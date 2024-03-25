@@ -21,6 +21,15 @@ export default function SignUp({navigation}) {
         return isValid  
     }
 
+    function validatePassword(value) {
+        // Regular expression to check if the password meets the criteria
+        const isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value);
+        setPasswordError(isValid ? '' : 'Please enter a valid password.');
+        return isValid;
+    }
+
+
+
 
     return (
         <SafeAreaView style={colors.container}>
@@ -35,7 +44,6 @@ export default function SignUp({navigation}) {
             />
             {emailError ? <Text style={colors.errorText}>{emailError}</Text> : null}
 
-            
             <Text style={styles.label}>Password</Text>
             <TextInput
                 style={styles.input}
@@ -46,6 +54,9 @@ export default function SignUp({navigation}) {
                 setPassword(changedText);
                 }}
             />
+
+            {PasswordError ? <Text style={colors.errorText}>{PasswordError}</Text> : null}
+
             <Text style={styles.label}>Confirm Password</Text>
             <TextInput
                 style={styles.input}
