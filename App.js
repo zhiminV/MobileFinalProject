@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Start from './Screens/Start';
 import colors from './Helpers/colors';
+import SignUp from './Screens/SignUp';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +26,14 @@ export default function App() {
               name="Start" 
               component={Start} 
             />
+             <Stack.Screen
+            options={{
+              headerShown: false,
+              headerTitle: "",
+            }} 
+            name="SignUp" 
+            component={SignUp} 
+          />
       </Stack.Navigator>
     </NavigationContainer>
   );

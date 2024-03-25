@@ -1,6 +1,8 @@
-import { Text, View, SafeAreaView,Alert} from 'react-native'
+import { Text, View, SafeAreaView,Alert,TextInput,styles} from 'react-native'
 import React from 'react'
 import colors from '../Helpers/colors';
+import { useState } from 'react';
+import PressableButton from '../Components/PressableButton';
 
 export default function SignUp({navigation}) {
     const [email, setemail] = useState('');
@@ -59,9 +61,9 @@ export default function SignUp({navigation}) {
             />
             {emailError ? <Text style={colors.errorText}>{emailError}</Text> : null}
 
-            <Text style={styles.label}>Password</Text>
+            <Text style={colors.text}>Password</Text>
             <TextInput
-                style={styles.input}
+                style={colors.input}
                 secureTextEntry={true}
                 placeholder="Password"
                 value={password}
@@ -72,9 +74,9 @@ export default function SignUp({navigation}) {
 
             {PasswordError ? <Text style={colors.errorText}>{PasswordError}</Text> : null}
 
-            <Text style={styles.label}>Confirm Password</Text>
+            <Text style={colors.text}>Confirm Password</Text>
             <TextInput
-                style={styles.input}
+                style={colors.input}
                 secureTextEntry={true}
                 placeholder="Confirm Password"
                 value={confirmPassword}
@@ -89,7 +91,7 @@ export default function SignUp({navigation}) {
                     </PressableButton>
                 </View>
                 <View style={colors.buttonView}>
-                    <PressableButton customStyle={colors.save} onPressFunction={handleLogin} disabled={isStartButtonDisabled}>
+                    <PressableButton customStyle={colors.save} onPressFunction={handleLogin}>
                         <Text style={colors.buttonText}>Already SignUp? Login</Text>
                     </PressableButton>
                 </View>
