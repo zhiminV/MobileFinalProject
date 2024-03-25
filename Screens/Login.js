@@ -9,7 +9,7 @@ export default function Login({navigation}) {
     const [password, setPassword] = useState("");
 
     const signupHandler = () => {
-        navigation.replace("Signup");
+        navigation.replace("SignUp");
     };
 
     const loginHandler = () => {
