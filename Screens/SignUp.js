@@ -38,6 +38,19 @@ export default function SignUp() {
             setConfirmPassword(changedText);
             }}
         />
+        <View style={colors.buttonsContainer}>
+            <View style={colors.buttonView}>
+                <PressableButton customStyle={colors.cancle} onPressFunction={handleSignup}>
+                    <Text style={colors.buttonText}>SignUp</Text>
+                </PressableButton>
+            </View>
+            <View style={colors.buttonView}>
+                <PressableButton customStyle={colors.save} onPressFunction={handleLogin} disabled={isStartButtonDisabled}>
+                    <Text style={colors.buttonText}>Already SignUp? Login</Text>
+                </PressableButton>
+            </View>
+        </View> 
+
 
     </SafeAreaView>
   )
