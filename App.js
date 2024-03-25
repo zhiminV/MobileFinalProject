@@ -6,6 +6,7 @@ import Start from './Screens/Start';
 import colors from './Helpers/colors';
 import SignUp from './Screens/SignUp';
 import Login from './Screens/Login';
+import Home from './Screens/Home';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +44,14 @@ export default function App() {
               }} 
               name="Login" 
               component={Login} 
+            />    
+             <Stack.Screen
+              options={{
+                headerShown: false,
+                headerTitle: "",
+              }} 
+              name="Home" 
+              component={Home} 
             />    
 
       </Stack.Navigator>

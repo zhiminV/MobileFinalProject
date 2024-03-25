@@ -3,6 +3,8 @@ import React from 'react'
 import colors from '../Helpers/colors';
 import { useState } from 'react';
 import PressableButton from '../Components/PressableButton';
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { auth } from "../firebase-files/firebaseSetup";
 
 export default function SignUp({navigation}) {
     const [email, setemail] = useState('');
@@ -16,18 +18,31 @@ export default function SignUp({navigation}) {
         navigation.navigate("Login");
     }
 
-    function handleSignup(){
+    const handleSignup = async () => {
         const isEmailValid = validateEmail(email);
-        const isNumberValid = validatePassword(password);
+        const isPasswordValid = validatePassword(password);
 
         if(!email || !password || !confirmPassword){
             Alert.alert("Files should not empty.");
-          }
+        }
+
         if (password !== confirmPassword) {
             Alert.alert("passwords don't match");
             return;
         }
-        if (isEmailValid && isNumberValid) {
+
+        // try {
+        //     const userCred = await createUserWithEmailAndPassword(
+        //       auth,
+        //       email,
+        //       password
+        //     );
+        //     console.log(userCred);
+        // } catch (err) {
+        //     console.log(err.code);
+        // }
+
+        if (isEmailValid && isPasswordValid) {
             navigation.navigate('Home');
         }
 

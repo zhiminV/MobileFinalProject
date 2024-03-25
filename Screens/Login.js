@@ -3,23 +3,54 @@ import React from 'react'
 import { useState } from "react";
 import colors from '../Helpers/colors';
 import PressableButton from '../Components/PressableButton';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase-files/firebaseSetup";
 
 export default function Login({navigation}) {
     const [email, setemail] = useState('');
     const [password, setPassword] = useState("");
+    const [emailError, setEmailError] = useState('');
+    const [PasswordError, setPasswordError] = useState('');
+
+    function validateEmail(value){
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9.-]+$/;
+        const isValid = emailRegex.test(value.trim());
+        setEmailError(isValid ? " " : 'Please enter a valid email address.');
+        return isValid  
+    }
+
+    function validatePassword(value) {
+        // Regular expression to check if the password meets the criteria
+        const isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value);
+        setPasswordError(isValid ? '' : 'Please enter a valid password.');
+        return isValid;
+    }
 
     const signupHandler = () => {
         navigation.replace("SignUp");
     };
 
-    const loginHandler = () => {
-        if (!email || !password) {
+    const loginHandler = async () => {
+        const isEmailValid = validateEmail(email);
+        const isPasswordValid = validatePassword(password);
+        try {
+          if (!email || !password) {
             Alert.alert("Fields should not be empty");
             return;
+          }
+        //   //return a promise 
+        //   const userCred = await signInWithEmailAndPassword(auth, email, password);
+        //   console.log(userCred);
+          
+        } catch (err) {
+          console.log(err);
         }
-        navigation.navigate("Home");
-  
-    };
+
+        if (isEmailValid && isPasswordValid) {
+            navigation.navigate('Home');
+        }
+    }
+
 
 
     return (
@@ -33,6 +64,7 @@ export default function Login({navigation}) {
                 setemail(text);
             }} 
             />
+             {emailError ? <Text style={colors.errorText}>{emailError}</Text> : null}
 
             <Text style={colors.text}>Password</Text>
             <TextInput
