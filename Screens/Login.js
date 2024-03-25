@@ -29,6 +29,19 @@ export default function Login() {
                 setPassword(changedText);
                 }}
             />
+
+            <View style={colors.buttonsContainer}>
+                <View style={colors.buttonView}>
+                    <PressableButton customStyle={colors.cancle} onPressFunction={loginHandler}>
+                        <Text style={colors.buttonText}>Login</Text>
+                    </PressableButton>
+                </View>
+                <View style={colors.buttonView}>
+                    <PressableButton customStyle={colors.save} onPressFunction={signupHandler}>
+                        <Text style={colors.buttonText}>New User? SignUp</Text>
+                    </PressableButton>
+                </View>
+            </View> 
         </SafeAreaView>
     )
 }
