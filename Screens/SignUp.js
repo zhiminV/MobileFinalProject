@@ -24,8 +24,8 @@ export default function SignUp({navigation}) {
             Alert.alert("Files should not empty.");
           }
         if (password !== confirmPassword) {
-        Alert.alert("passwords don't match");
-        return;
+            Alert.alert("passwords don't match");
+            return;
         }
         if (isEmailValid && isNumberValid) {
             navigation.navigate('Home');

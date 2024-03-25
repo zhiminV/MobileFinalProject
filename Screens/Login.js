@@ -1,11 +1,26 @@
-import { StyleSheet, Text, View ,TextInput} from 'react-native'
+import { StyleSheet, Text, View ,TextInput, Alert} from 'react-native'
 import React from 'react'
 import { useState } from "react";
 import colors from '../Helpers/colors';
+import PressableButton from '../Components/PressableButton';
 
-export default function Login() {
+export default function Login({navigation}) {
     const [email, setemail] = useState('');
     const [password, setPassword] = useState("");
+
+    const signupHandler = () => {
+        navigation.replace("Signup");
+    };
+
+    const loginHandler = () => {
+        if (!email || !password) {
+            Alert.alert("Fields should not be empty");
+            return;
+        }
+        navigation.navigate("Home");
+  
+    };
+
 
     return (
         <SafeAreaView style={colors.container}>
