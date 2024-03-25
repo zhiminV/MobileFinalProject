@@ -14,6 +14,24 @@ export default function SignUp({navigation}) {
         navigation.navigate("Login");
     }
 
+    function handleSignup(){
+        const isEmailValid = validateEmail(email);
+        const isNumberValid = validatePassword(password);
+
+        if(!email || !password || !confirmPassword){
+            Alert.alert("Files should not empty.");
+          }
+        if (password !== confirmPassword) {
+        Alert.alert("passwords don't match");
+        return;
+        }
+        if (isEmailValid && isNumberValid) {
+            navigation.navigate('Home');
+        }
+
+    }
+
+    
     function validateEmail(value){
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9.-]+$/;
         const isValid = emailRegex.test(value.trim());
@@ -27,9 +45,6 @@ export default function SignUp({navigation}) {
         setPasswordError(isValid ? '' : 'Please enter a valid password.');
         return isValid;
     }
-
-
-
 
     return (
         <SafeAreaView style={colors.container}>
