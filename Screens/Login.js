@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View ,TextInput, Alert} from 'react-native'
+import { StyleSheet, Text, View ,TextInput, Alert,SafeAreaView} from 'react-native'
 import React from 'react'
 import { useState } from "react";
 import colors from '../Helpers/colors';
