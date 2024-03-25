@@ -6,11 +6,21 @@ export default function SignUp({navigation}) {
     const [email, setemail] = useState('');
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [emailError, setEmailError] = useState('');
+    const [PasswordError, setPasswordError] = useState('');
 
 
     function handleLogin(){
         navigation.navigate("Login");
     }
+
+    function validateEmail(value){
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9.-]+$/;
+        const isValid = emailRegex.test(value.trim());
+        setEmailError(isValid ? " " : 'Please enter a valid email address.');
+        return isValid  
+    }
+
 
     return (
         <SafeAreaView style={colors.container}>
@@ -23,6 +33,9 @@ export default function SignUp({navigation}) {
                 setemail(text);
             }} 
             />
+            {emailError ? <Text style={colors.errorText}>{emailError}</Text> : null}
+
+            
             <Text style={styles.label}>Password</Text>
             <TextInput
                 style={styles.input}
