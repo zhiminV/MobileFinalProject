@@ -24,6 +24,7 @@ export default function SignUp({navigation}) {
 
         if(!email || !password || !confirmPassword){
             Alert.alert("Files should not empty.");
+            return;
         }
 
         if (password !== confirmPassword) {
@@ -37,16 +38,15 @@ export default function SignUp({navigation}) {
               email,
               password
             );
+            if (isEmailValid && isPasswordValid) {
+                navigation.navigate('HomeScreen');
+            }
             console.log(userCred);
         } catch (err) {
             console.log(err.code);
         }
 
-        if (isEmailValid && isPasswordValid) {
-            navigation.navigate('Home');
-        }
-
-    }
+    };
 
     
     function validateEmail(value){
