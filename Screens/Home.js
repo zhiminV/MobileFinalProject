@@ -1,16 +1,33 @@
-import { StyleSheet, Text, View,SafeAreaView } from 'react-native'
-import React from 'react'
-import colors
- from '../Helpers/colors'
-export default function Home() {
-  return (
-    <SafeAreaView style={colors.container}>
-        <View>
-        <Text>Home</Text>
-        </View>
-    
-    </SafeAreaView>
- )
-}
+import { View, Text } from 'react-native'
+import React, { useState } from 'react'
+import { getAllDocs } from '../firebase-files/firebaseHelper';
 
-const styles = StyleSheet.create({})
+export default function Home() {
+
+  const [posts, setPosts] = useState([]);
+  
+  useEffect(() => {
+  
+    async function getData() {
+      
+      try {
+        
+        const posts = await getAllDocs('goals');
+        if (posts.length) {
+          setPosts(posts);
+        }
+      } catch (err) {
+        console.log('Failed to Get User Data, ', err);
+      }
+
+    }
+    getData();
+  }, []);
+
+
+  return (
+    <View>
+      <Text>{posts}</Text>
+    </View>
+  )
+}
