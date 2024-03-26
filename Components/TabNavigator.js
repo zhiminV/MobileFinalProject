@@ -12,7 +12,7 @@ import Post from '../Screens/Profile';
 
 const Tab = createBottomTabNavigator();
 
-export default function TabNavigator( {route}) {
+export default function TabNavigator( {route} ) {
     return (
     <Tab.Navigator
         initialRouteName="Home"
