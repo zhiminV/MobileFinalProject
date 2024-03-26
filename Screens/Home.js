@@ -1,6 +1,7 @@
 import { View, Text } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { getAllDocs } from '../firebase-files/firebaseHelper';
+import { database } from '../firebase-files/firebaseSetup';
 
 export default function Home() {
 
@@ -12,10 +13,12 @@ export default function Home() {
       
       try {
         
-        const posts = await getAllDocs('goals');
+        const posts = await getAllDocs('posts/');
+        console.log(database);
         if (posts.length) {
           setPosts(posts);
         }
+
       } catch (err) {
         console.log('Failed to Get User Data, ', err);
       }
@@ -27,7 +30,7 @@ export default function Home() {
 
   return (
     <View>
-      <Text>{posts}</Text>
+      <Text>xixi</Text>
     </View>
   )
 }
