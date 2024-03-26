@@ -11,6 +11,8 @@ import TabNavigator from './Components/TabNavigator';
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./firebase-files/firebaseSetup";
 import { useEffect, useState} from 'react';
+import PressableButton from './Components/PressableButton';
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
 
@@ -46,14 +48,30 @@ export default function App() {
       /> */}
 
       <Stack.Screen 
-        options={({ route }) => {
-          return {
-            headerTitle: route.params?.tabName,
-            headerShown: false,
-            headerTitle: "",
-          };
-        }}
-        name="Home" 
+       options={({navigation})=>{
+        return{
+          headerRight: () => {
+            return (
+            <PressableButton
+              onPressFunction ={()=>{
+
+                try{
+                  signOut(auth);
+                }
+                catch(err){
+                  console.log(err);
+                }
+
+              }}
+            >
+               <AntDesign name="logout" size={24} color="white" />
+            </PressableButton>
+            );
+          },
+        }
+       
+      }}
+        name="HomeScreen" 
         component = {TabNavigator}
       /> 
     </>
