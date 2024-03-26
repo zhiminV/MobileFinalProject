@@ -13,6 +13,7 @@ import { auth } from "./firebase-files/firebaseSetup";
 import { useEffect, useState} from 'react';
 import PressableButton from './Components/PressableButton';
 import { Ionicons, AntDesign } from "@expo/vector-icons";
+import EditProfile from "./Screens/EditProfile";
 
 const Stack = createNativeStackNavigator();
 
@@ -74,6 +75,11 @@ export default function App() {
         name="HomeScreen" 
         component = {TabNavigator}
       /> 
+
+      <Stack.Screen
+      name='EditProfile'
+      component={EditProfile}
+      />
     </>
   )
 
