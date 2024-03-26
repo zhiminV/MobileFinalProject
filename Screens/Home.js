@@ -4,18 +4,30 @@ import { getAllDocs } from '../firebase-files/firebaseHelper';
 
 export default function Home() {
 
-  const [userID, setUserID] = useState('');
+  const [posts, setPosts] = useState([]);
   
   useEffect(() => {
-    try {
-      const posts = await getAllDocs('goals');
-    }catch (err) {
-      console.log('Failed to Get User Data, ', err);
+  
+    async function getData() {
+      
+      try {
+        
+        const posts = await getAllDocs('goals');
+        if (posts.length) {
+          setPosts(posts);
+        }
+      } catch (err) {
+        console.log('Failed to Get User Data, ', err);
+      }
+
     }
-  });
+    getData();
+  }, []);
+
+
   return (
     <View>
-      <Text>{}</Text>
+      <Text>{posts}</Text>
     </View>
   )
 }
