@@ -6,14 +6,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import Home from '../Screens/Home';
 import Profile from '../Screens/Profile';
-import Search from '../Screens/Profile';
-import NearMe from '../Screens/Profile';
-import Post from '../Screens/Profile';
+import Search from '../Screens/Search';
+import NearMe from '../Screens/NearMe';
+import Post from '../Screens/Post';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator( {route} ) {
-    return (
+  return (
     <Tab.Navigator
         initialRouteName="Home"
         screenOptions={{
@@ -106,6 +106,6 @@ export default function TabNavigator( {route} ) {
         />
         
     </Tab.Navigator>
-    );
+  );
 }
 
