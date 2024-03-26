@@ -7,11 +7,9 @@ import { useEffect,useState } from 'react';
 import colors from '../Helpers/colors';
 
 export default function Profile({navigation}) {
-    const [userData, setUserData] = useState({
-        Name: "",
-        Location:"",
-        Phone:"",
-    });
+    const [Name, setName] = useState("");
+    const [Location, setLocation] = useState("");
+    const [Phone, setPhone] = useState("");
 
     useEffect(()=> {
         //fetch user postsCount,followersCount,followingCount
@@ -25,7 +23,8 @@ export default function Profile({navigation}) {
         navigation.goBack()
     }
     function handleSave(){
-        console.log("updata change in dattbase")
+        console.log("updata change in dattbase");
+        
     }
 
  
@@ -39,22 +38,22 @@ export default function Profile({navigation}) {
             <Text style={colors.text}>Name:</Text>
             <TextInput
             style={colors.input}
-            value={userData.Name}
-            onChangeText={(text) => setUserData({ ...userData, Name: text })}
+            value={Name}
+            onChangeText={() => setName({ value })}
             />
 
             <Text style={colors.text}>Phone:</Text>
             <TextInput
             style={colors.input}
-            value={userData.Phone}
-            onChangeText={(text) => setUserData({ ...userData, Phone: text })}
+            value={Phone}
+            onChangeText={() => setPhone({value})}
             />
 
             <Text style={colors.text}>Location:</Text>
             <TextInput
             style={colors.input}
-            value={userData.Location}
-            onChangeText={(text) => setUserData({ ...userData, Location: text })}
+            value={Location}
+            onChangeText={() => setLocation({value})}
             />
             <View >
                 <Text>Email: {auth.currentUser.email}</Text>
