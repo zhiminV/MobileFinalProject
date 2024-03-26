@@ -38,9 +38,9 @@ export default function Login({navigation}) {
             Alert.alert("Fields should not be empty");
             return;
           }
-        //   //return a promise 
-        //   const userCred = await signInWithEmailAndPassword(auth, email, password);
-        //   console.log(userCred);
+          //return a promise 
+          const userCred = await signInWithEmailAndPassword(auth, email, password);
+          console.log(userCred);
           
         } catch (err) {
           console.log(err);
