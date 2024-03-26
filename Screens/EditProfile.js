@@ -1,66 +1,63 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, TextInput,SafeAreaView } from 'react-native'
 import React from 'react'
 import { auth } from '../firebase-files/firebaseSetup'
 import { Ionicons } from '@expo/vector-icons';
 import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
+import colors from '../Helpers/colors';
 
 export default function Profile() {
-  const [postsCount, setPostsCount] = useState(0);
-  const [followersCount, setFollowersCount] = useState(0);
-  const [followingCount, setFollowingCount] = useState(0);
+    const [userData, setUserData] = useState({
+        Name: "",
+        Location:"",
+        Phone:"",
+    });
 
-  useEffect(()=> {
-    //fetch user postsCount,followersCount,followingCount
-    
-  },[])
+    useEffect(()=> {
+        //fetch user postsCount,followersCount,followingCount
+        
+    },[])
 
-  function addImageHandle(){
-    // let user add photo 
-  }
+    function addImageHandle(){
+        // let user add photo 
+    }
 
  
   return (
-    <View style={styles.container}>
-      <PressableButton onPressFunction={addImageHandle} style={styles.iconContainer}>
+    <SafeAreaView style={colors.container}>
+      <PressableButton onPressFunction={addImageHandle} >
         <Ionicons name="person-add-outline" size={40} color="black" /> 
       </PressableButton>
 
-      <View style={styles.userInfo}>
-        <View style={styles.stats}>
-          <Text style={styles.statsItem}>Posts: {postsCount} </Text>
-          <Text style={styles.statsItem}>Fans:  {followersCount} </Text>
-          <Text style={styles.statsItem}>Following: {followingCount} </Text>
-          
-      </View >
-        <Text>Name: </Text>
-        <Text>Email: {auth.currentUser.email}</Text>
-        <Text>UID: {auth.currentUser.uid}</Text>
-        
-      </View>
-    </View>
+        <View >
+            <Text style={colors.text}>Name:</Text>
+            <TextInput
+            style={colors.input}
+            value={userData.Name}
+            onChangeText={(text) => setUserData({ ...userData, Name: text })}
+            />
+
+            <Text style={colors.text}>Phone:</Text>
+            <TextInput
+            style={colors.input}
+            value={userData.Phone}
+            onChangeText={(text) => setUserData({ ...userData, Phone: text })}
+            />
+
+            <Text style={colors.text}>Location:</Text>
+            <TextInput
+            style={colors.input}
+            value={userData.Location}
+            onChangeText={(text) => setUserData({ ...userData, Location: text })}
+            />
+            <View >
+                <Text>Email: {auth.currentUser.email}</Text>
+                <Text>UID: {auth.currentUser.uid}</Text>
+            </View>
+
+        </View>
+    </SafeAreaView>
   
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    // alignItems: 'center',
-    padding: 20,
-  },
-  iconContainer: {
-    marginRight: 5,
-  },
-  userInfo: {
-    flexDirection: 'column',
-  },
-  stats: {
-    flexDirection: 'row',
-    marginBottom: 50,
-  },
-  statsItem: {
-    marginRight: 5,
-  },
-});
