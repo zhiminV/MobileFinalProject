@@ -7,6 +7,7 @@ import colors from './Helpers/colors';
 import SignUp from './Screens/SignUp';
 import Login from './Screens/Login';
 import Home from './Screens/Home';
+import TabNavigator from './Components/TabNavigator';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,14 +45,18 @@ export default function App() {
               }} 
               name="Login" 
               component={Login} 
-            />    
-             <Stack.Screen
-              options={{
-                headerShown: false,
-                headerTitle: "",
-              }} 
+            />     
+
+            <Stack.Screen 
+              options={({ route }) => {
+                return {
+                  headerTitle: route.params?.tabName,
+                  headerShown: false,
+                  headerTitle: "",
+                };
+              }}
               name="Home" 
-              component={Home} 
+              component = {TabNavigator}
             />    
 
       </Stack.Navigator>

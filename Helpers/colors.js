@@ -51,7 +51,7 @@ const colors = StyleSheet.create({
         color: "goldenrod",
     },
     hearderColor:{
-        backgroundColor:"indigo",
+        backgroundColor:"linen",
     },
    
     Context:{
