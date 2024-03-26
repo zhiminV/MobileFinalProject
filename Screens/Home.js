@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { getAllDocs } from '../firebase-files/firebaseHelper';
 
 export default function Home() {
