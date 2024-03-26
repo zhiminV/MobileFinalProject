@@ -12,10 +12,12 @@ export default function Home() {
       
       try {
         
-        const posts = await getAllDocs('goals');
+        const posts = await getAllDocs('posts/');
+        console.log(posts);
         if (posts.length) {
           setPosts(posts);
         }
+
       } catch (err) {
         console.log('Failed to Get User Data, ', err);
       }
@@ -27,7 +29,7 @@ export default function Home() {
 
   return (
     <View>
-      <Text>{posts}</Text>
+      <Text>xixi</Text>
     </View>
   )
 }
