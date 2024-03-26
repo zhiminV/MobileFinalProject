@@ -6,7 +6,7 @@ import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
 import colors from '../Helpers/colors';
 
-export default function Profile() {
+export default function Profile({navigation}) {
     const [userData, setUserData] = useState({
         Name: "",
         Location:"",
@@ -20,6 +20,12 @@ export default function Profile() {
 
     function addImageHandle(){
         // let user add photo 
+    }
+    function handleCancle(){
+        navigation.goBack()
+    }
+    function handleSave(){
+        console.log("updata change in dattbase")
     }
 
  
@@ -54,6 +60,18 @@ export default function Profile() {
                 <Text>Email: {auth.currentUser.email}</Text>
                 <Text>UID: {auth.currentUser.uid}</Text>
             </View>
+            <View style={colors.buttonsContainer}>
+                <View style={colors.buttonView}>
+                    <PressableButton customStyle={colors.cancle} onPressFunction={handleCancle}>
+                        <Text style={colors.buttonText}>Cancle</Text>
+                    </PressableButton>
+                </View>
+                <View style={colors.buttonView}>
+                    <PressableButton customStyle={colors.save} onPressFunction={handleSave}>
+                        <Text style={colors.buttonText}>Save</Text>
+                    </PressableButton>
+                </View>
+            </View> 
 
         </View>
     </SafeAreaView>
