@@ -31,16 +31,16 @@ export default function SignUp({navigation}) {
             return;
         }
 
-        // try {
-        //     const userCred = await createUserWithEmailAndPassword(
-        //       auth,
-        //       email,
-        //       password
-        //     );
-        //     console.log(userCred);
-        // } catch (err) {
-        //     console.log(err.code);
-        // }
+        try {
+            const userCred = await createUserWithEmailAndPassword(
+              auth,
+              email,
+              password
+            );
+            console.log(userCred);
+        } catch (err) {
+            console.log(err.code);
+        }
 
         if (isEmailValid && isPasswordValid) {
             navigation.navigate('Home');
@@ -107,7 +107,7 @@ export default function SignUp({navigation}) {
                 </View>
                 <View style={colors.buttonView}>
                     <PressableButton customStyle={colors.save} onPressFunction={handleLogin}>
-                        <Text style={colors.buttonText}>Already SignUp? Login</Text>
+                        <Text style={colors.buttonText}>Have Account? Login</Text>
                     </PressableButton>
                 </View>
             </View> 
