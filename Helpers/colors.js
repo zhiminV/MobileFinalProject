@@ -14,7 +14,7 @@ const colors = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: 'plum',
+        backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center',
     },
