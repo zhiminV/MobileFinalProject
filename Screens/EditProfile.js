@@ -6,17 +6,46 @@ import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
 import colors from '../Helpers/colors';
 import ImageManerge from '../Components/ImageManerge';
+import { fetchInfoById } from '../firebase-files/firebaseHelper';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { database } from '../firebase-files/firebaseSetup';
 
-export default function Profile({navigation}) {
+export default function EditProfile({navigation}) {
     const [Name, setName] = useState("");
     const [Location, setLocation] = useState("");
     const [Phone, setPhone] = useState("");
     const [avatar, setAvatar] = useState("");
 
-    useEffect(()=> {
-        //fetch user postsCount,followersCount,followingCount
-        
-    },[])
+    useEffect(() => {
+        const fetchUserData = async () => {
+          try {
+            // Query the "Users" collection to find the document associated with the current user's UID
+            const usersCollectionRef = collection(database, "Users");
+            const q = query(usersCollectionRef, where("uid", "==", auth.currentUser.uid));
+            const querySnapshot = await getDocs(q);
+    
+            if (!querySnapshot.empty) {
+              // If a document is found, obtain its document ID and fetch user data using fetchInfoById
+              const docId = querySnapshot.docs[0].id;
+              const userProfile = await fetchInfoById("Users", docId);
+              
+              if (userProfile) {
+                setName(userProfile.userName || "");
+                setLocation(userProfile.location || "");
+                setPhone(userProfile.phoneNum || "");
+                setAvatar(userProfile.userAvatar || "");
+              }
+            } else {
+              console.log("No document found for the current user");
+            }
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+          }
+        };
+    
+        fetchUserData();
+      }, []);
+    
 
    
     function handleCancle(){
