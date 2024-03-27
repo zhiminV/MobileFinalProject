@@ -4,7 +4,8 @@ import colors from '../Helpers/colors';
 import { useState } from 'react';
 import PressableButton from '../Components/PressableButton';
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { auth } from "../firebase-files/firebaseSetup";
+import { auth, database } from "../firebase-files/firebaseSetup";
+import { writeToDB } from '../firebase-files/firebaseHelper';
 
 export default function SignUp({navigation}) {
     const [email, setemail] = useState('');
@@ -39,12 +40,23 @@ export default function SignUp({navigation}) {
               password
             );
             if (isEmailValid && isPasswordValid) {
+                //const refID = await writeToDB(email, 'Users');
+                //console.log(auth.currentUser.uid);
+                data = {
+                    uid: auth.currentUser.uid,
+                    email: email
+                }
+
+                writeToDB(data, "Users");
                 navigation.navigate('HomeScreen');
+
             }
-            console.log(userCred);
+            //console.log(userCred);
         } catch (err) {
-            console.log(err.code);
+            console.log("Error at Signup: ", err.code);
         }
+
+
 
     };
 

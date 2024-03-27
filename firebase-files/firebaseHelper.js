@@ -15,7 +15,7 @@ export async function writeToDB(data, col, docId) {
       await addDoc(collection(database, col), data);
     }
   } catch (err) {
-    console.log(err);
+    console.log("Error at Write: ", err.code);
   }
 }
 

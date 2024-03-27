@@ -60,7 +60,7 @@ export default function App() {
                   signOut(auth);
                 }
                 catch(err){
-                  console.log(err);
+                  console.log('Error at App.js', err);
                 }
 
               }}

@@ -13,9 +13,9 @@ export default function Home() {
       
       try {
         
-        const posts = await getAllDocs('posts/');
-        console.log(database);
-        if (posts.length) {
+        const posts = await getAllDocs('/post');
+        //console.log(database);
+        if (posts) {
           setPosts(posts);
         }
 
