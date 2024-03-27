@@ -4,7 +4,8 @@ import {
   doc,
   deleteDoc,
   getDocs,
-  getDoc
+  getDoc,
+  updateDoc
 } from "firebase/firestore";
 import { database } from "./firebaseSetup";
 
@@ -63,6 +64,6 @@ export async function updateFromDB(col,id,newData){
       await updateDoc(doc(database,col,id),newData);
   }
   catch(err){
-      console(err.code); 
+    console.log(err); 
   }
 }
