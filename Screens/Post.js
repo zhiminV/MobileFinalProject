@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View,Button, ScrollView,Image} from 'react-native'
+import { StyleSheet, Text, TextInput, View,Button, ScrollView, Image, TouchableWithoutFeedback, Keyboard } from 'react-native'
 import React, { useState } from 'react'
 import colors from '../Helpers/colors';
 import ImageManerge from '../Components/ImageManerge';
@@ -34,8 +34,9 @@ export default function Post({navigation}) {
 
   function handleReset(){
     setDescription('');
-      setImageUris([]);
+    setImageUris([]);
   }
+
   const handlePost = async () => {
     try {
       const uploadUris = await Promise.all(imageUris.map(uri => getImageData(uri)));
@@ -48,7 +49,7 @@ export default function Post({navigation}) {
       // Reset state
       setDescription('');
       setImageUris([]);
-      navigation.navigate("HomeScreen");
+      navigation.navigate("Home");
   
     } catch (error) {
       console.error("Failed to post:", error);
@@ -56,33 +57,45 @@ export default function Post({navigation}) {
     }
   };
 
+  function handleLocation(){
+    console.log("should locate user current location");
+  }
+
+  function handleWeather(){
+    console.log("should use external API in iteration 2")
+  }
+
   
  
   return (
-    <View >
-      <Text style={colors.text}>Description</Text>
-      <TextInput
-        value={description}
-        style={[colors.input, { height: 100, width: 300, marginLeft: 20 }]}
-        onChangeText={setDescription}
-        multiline
-      />
+    <ScrollView keyboardShouldPersistTaps="handled">
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
+          <Text style={colors.text}>Description</Text>
+          <TextInput
+            value={description}
+            style={[colors.input, { height: 100, width: 300, marginLeft: 20 }]}
+            onChangeText={setDescription}
+            multiline
+          />
 
-      <View style={styles.imageGrid}>
-        {imageUris.map((uri, index) => (
-          <View style={styles.imageContainer} key={index}>
-            <Image source={{ uri }} style={styles.image} />
+          <View style={styles.imageGrid}>
+            {imageUris.map((uri, index) => (
+              <View style={styles.imageContainer} key={index}>
+                <Image source={{ uri }} style={styles.image} />
+              </View>
+            ))}
           </View>
-        ))}
-      </View>
-  
-      <ImageManerge recieveImageUri = {handleImageUri}/>
-      <Button title="Post" onPress={handlePost} />
-      <Button title="Reset" onPress={handleReset} />
-    
 
-    </View>
-  )
+          <ImageManerge recieveImageUri={handleImageUri} />
+          <Button title="Post" onPress={handlePost} />
+          <Button title="Reset" onPress={handleReset} />
+          <Button title="Location" onPress={handleLocation} />
+          <Button title="Weather" onPress={handleWeather} />
+        </View>
+      </TouchableWithoutFeedback>
+  </ScrollView>
+);
 }
 
 const styles = StyleSheet.create({
