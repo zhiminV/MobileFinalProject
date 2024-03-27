@@ -19,6 +19,13 @@ export default function Post({navigation}) {
     }
   };
 
+  function handleReset(){
+    setDescription('');
+      setImageUris([]);
+  }
+  function handlePost(){
+    console.log("post");
+  }
  
   return (
     <View>
@@ -33,6 +40,8 @@ export default function Post({navigation}) {
 
 
       <ImageManerge recieveImageUri = {handleImageUri}/>
+      <Button title="Post" onPress={handlePost} />
+      <Button title="Reset" onPress={handleReset} />
     
 
     </View>
