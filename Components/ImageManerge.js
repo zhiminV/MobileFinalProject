@@ -2,6 +2,8 @@ import { Alert, Button, Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import * as ImagePicker from 'expo-image-picker'
 import { useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+
 
 export default function ImageManerge({recieveImageUri}) {
   const [status, requestPermission] = ImagePicker.useCameraPermissions();
@@ -46,15 +48,7 @@ export default function ImageManerge({recieveImageUri}) {
 
   return (
     <View style = {styles.container}>
-      <Button title='Take a photo' onPress={takeImageHandle}></Button>
-      {/* {imageUri&& (
-        <Image
-          style={styles.image}
-          source={{
-            uri: imageUri,
-          }}
-        />
-      )}  */}
+      <Ionicons name="camera" size={60} color="black"onPress={takeImageHandle} />
     </View>
   )
 }
