@@ -20,9 +20,9 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [userLogined, setUserLogined] = useState(false);
 
-  useEffect(()=>{
+  useEffect(()=> {
     onAuthStateChanged(auth,(user) =>{
-      if(user){
+      if(user) {
         setUserLogined(true);
       }
       else{
@@ -60,7 +60,7 @@ export default function App() {
                   signOut(auth);
                 }
                 catch(err){
-                  console.log(err);
+                  console.log('Error at App.js', err);
                 }
 
               }}

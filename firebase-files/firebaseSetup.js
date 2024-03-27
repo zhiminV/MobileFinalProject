@@ -16,6 +16,7 @@ import {
     appId,
   } from "@env";
   // Your web app's Firebase configuration
+
 const firebaseConfig = {
     apiKey: apiKey,
     authDomain: authDomain,
@@ -24,7 +25,6 @@ const firebaseConfig = {
     messagingSenderId: messagingSenderId,
     appId: appId,
   };
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const database = getFirestore(app);
