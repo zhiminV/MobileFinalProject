@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput,SafeAreaView,Image } from 'react-native'
+import { StyleSheet, Text, View, TextInput,SafeAreaView,Image,Alert } from 'react-native'
 import React from 'react'
 import { auth } from '../firebase-files/firebaseSetup'
 import { Ionicons } from '@expo/vector-icons';
@@ -6,15 +6,11 @@ import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
 import colors from '../Helpers/colors';
 import ImageManerge from '../Components/ImageManerge';
-import { fetchInfoById } from '../firebase-files/firebaseHelper';
+import { fetchInfoById,updateFromDB } from '../firebase-files/firebaseHelper';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { database } from '../firebase-files/firebaseSetup';
 
 export default function EditProfile({navigation}) {
-    const [Name, setName] = useState("");
-    const [Location, setLocation] = useState("");
-    const [Phone, setPhone] = useState("");
-    const [avatar, setAvatar] = useState("");
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -27,6 +23,7 @@ export default function EditProfile({navigation}) {
             if (!querySnapshot.empty) {
               // If a document is found, obtain its document ID and fetch user data using fetchInfoById
               const docId = querySnapshot.docs[0].id;
+              setdocid(docId);
               const userProfile = await fetchInfoById("Users", docId);
               
               if (userProfile) {
@@ -45,14 +42,38 @@ export default function EditProfile({navigation}) {
     
         fetchUserData();
       }, []);
-    
 
+    const [Name, setName] = useState("");
+    const [Location, setLocation] = useState("");
+    const [Phone, setPhone] = useState("");
+    const [avatar, setAvatar] = useState("");
+    const [docid, setdocid] = useState("");
    
     function handleCancle(){
         navigation.goBack()
     }
+
     function handleSave(){
-        console.log("updata change in dattbase");
+        const newProfile = {
+            userName:Name,
+            location: Location,
+            phoneNum: Phone,
+            userAvatar: avatar
+        };
+        Alert.alert('Important', 'Are you sure you want to save these changes?',[
+            {
+              text: 'No',
+              style: 'cancel',
+            },
+            {text: 'Yes', onPress: () => 
+            updateFromDB("Users",docid, newProfile)
+              .then(() => {
+                navigation.navigate("Profile");
+              })
+              .catch((error) => console.error("Update failed", error))
+            },
+        ]);
+        
         
     }
 
