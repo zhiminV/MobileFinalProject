@@ -33,7 +33,7 @@ export default function ImageManerge({recieveImageUri}) {
         allowsEditing:true,
       });
       recieveImageUri(result.assets[0].uri);
-      setImageUri(result.assets[0].uri);
+      // setImageUri(result.assets[0].uri);
 
     }
     catch(err){
@@ -47,14 +47,14 @@ export default function ImageManerge({recieveImageUri}) {
   return (
     <View style = {styles.container}>
       <Button title='Take a photo' onPress={takeImageHandle}></Button>
-      {imageUri && (
+      {/* {imageUri&& (
         <Image
           style={styles.image}
           source={{
             uri: imageUri,
           }}
         />
-      )} 
+      )}  */}
     </View>
   )
 }
