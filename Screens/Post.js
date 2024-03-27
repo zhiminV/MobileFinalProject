@@ -11,6 +11,19 @@ export default function Post({navigation}) {
   const [description, setDescription] = useState("");
   const [imageUris, setImageUris] = useState([]);
 
+  async function getImageData(uri) {
+    try {
+      const response = await fetch(uri);
+      const imageBlob = await response.blob();
+      const imageName = uri.substring(uri.lastIndexOf("/") + 1);
+      const imageRef = ref(storage, `images/${imageName}`);
+      const uploadResult = await uploadBytes(imageRef, imageBlob);
+      return uploadResult.metadata.fullPath;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   const handleImageUri = (uri) => {
     if (imageUris.length < 9) {
       setImageUris([...imageUris, uri]);
@@ -23,9 +36,27 @@ export default function Post({navigation}) {
     setDescription('');
       setImageUris([]);
   }
-  function handlePost(){
-    console.log("post");
-  }
+  const handlePost = async () => {
+    try {
+      const uploadUris = await Promise.all(imageUris.map(uri => getImageData(uri)));
+      const newPost = {
+        description: description,
+        imageUris: uploadUris, // Array of uploaded image paths
+      };
+  
+      await writeToDB(newPost, "Posts"); 
+      // Reset state
+      setDescription('');
+      setImageUris([]);
+      navigation.navigate("HomeScreen");
+  
+    } catch (error) {
+      console.error("Failed to post:", error);
+      alert('Failed to add post. Please try again.');
+    }
+  };
+
+  
  
   return (
     <View>
