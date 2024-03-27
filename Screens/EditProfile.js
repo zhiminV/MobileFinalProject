@@ -1,25 +1,24 @@
-import { StyleSheet, Text, View, TextInput,SafeAreaView } from 'react-native'
+import { StyleSheet, Text, View, TextInput,SafeAreaView,Image } from 'react-native'
 import React from 'react'
 import { auth } from '../firebase-files/firebaseSetup'
 import { Ionicons } from '@expo/vector-icons';
 import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
 import colors from '../Helpers/colors';
+import ImageManerge from '../Components/ImageManerge';
 
 export default function Profile({navigation}) {
     const [Name, setName] = useState("");
     const [Location, setLocation] = useState("");
     const [Phone, setPhone] = useState("");
-    const [avatar, setAvatar] = useState(null);
+    const [avatar, setAvatar] = useState("");
 
     useEffect(()=> {
         //fetch user postsCount,followersCount,followingCount
         
     },[])
 
-    function addImageHandle(){
-        // let user add photo 
-    }
+   
     function handleCancle(){
         navigation.goBack()
     }
@@ -28,12 +27,22 @@ export default function Profile({navigation}) {
         
     }
 
+    function receiveImageUri(uri){
+        setAvatar(uri);
+    }
+
  
   return (
     <SafeAreaView style={colors.container}>
-      <PressableButton onPressFunction={addImageHandle} >
-        <Ionicons name="person-add-outline" size={40} color="black"/> 
-      </PressableButton>
+    
+      <View style={styles.avatarContainer}>
+            {avatar ? (
+                <Image source={{ uri: avatar }} style={styles.avatarImage} />
+            ) : (
+                <Ionicons name="person-circle-outline" size={120} color="gray" />
+            )}
+            <ImageManerge recieveImageUri={receiveImageUri} />
+        </View>
 
         <View >
             <Text style={colors.text}>Name:</Text>
@@ -81,3 +90,15 @@ export default function Profile({navigation}) {
   )
 }
 
+const styles = StyleSheet.create({
+  
+    avatarContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    avatarImage: {
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+    },
+})
