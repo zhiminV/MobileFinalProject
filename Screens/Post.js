@@ -59,14 +59,15 @@ export default function Post({navigation}) {
   
  
   return (
-    <View>
+    <View >
       <Text style={colors.text}>Description</Text>
       <TextInput
-      value={description}
-      style = {[colors.input, { height: 100, width: 300,marginLeft:20}]}
-      onChange={(text)=>setDescription(text)}
-      multiline
+        value={description}
+        style={[colors.input, { height: 100, width: 300, marginLeft: 20 }]}
+        onChangeText={setDescription}
+        multiline
       />
+
       <View style={styles.imageGrid}>
         {imageUris.map((uri, index) => (
           <View style={styles.imageContainer} key={index}>
@@ -89,6 +90,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
     padding: 10,
   },
   imageContainer: {
