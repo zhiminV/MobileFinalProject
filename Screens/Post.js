@@ -67,9 +67,14 @@ export default function Post({navigation}) {
       onChange={(text)=>setDescription(text)}
       multiline
       />
+      <View style={styles.imageGrid}>
+        {imageUris.map((uri, index) => (
+          <View style={styles.imageContainer} key={index}>
+            <Image source={{ uri }} style={styles.image} />
+          </View>
+        ))}
+      </View>
   
-
-
       <ImageManerge recieveImageUri = {handleImageUri}/>
       <Button title="Post" onPress={handlePost} />
       <Button title="Reset" onPress={handleReset} />
@@ -78,4 +83,22 @@ export default function Post({navigation}) {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  imageGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    padding: 10,
+  },
+  imageContainer: {
+    width: '30%', // Approximately three images per row
+    aspectRatio: 1, // Keep the aspect ratio of images to 1:1
+    marginBottom: 10,
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+});
 
