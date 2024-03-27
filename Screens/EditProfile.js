@@ -49,21 +49,21 @@ export default function Profile({navigation}) {
             <TextInput
             style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
             value={Name}
-            onChangeText={() => setName({ value })}
+            onChangeText={(text) => setName(text)}
             />
 
             <Text style={colors.text}>Phone:</Text>
             <TextInput
             style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
             value={Phone}
-            onChangeText={() => setPhone({value})}
+            onChangeText={(text) => setPhone(text)}
             />
 
             <Text style={colors.text}>Location:</Text>
             <TextInput
             style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
             value={Location}
-            onChangeText={() => setLocation({value})}
+            onChangeText={(text) => setLocation(text)}
             />
            
             <Text style={colors.text}>Email:</Text>
