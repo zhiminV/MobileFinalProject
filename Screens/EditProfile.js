@@ -10,6 +10,7 @@ export default function Profile({navigation}) {
     const [Name, setName] = useState("");
     const [Location, setLocation] = useState("");
     const [Phone, setPhone] = useState("");
+    const [avatar, setAvatar] = useState(null);
 
     useEffect(()=> {
         //fetch user postsCount,followersCount,followingCount
@@ -31,7 +32,7 @@ export default function Profile({navigation}) {
   return (
     <SafeAreaView style={colors.container}>
       <PressableButton onPressFunction={addImageHandle} >
-        <Ionicons name="person-add-outline" size={40} color="black" /> 
+        <Ionicons name="person-add-outline" size={40} color="black"/> 
       </PressableButton>
 
         <View >

@@ -19,24 +19,60 @@ export default function ImageManerge({recieveImageUri}) {
       }
       catch(err){
         console.log(err);
+        return false;
       }
   }
 
 
-  async function  takeImageHandle() {
-    try{
+  async function takeImageHandle() {
+    try {
       const havePermission = await vertifyPermission()
       console.log(havePermission);
-      if(!havePermission){
-        Alert("You do not have permission to access camera");
+      if (!havePermission) {
+        Alert.alert("You do not have permission to access the camera");
         return;
       }
-      const result = await ImagePicker.launchCameraAsync({
-        allowsEditing:true,
-      });
-      recieveImageUri(result.assets[0].uri);
+      Alert.alert(
+        "Select Image Source",
+        "Choose the source of the image",
+        [
+          {
+            text: "Camera",
+            onPress: () => {
+              takeImageHandleFromCamera();
+              return false; 
+            },
+          },
+          {
+            text: "Photo Library",
+            onPress: () => {
+              takeImageHandleFromLibrary();
+              return false;
+            },
+          },
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+        ],
+        { cancelable: false }
+      );
+    } catch (err) {
+      console.log(err);
     }
-    catch(err){
+  }
+  
+
+  async function takeImageHandleFromCamera() {
+    try {
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+      });
+    
+      recieveImageUri(result.assets[0].uri);
+      
+    } catch (err) {
       console.log(err);
     }
   }
@@ -44,13 +80,9 @@ export default function ImageManerge({recieveImageUri}) {
   async function takeImageHandleFromLibrary() {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
       });
-   
-      recieveImageUri(result.uri);
+      recieveImageUri(result.assets[0].uri);
       
     } catch (err) {
       console.log(err);
