@@ -5,12 +5,13 @@ import { StyleSheet } from 'react-native'
 const colors = StyleSheet.create({
 
     buttonView: {
-        width: "30%",
-        margin: 10,
+        width: "35%",
+        margin: 20,
     },
     buttonsContainer: {
          flexDirection: "row",
-         marginTop: 100,
+         marginTop: 20,
+         marginLeft: 20,
     },
     container: {
         flex: 1,
@@ -37,10 +38,10 @@ const colors = StyleSheet.create({
     text: { 
         color: 'purple',
         fontSize: 20,
-        marginBottom: 10,
+        marginBottom: 0,
         alignSelf: 'flex-start',
         marginLeft:30,
-        marginTop:22
+        marginTop:10
     },
     errorText: {
         color: 'dimgray',

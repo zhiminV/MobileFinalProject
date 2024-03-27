@@ -37,28 +37,30 @@ export default function Profile({navigation}) {
         <View >
             <Text style={colors.text}>Name:</Text>
             <TextInput
-            style={colors.input}
+            style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
             value={Name}
             onChangeText={() => setName({ value })}
             />
 
             <Text style={colors.text}>Phone:</Text>
             <TextInput
-            style={colors.input}
+            style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
             value={Phone}
             onChangeText={() => setPhone({value})}
             />
 
             <Text style={colors.text}>Location:</Text>
             <TextInput
-            style={colors.input}
+            style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
             value={Location}
             onChangeText={() => setLocation({value})}
             />
-            <View >
-                <Text>Email: {auth.currentUser.email}</Text>
-                <Text>UID: {auth.currentUser.uid}</Text>
-            </View>
+           
+            <Text style={colors.text}>Email:</Text>
+            <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.email}</Text>
+            <Text style={colors.text}>UID:</Text>
+            <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.uid}</Text>
+            
             <View style={colors.buttonsContainer}>
                 <View style={colors.buttonView}>
                     <PressableButton customStyle={colors.cancle} onPressFunction={handleCancle}>
