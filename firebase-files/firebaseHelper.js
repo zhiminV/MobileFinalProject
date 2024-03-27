@@ -57,3 +57,12 @@ export async function fetchInfoById(col,docId) {
     throw new Error(error);
   }
 }
+
+export async function updateFromDB(col,id,newData){
+  try{
+      await updateDoc(doc(database,col,id),newData);
+  }
+  catch(err){
+      console(err.code); 
+  }
+}
