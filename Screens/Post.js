@@ -5,6 +5,7 @@ import ImageManerge from '../Components/ImageManerge';
 import { writeToDB } from '../firebase-files/firebaseHelper';
 import { ref, uploadBytes } from "firebase/storage";
 import { storage } from '../firebase-files/firebaseSetup';
+import { serverTimestamp } from 'firebase/firestore';
 
 
 export default function Post({navigation}) {
@@ -40,9 +41,11 @@ export default function Post({navigation}) {
   const handlePost = async () => {
     try {
       const uploadUris = await Promise.all(imageUris.map(uri => getImageData(uri)));
+      const timestamp = serverTimestamp();
       const newPost = {
         description: description,
-        imageUris: uploadUris, // Array of uploaded image paths
+        imageUris: uploadUris,
+        timestamp: timestamp, 
       };
   
       await writeToDB(newPost, "Posts"); 
