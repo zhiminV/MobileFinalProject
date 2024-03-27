@@ -35,14 +35,26 @@ export default function ImageManerge({recieveImageUri}) {
         allowsEditing:true,
       });
       recieveImageUri(result.assets[0].uri);
-      // setImageUri(result.assets[0].uri);
-
     }
     catch(err){
       console.log(err);
     }
-   
+  }
 
+  async function takeImageHandleFromLibrary() {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+   
+      recieveImageUri(result.uri);
+      
+    } catch (err) {
+      console.log(err);
+    }
   }
 
 
