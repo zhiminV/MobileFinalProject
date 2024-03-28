@@ -13,6 +13,10 @@ export default function SignUp({navigation}) {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [emailError, setEmailError] = useState('');
     const [PasswordError, setPasswordError] = useState('');
+    const [Name, setName] = useState("");
+    const [Location, setLocation] = useState("");
+    const [Phone, setPhone] = useState("");
+    const [avatar, setAvatar] = useState("");
 
 
     function handleLogin(){
@@ -44,7 +48,11 @@ export default function SignUp({navigation}) {
                 //console.log(auth.currentUser.uid);
                 data = {
                     uid: auth.currentUser.uid,
-                    email: email
+                    email: email,
+                    userName: Name,
+                    phoneNum:Phone,
+                    location:Location,
+                    userAvatar: avatar, 
                 }
 
                 writeToDB(data, "Users");

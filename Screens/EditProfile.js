@@ -1,64 +1,126 @@
-import { StyleSheet, Text, View, TextInput,SafeAreaView } from 'react-native'
+import { StyleSheet, Text, View, TextInput,SafeAreaView,Image,Alert } from 'react-native'
 import React from 'react'
 import { auth } from '../firebase-files/firebaseSetup'
 import { Ionicons } from '@expo/vector-icons';
 import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
 import colors from '../Helpers/colors';
+import ImageManerge from '../Components/ImageManerge';
+import { fetchInfoById,updateFromDB } from '../firebase-files/firebaseHelper';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { database } from '../firebase-files/firebaseSetup';
 
-export default function Profile({navigation}) {
+export default function EditProfile({navigation}) {
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+          try {
+            // Query the "Users" collection to find the document associated with the current user's UID
+            const usersCollectionRef = collection(database, "Users");
+            const q = query(usersCollectionRef, where("uid", "==", auth.currentUser.uid));
+            const querySnapshot = await getDocs(q);
+    
+            if (!querySnapshot.empty) {
+              // If a document is found, obtain its document ID and fetch user data using fetchInfoById
+              const docId = querySnapshot.docs[0].id;
+              setdocid(docId);
+              const userProfile = await fetchInfoById("Users", docId);
+              
+              if (userProfile) {
+                setName(userProfile.userName || "");
+                setLocation(userProfile.location || "");
+                setPhone(userProfile.phoneNum || "");
+                setAvatar(userProfile.userAvatar || "");
+              }
+            } else {
+              console.log("No document found for the current user");
+            }
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+          }
+        };
+    
+        fetchUserData();
+      }, []);
+
     const [Name, setName] = useState("");
     const [Location, setLocation] = useState("");
     const [Phone, setPhone] = useState("");
-
-    useEffect(()=> {
-        //fetch user postsCount,followersCount,followingCount
-        
-    },[])
-
-    function addImageHandle(){
-        // let user add photo 
-    }
+    const [avatar, setAvatar] = useState("");
+    const [docid, setdocid] = useState("");
+   
     function handleCancle(){
         navigation.goBack()
     }
+
     function handleSave(){
-        console.log("updata change in dattbase");
+        const newProfile = {
+            userName:Name,
+            location: Location,
+            phoneNum: Phone,
+            userAvatar: avatar
+        };
+        Alert.alert('Important', 'Are you sure you want to save these changes?',[
+            {
+              text: 'No',
+              style: 'cancel',
+            },
+            {text: 'Yes', onPress: () => 
+            updateFromDB("Users",docid, newProfile)
+              .then(() => {
+                navigation.navigate("Profile");
+              })
+              .catch((error) => console.error("Update failed", error))
+            },
+        ]);
         
+        
+    }
+
+    function receiveImageUri(uri){
+        setAvatar(uri);
     }
 
  
   return (
     <SafeAreaView style={colors.container}>
-      <PressableButton onPressFunction={addImageHandle} >
-        <Ionicons name="person-add-outline" size={40} color="black" /> 
-      </PressableButton>
+    
+      <View style={styles.avatarContainer}>
+            {avatar ? (
+                <Image source={{ uri: avatar }} style={styles.avatarImage} />
+            ) : (
+                <Ionicons name="person-circle-outline" size={120} color="gray" />
+            )}
+            <ImageManerge recieveImageUri={receiveImageUri} />
+        </View>
 
         <View >
             <Text style={colors.text}>Name:</Text>
             <TextInput
-            style={colors.input}
+            style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
             value={Name}
-            onChangeText={() => setName({ value })}
+            onChangeText={(text) => setName(text)}
             />
 
             <Text style={colors.text}>Phone:</Text>
             <TextInput
-            style={colors.input}
+            style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
             value={Phone}
-            onChangeText={() => setPhone({value})}
+            onChangeText={(text) => setPhone(text)}
             />
 
             <Text style={colors.text}>Location:</Text>
             <TextInput
-            style={colors.input}
+            style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
             value={Location}
-            onChangeText={() => setLocation({value})}
+            onChangeText={(text) => setLocation(text)}
             />
-            <View >
-                <Text>Email: {auth.currentUser.email}</Text>
-                <Text>UID: {auth.currentUser.uid}</Text>
-            </View>
+           
+            <Text style={colors.text}>Email:</Text>
+            <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.email}</Text>
+            <Text style={colors.text}>UID:</Text>
+            <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.uid}</Text>
+            
             <View style={colors.buttonsContainer}>
                 <View style={colors.buttonView}>
                     <PressableButton customStyle={colors.cancle} onPressFunction={handleCancle}>
@@ -78,3 +140,15 @@ export default function Profile({navigation}) {
   )
 }
 
+const styles = StyleSheet.create({
+  
+    avatarContainer: {
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    avatarImage: {
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+    },
+})
