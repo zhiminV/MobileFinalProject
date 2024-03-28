@@ -53,6 +53,9 @@ export default function SignUp({navigation}) {
                     phoneNum:Phone,
                     location:Location,
                     userAvatar: avatar, 
+                    post:[],
+                    followers:[],
+                    following:[],
                 }
 
                 writeToDB(data, "Users");
