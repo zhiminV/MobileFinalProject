@@ -57,8 +57,6 @@ export default function Profile({navigation}) {
               </PressableButton>
           </View>
       </View>
-     
-    
     </SafeAreaView>
    
   )
