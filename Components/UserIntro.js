@@ -2,15 +2,15 @@ import { View, Text, Button, StyleSheet } from 'react-native'
 import React from 'react'
 import PressableButton from './PressableButton';
 
-export default function UserIntro( props ) {
+export default function UserIntro(props) {
 
 
 
   return (
-    <View>
+    <View style={styles.introView}>
       <Text>{props.username}</Text>
-      <PressableButton>
-        <Text>Add</Text>
+      <PressableButton customStyle={styles.confirmButtonStyle} onPressFunction={props.navigation} >
+        <Text style={styles.textIntroStyle}>Profile</Text>
       </PressableButton>
     </View>
   )
@@ -22,6 +22,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignSelf: 'center',
+    width: 200,
   },
 
   confirmButtonStyle: {
@@ -34,4 +36,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginLeft: 20,
   },
+  textIntroStyle: {
+    color: 'white',
+  }
 });

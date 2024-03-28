@@ -3,14 +3,12 @@ import React, { useEffect, useState } from 'react'
 import SearchBar from '../Components/SearchBar'
 import UserIntro from '../Components/UserIntro';
 
-export default function Search() {
+export default function Search({ navigation }) {
 
   [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    
-
-  })
+  function ProfileButtonHandler() {
+    navigation.navigate('OtherProfile');
+  }
 
   return (
     <View>
@@ -24,12 +22,25 @@ export default function Search() {
             return (
               <UserIntro
                 username={item}
+                navigation={ProfileButtonHandler}
               />
             )
           }}
+          style={styles.flatListStyle}
         />
     </View>
   )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  searchView: {
+    flex: 1,
+  },
+  
+  flatListStyle: {
+    marginTop: 30,
+    height:300,
+  },
+
+
+})
