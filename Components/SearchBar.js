@@ -17,6 +17,9 @@ export default function SearchBar( props ) {
     search(text);
   };
 
+  
+
+
   useEffect(() => {
     async function search(command) {
 
