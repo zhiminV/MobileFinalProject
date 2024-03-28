@@ -47,8 +47,11 @@ export default function Post({navigation}) {
         imageUris: uploadUris,
         timestamp: timestamp, 
       };
-  
-      await writeToDB(newPost, "Posts"); 
+
+      // postID
+      const docRef = await writeToDB(newPost, "Posts"); 
+      const postId = docRef.id;
+
       // Reset state
       setDescription('');
       setImageUris([]);
