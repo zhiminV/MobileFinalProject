@@ -1,20 +1,58 @@
-import { StyleSheet, Text, View, SafeAreaView} from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView,FlatList,TouchableOpacity} from 'react-native'
 import React from 'react'
-import { auth } from '../firebase-files/firebaseSetup'
 import { Ionicons } from '@expo/vector-icons';
 import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
 import colors from '../Helpers/colors';
+import { fetchInfoById} from '../firebase-files/firebaseHelper';
+import {auth, database  } from '../firebase-files/firebaseSetup';
+import { collection,query, where, getDocs } from 'firebase/firestore'
 
 export default function Profile({navigation}) {
   const [postsCount, setPostsCount] = useState(0);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [postHistory, setPostHistory] = useState([]);
 
-  useEffect(()=> {
-    //fetch user postsCount,followersCount,followingCount
-    
-  },[])
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Query the "Users" collection to find the document associated with the current user's UID
+        const usersCollectionRef = collection(database, "Users");
+        const q = query(usersCollectionRef, where("uid", "==", auth.currentUser.uid));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const docId = querySnapshot.docs[0].id;    
+          const userProfile = await fetchInfoById("Users", docId);
+          setPostHistory(userProfile.post);
+          console.log(postHistory);
+        
+        } else {
+          console.log("No document found for the current user");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  
+
+  const navigateToPostDetail = (postId) => {
+    // Navigate to the post detail screen with postId as a parameter
+    navigation.navigate('PostDetail', { postId });
+  };
+
+  const renderPostItem = ({ item }) => (
+    <PressableButton style={colors.postItem} onPress={() => navigateToPostDetail(item.id)}>
+      <Text>{item}</Text>
+    </PressableButton>
+  );
+
+
 
   function addImageHandle(){
     console.log("user can edit profile picture") 
@@ -26,6 +64,10 @@ export default function Profile({navigation}) {
   }
   function handleNotification(){
     console.log("navigate to notification page")
+  }
+
+  function handleHistory(){
+
   }
 
  
@@ -57,6 +99,13 @@ export default function Profile({navigation}) {
               </PressableButton>
           </View>
       </View>
+      <FlatList
+      data ={postHistory}
+      renderItem ={renderPostItem}
+      keyExtractor={(item) => item.id}
+
+      />
+
     </SafeAreaView>
    
   )
@@ -82,4 +131,12 @@ const styles = StyleSheet.create({
   statsItem: {
     marginRight: 5,
   },
+  postItem: {
+    padding: 10,
+    backgroundColor: "plum",
+    borderRadius: 5,
+    marginBottom: 10,
+    marginTop:10,
+  },
+
 });
