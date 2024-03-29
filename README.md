@@ -50,7 +50,7 @@
 
 7. A detailed description of what each member has contributed so far.
    
-   ZiChuan Zhang:
+   ZiChuan Zhang: Implemented the home screen. Search Functionality, Signin/Signup.
    
    Zhimin Liang: Setup the base environment of the app
                  Create navigator tab, add signin and signup screen
