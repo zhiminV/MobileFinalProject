@@ -1,82 +1,36 @@
-import { View, Text, FlatList, StyleSheet } from 'react-native'
+import { View, Text } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { getAllDocs } from '../firebase-files/firebaseHelper';
-import { auth, database } from '../firebase-files/firebaseSetup';
-import TimeLine from '../Components/TimeLine';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { database } from '../firebase-files/firebaseSetup';
 
 export default function Home() {
 
   const [posts, setPosts] = useState([]);
-
-  const [following, setFollowing] = useState([]);
-  const [postID, setPostID] = useState([]);
-
-  useEffect(()=> {
+  
+  useEffect(() => {
+  
     async function getData() {
-      try {
-        const collectionRef = collection(database, 'Users');
-        const collectionRefPosts = collection(database, 'Posts');
-
-        const query_user = query(collectionRef, where('uid', '==', auth.currentUser.uid))
-        const querySnapshot = await getDocs(query_user);
-        querySnapshot.forEach((doc) => {
-          setFollowing(doc.data().following); 
-        
-        });
-        for (i = 0; i<following.length; i++) {
-          const query_posts = query(collectionRefPosts, where('userID', '==', following[i]));
-          const querySnapshotPosts = await getDocs(query_posts);
-          querySnapshotPosts.forEach((doc) => {
-          if(!postID.includes(doc.id)){
-            setPostID(previousItems => [...previousItems, doc.id]);
-          }
-        });
-        }
-        /*
-        const query_posts = query(collectionRefPosts, where('userID', 'array-contains-any', following));
-        const querySnapshotPosts = await getDocs(query_posts);
-        querySnapshotPosts.forEach((doc) => {
-          setPostID([...oldItems, doc.id]);
-        });
-        */
-        console.log(postID)
       
-      } catch (err){
-        console.log(err);
+      try {
+        
+        const posts = await getAllDocs('/post');
+        //console.log(database);
+        if (posts) {
+          setPosts(posts);
+        }
+
+      } catch (err) {
+        console.log('Failed to Get User Data, ', err);
       }
+
     }
     getData();
-  }, [])
+  }, []);
 
 
   return (
     <View>
-      <Text>Here are all the Posts docuemnt IDs for this follower's timeline.</Text>
-      <FlatList
-        data={postID}
-        renderItem={({item}) => {
-          return (
-            <Text>{item}</Text>
-          )
-        }
-        
-        }
-        style={styles.flatListStyle}
-      />
+      <Text>xixi</Text>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  searchView: {
-    flex: 1,
-  },
-  
-  flatListStyle: {
-    marginTop: 30,
-    height:300,
-  },
-
-
-})
