@@ -1,4 +1,4 @@
-import { View, Text, FlatList, StyleSheet } from 'react-native'
+import { View, Text, FlatList, StyleSheet, Button } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { getAllDocs } from '../firebase-files/firebaseHelper';
 import { auth, database } from '../firebase-files/firebaseSetup';
@@ -11,6 +11,7 @@ export default function Home() {
 
   const [following, setFollowing] = useState([]);
   const [postID, setPostID] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(()=> {
     async function getData() {
@@ -47,7 +48,7 @@ export default function Home() {
       }
     }
     getData();
-  }, [])
+  }, [refresh])
 
 
   return (
@@ -63,6 +64,10 @@ export default function Home() {
         
         }
         style={styles.flatListStyle}
+      />
+      <Button
+        title = {'Refresh'}
+        onPress={setRefresh}
       />
     </View>
   )
