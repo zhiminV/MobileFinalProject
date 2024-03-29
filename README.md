@@ -36,7 +36,9 @@
    In the profile page, we enble user to delete their account which will delete the docID in user collection and then signout the app 
 
 5. Your readme should reflect the current state of the application, with screenshots as appropriate (at least 1)
-   
+   ![IMG_8542](https://github.com/zhiminV/MobileFinalProject/assets/122182731/4ac7fecd-cea9-46f4-9319-31ab387a5f49)
+
+
 
 6. A detailed description of what each member has contributed so far.
    
