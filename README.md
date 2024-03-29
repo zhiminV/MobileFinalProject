@@ -37,10 +37,18 @@
 
 5. Your readme should reflect the current state of the application, with screenshots as appropriate (at least 1)
    ![IMG_8542](https://github.com/zhiminV/MobileFinalProject/assets/122182731/4ac7fecd-cea9-46f4-9319-31ab387a5f49)
+   ![IMG_8539](https://github.com/zhiminV/MobileFinalProject/assets/122182731/d7ad6b57-14bc-4ebf-b4ff-0ffce003bb64)
+![IMG_8540](https://github.com/zhiminV/MobileFinalProject/assets/122182731/7ce9e119-f620-4432-a0f1-623520b6ffcf)
+   ![IMG_8534](https://github.com/zhiminV/MobileFinalProject/assets/122182731/48e662d9-688d-467c-877d-cd658530160b)
+   ![IMG_8535](https://github.com/zhiminV/MobileFinalProject/assets/122182731/6f6ae253-3b9a-411e-b811-343980661518)
+   ![IMG_8536](https://github.com/zhiminV/MobileFinalProject/assets/122182731/d5df2598-8f58-4d5f-9dd1-e26088d0905e)
 
 
 
-6. A detailed description of what each member has contributed so far.
+
+
+
+7. A detailed description of what each member has contributed so far.
    
    ZiChuan Zhang:
    
