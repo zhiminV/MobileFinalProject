@@ -12,10 +12,11 @@ import { database } from "./firebaseSetup";
 export async function writeToDB(data, col, docId) {
   try {
     if (docId) {
-      await addDoc(collection(database, col, docId), data);
+      docRef =await addDoc(collection(database, col, docId), data);
     } else {
-      await addDoc(collection(database, col), data);
+      docRef = await addDoc(collection(database, col), data);
     }
+    return docRef;
   } catch (err) {
     console.log("Error at Write: ", err.code);
   }

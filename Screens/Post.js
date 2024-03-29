@@ -1,16 +1,50 @@
 import { StyleSheet, Text, TextInput, View,Button, ScrollView, Image, TouchableWithoutFeedback, Keyboard } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import colors from '../Helpers/colors';
 import ImageManerge from '../Components/ImageManerge';
-import { writeToDB } from '../firebase-files/firebaseHelper';
+import { writeToDB,updateFromDB,fetchInfoById} from '../firebase-files/firebaseHelper';
 import { ref, uploadBytes } from "firebase/storage";
-import { storage } from '../firebase-files/firebaseSetup';
+import { storage, auth, database, firestore  } from '../firebase-files/firebaseSetup';
 import { serverTimestamp } from 'firebase/firestore';
+import { collection,query, where, getDocs } from 'firebase/firestore'
 
 
 export default function Post({navigation}) {
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Query the "Users" collection to find the document associated with the current user's UID
+        const usersCollectionRef = collection(database, "Users");
+        const q = query(usersCollectionRef, where("uid", "==", auth.currentUser.uid));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          // If a document is found, obtain its document ID and fetch user data using fetchInfoById
+          const docId = querySnapshot.docs[0].id;
+          // console.log(docId);
+          setdocID(docId);
+          const userProfile = await fetchInfoById("Users", docId);
+          // console.log(userProfile)
+          setPostArr(userProfile.post);
+        
+        } else {
+          console.log("No document found for the current user");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+
   const [description, setDescription] = useState("");
   const [imageUris, setImageUris] = useState([]);
+  const [docID, setdocID] = useState("");
+  const [postArr, setPostArr] = useState([]);
+  // console.log(postArr);
 
   async function getImageData(uri) {
     try {
@@ -46,17 +80,22 @@ export default function Post({navigation}) {
         description: description,
         imageUris: uploadUris,
         timestamp: timestamp, 
+        userID: auth.currentUser.uid,
       };
 
-      // postID
-      const docRef = await writeToDB(newPost, "Posts"); 
+      console.log(newPost);
+
+      const docRef =  await writeToDB(newPost, "Posts")
       const postId = docRef.id;
+
+      // Update the user document with the updated postArr
+       updateFromDB("Users", docID, { post: [postId]});
 
       // Reset state
       setDescription('');
       setImageUris([]);
       navigation.navigate("Home");
-  
+      
     } catch (error) {
       console.error("Failed to post:", error);
       alert('Failed to add post. Please try again.');
