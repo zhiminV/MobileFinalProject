@@ -1,7 +1,7 @@
 import { View, Text, TextInput, StyleSheet, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { FontAwesome } from '@expo/vector-icons';
-import { database } from '../firebase-files/firebaseSetup';
+import { auth, database } from '../firebase-files/firebaseSetup';
 import { doc, Firestore, where , query, collection, getDoc, getDocs} from 'firebase/firestore';
 import { getAllDocs } from '../firebase-files/firebaseHelper';
 import UserIntro from './UserIntro';
@@ -10,25 +10,23 @@ import { debounce } from "lodash";
 
 export default function SearchBar( props ) {
 
-  [searchText, setSearchText] = useState('');
+  [followed, setFollowed] = useState(false);
 
   async function searchHandler(text) {
     setSearchText(text);
     search(text);
   };
 
-  
-
-
   useEffect(() => {
-    async function search(command) {
-
+    
+    async function search( command ) {
       props.setUsers([]);
-  
       try {
         const collectionRef = collection(database, 'Users');
-        const result = query(collectionRef, where('email', '==', searchText));
+        const result = query(collectionRef, where('email', '==', props.searchText));
+        
         const querySnapshot = await getDocs(result);
+
         querySnapshot.forEach((doc) => {
           if (doc.id){
           // doc.data() is never undefined for query doc snapshots
@@ -36,13 +34,14 @@ export default function SearchBar( props ) {
             props.setUsers([doc.data().email]);
           }
         });
+        
+
       } catch (err) {
         console.log("This Error Happened in SearchBar.js", err);
       }
-      console.log(props.users);
     };
-    search(searchText);
-  }, [searchText])
+    search(props.searchText);
+  }, [props.searchText])
 
   /*
   async function search(command) {
@@ -77,8 +76,8 @@ export default function SearchBar( props ) {
         <TextInput
           style={styles.textInput}
           placeholder={"Enter Email to Search for Users"}
-          value={searchText}
-          onChangeText={setSearchText}
+          value={props.searchText}
+          onChangeText={props.setSearchText}
         />
       </View>
     </View>
