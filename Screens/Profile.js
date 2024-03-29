@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView,FlatList,TouchableOpacity,Alert} from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView,FlatList,TouchableOpacity,Alert, Button} from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons';
 import PressableButton from '../Components/PressableButton';
@@ -7,12 +7,14 @@ import colors from '../Helpers/colors';
 import { fetchInfoById,deleteFromDB} from '../firebase-files/firebaseHelper';
 import {auth, database  } from '../firebase-files/firebaseSetup';
 import { collection,query, where, getDocs } from 'firebase/firestore'
+import { signOut } from "firebase/auth";
 
 export default function Profile({navigation}) {
   const [postsCount, setPostsCount] = useState(0);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [postHistory, setPostHistory] = useState([]);
+  const [userId,setUserId] = useState("");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -25,6 +27,7 @@ export default function Profile({navigation}) {
         if (!querySnapshot.empty) {
           const docId = querySnapshot.docs[0].id;    
           const userProfile = await fetchInfoById("Users", docId);
+          setUserId(docId);
           setPostHistory(userProfile.post);
         
         } else {
@@ -68,8 +71,24 @@ export default function Profile({navigation}) {
     console.log("navigate to notification page")
   }
 
-  function handleHistory(){
-
+  function deleteAccount() {
+    try {
+  
+      deleteFromDB("Users", userId)
+        .then(() => {
+          console.log("User account deleted successfully");
+          // Sign out the user after deleting the account
+          auth.signOut()
+            .then(() => {
+              console.log("User signed out successfully");
+              // Optionally navigate to a different screen after sign out
+            })
+            .catch((error) => console.error("Error signing out user:", error));
+        })
+        .catch((error) => console.error("Error deleting user account:", error));
+    } catch (error) {
+      console.error("Error deleting user account:", error);
+    }
   }
 
  
@@ -105,9 +124,9 @@ export default function Profile({navigation}) {
       data ={postHistory}
       renderItem ={renderPostItem}
       keyExtractor={(item) => item} 
-
       />
-
+    <Button title="Delete Account" onPress={deleteAccount} />
+      
     </SafeAreaView>
    
   )
