@@ -15,6 +15,7 @@ import PressableButton from './Components/PressableButton';
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import EditProfile from "./Screens/EditProfile";
 import OtherProfile from './Screens/OtherProfile';
+import PostDetail from './Screens/PostDetail';
 
 const Stack = createNativeStackNavigator();
 
@@ -84,6 +85,10 @@ export default function App() {
       <Stack.Screen
         name='OtherProfile'
         component={OtherProfile}
+      />
+      <Stack.Screen
+        name='PostDetail'
+        component={PostDetail}
       />
     </>
   )

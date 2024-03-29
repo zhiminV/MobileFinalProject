@@ -67,8 +67,6 @@ export default function SignUp({navigation}) {
             console.log("Error at Signup: ", err.code);
         }
 
-
-
     };
 
     

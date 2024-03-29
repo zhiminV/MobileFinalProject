@@ -1,20 +1,63 @@
-import { StyleSheet, Text, View, SafeAreaView} from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView,FlatList,TouchableOpacity,Alert, Button} from 'react-native'
 import React from 'react'
-import { auth } from '../firebase-files/firebaseSetup'
 import { Ionicons } from '@expo/vector-icons';
 import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
 import colors from '../Helpers/colors';
+import { fetchInfoById,deleteFromDB} from '../firebase-files/firebaseHelper';
+import {auth, database  } from '../firebase-files/firebaseSetup';
+import { collection,query, where, getDocs } from 'firebase/firestore'
+import { signOut } from "firebase/auth";
 
 export default function Profile({navigation}) {
   const [postsCount, setPostsCount] = useState(0);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
+  const [postHistory, setPostHistory] = useState([]);
+  const [userId,setUserId] = useState("");
 
-  useEffect(()=> {
-    //fetch user postsCount,followersCount,followingCount
-    
-  },[])
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Query the "Users" collection to find the document associated with the current user's UID
+        const usersCollectionRef = collection(database, "Users");
+        const q = query(usersCollectionRef, where("uid", "==", auth.currentUser.uid));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const docId = querySnapshot.docs[0].id;    
+          const userProfile = await fetchInfoById("Users", docId);
+          setUserId(docId);
+          setPostHistory(userProfile.post);
+        
+        } else {
+          console.log("No document found for the current user");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, [postHistory]);
+
+  
+
+  const navigateToPostDetail = (postId) => {
+    navigation.navigate('PostDetail', { postId });
+  };
+
+  
+
+  const renderPostItem = ({ item }) => (
+    <View style={styles.postItemContainer}>
+      <PressableButton style={colors.postItem} onPressFunction={() => navigateToPostDetail(item)}>
+        <Text>{item}</Text>
+      </PressableButton>
+    </View>
+  );
+
+
 
   function addImageHandle(){
     console.log("user can edit profile picture") 
@@ -26,6 +69,26 @@ export default function Profile({navigation}) {
   }
   function handleNotification(){
     console.log("navigate to notification page")
+  }
+
+  function deleteAccount() {
+    try {
+  
+      deleteFromDB("Users", userId)
+        .then(() => {
+          console.log("User account deleted successfully");
+          // Sign out the user after deleting the account
+          auth.signOut()
+            .then(() => {
+              console.log("User signed out successfully");
+              // Optionally navigate to a different screen after sign out
+            })
+            .catch((error) => console.error("Error signing out user:", error));
+        })
+        .catch((error) => console.error("Error deleting user account:", error));
+    } catch (error) {
+      console.error("Error deleting user account:", error);
+    }
   }
 
  
@@ -57,6 +120,13 @@ export default function Profile({navigation}) {
               </PressableButton>
           </View>
       </View>
+      <FlatList
+      data ={postHistory}
+      renderItem ={renderPostItem}
+      keyExtractor={(item) => item} 
+      />
+    <Button title="Delete Account" onPress={deleteAccount} />
+      
     </SafeAreaView>
    
   )
@@ -82,4 +152,22 @@ const styles = StyleSheet.create({
   statsItem: {
     marginRight: 5,
   },
+  postItem: {
+    padding: 10,
+    backgroundColor: "plum",
+    borderRadius: 5,
+    marginBottom: 10,
+    marginTop:10,
+  },
+  postItemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  deleteButton: {
+    padding: 10,
+  },
+
 });
