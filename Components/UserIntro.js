@@ -8,7 +8,7 @@ import { updateFromDB } from '../firebase-files/firebaseHelper';
 export default function UserIntro(props) {
 
   [followed, setFollowed] = useState();
-  [docID, setDocID] = useState('');
+  [documentID, setDocID] = useState('');
   
   useEffect(() => {
     
@@ -24,6 +24,7 @@ export default function UserIntro(props) {
           
           //console.log(doc.data());
           if (doc.data()) {
+            setFollowed(true);
             //setFollowed(true);
           }
         });
@@ -42,7 +43,7 @@ export default function UserIntro(props) {
 
     search();
 
-  }, [followed])
+  }, [followed, props.email])
   
   
  /*
@@ -79,16 +80,35 @@ export default function UserIntro(props) {
   
 */
   async function followHandler() {
+    let uid = ''
     setFollowed(true);
-    await updateDoc(doc(database, 'Users', docID), {
-      following: arrayUnion(props.email)});
+    const collectionRef = collection(database, 'Users');
+    const query_user = query(collectionRef, where('email', '==', props.email))
+    const querySnapshot2 = await getDocs(query_user);
+    querySnapshot2.forEach(
+      (doc) => {
+        uid = doc.data().uid;
+      }
+    )
+    await updateDoc(doc(database, 'Users', documentID), {
+      following: arrayUnion(uid)});
     
   }
 
   async function unfollowHandler() {
+    let uid = ''
+    setFollowed(true);
+    const collectionRef = collection(database, 'Users');
+    const query_user = query(collectionRef, where('email', '==', props.email))
+    const querySnapshot2 = await getDocs(query_user);
+    querySnapshot2.forEach(
+      (doc) => {
+        uid = doc.data().uid;
+      }
+    )
     setFollowed(false);
-    await updateDoc(doc(database, 'Users', docID), {
-      following: arrayRemove(props.email)});
+    await updateDoc(doc(database, 'Users', documentID), {
+      following: arrayRemove(uid)});
   }
 
 
