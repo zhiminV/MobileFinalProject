@@ -36,9 +36,9 @@ export async function getAllDocs(path) {
   }
 }
 
-export async function deleteFromDB(id) {
+export async function deleteFromDB(col,id) {
   try {
-    await deleteDoc(doc(database, "goals", id));
+    await deleteDoc(doc(database, col, id));
   } catch (err) {
     console.log(err);
   }

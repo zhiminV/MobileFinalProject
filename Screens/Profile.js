@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View, SafeAreaView,FlatList,TouchableOpacity} from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView,FlatList,TouchableOpacity,Alert} from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons';
 import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
 import colors from '../Helpers/colors';
-import { fetchInfoById} from '../firebase-files/firebaseHelper';
+import { fetchInfoById,deleteFromDB} from '../firebase-files/firebaseHelper';
 import {auth, database  } from '../firebase-files/firebaseSetup';
 import { collection,query, where, getDocs } from 'firebase/firestore'
 
@@ -26,7 +26,6 @@ export default function Profile({navigation}) {
           const docId = querySnapshot.docs[0].id;    
           const userProfile = await fetchInfoById("Users", docId);
           setPostHistory(userProfile.post);
-          console.log(postHistory);
         
         } else {
           console.log("No document found for the current user");
@@ -37,19 +36,22 @@ export default function Profile({navigation}) {
     };
 
     fetchUserData();
-  }, []);
+  }, [postHistory]);
 
   
 
   const navigateToPostDetail = (postId) => {
-    // Navigate to the post detail screen with postId as a parameter
     navigation.navigate('PostDetail', { postId });
   };
 
+  
+
   const renderPostItem = ({ item }) => (
-    <PressableButton style={colors.postItem} onPress={() => navigateToPostDetail(item.id)}>
-      <Text>{item}</Text>
-    </PressableButton>
+    <View style={styles.postItemContainer}>
+      <PressableButton style={colors.postItem} onPressFunction={() => navigateToPostDetail(item)}>
+        <Text>{item}</Text>
+      </PressableButton>
+    </View>
   );
 
 
@@ -102,7 +104,7 @@ export default function Profile({navigation}) {
       <FlatList
       data ={postHistory}
       renderItem ={renderPostItem}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item} 
 
       />
 
@@ -137,6 +139,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     marginTop:10,
+  },
+  postItemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  deleteButton: {
+    padding: 10,
   },
 
 });
