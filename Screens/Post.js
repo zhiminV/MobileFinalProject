@@ -87,9 +87,10 @@ export default function Post({navigation}) {
 
       const docRef =  await writeToDB(newPost, "Posts")
       const postId = docRef.id;
+      console.log(postId)
 
       // Update the user document with the updated postArr
-       updateFromDB("Users", docID, { post: [postId]});
+      updateFromDB("Users", docID, { post: [...postArr, postId] });
 
       // Reset state
       setDescription('');
