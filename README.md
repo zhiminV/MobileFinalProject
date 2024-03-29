@@ -30,14 +30,15 @@
 
 
 3. Describe which of the CRUD operations are implemented on which collections.
+   
    We use CRUD in the User collection, we write user information in user collection when signup account,
    and in the editProfile, the app will fetch(read) the exist information from database, and it also allow user to updata the personal information,
    In the profile page, we enble user to delete their account which will delete the docID in user collection and then signout the app 
 
-4. Your readme should reflect the current state of the application, with screenshots as appropriate (at least 1)
+5. Your readme should reflect the current state of the application, with screenshots as appropriate (at least 1)
    
 
-5. A detailed description of what each member has contributed so far.
+6. A detailed description of what each member has contributed so far.
    
    ZiChuan Zhang:
    
