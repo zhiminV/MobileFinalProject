@@ -36,6 +36,9 @@ export default function SignUp({navigation}) {
             Alert.alert("passwords don't match");
             return;
         }
+        if(!isPasswordValid){
+            return
+        }
 
         try {
             const userCred = await createUserWithEmailAndPassword(
