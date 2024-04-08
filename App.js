@@ -35,24 +35,25 @@ export default function App() {
 
   const AuthStack = (
     <> 
-    <Stack.Screen name="Login" component={Login}/>
-    <Stack.Screen name="SignUp" component={SignUp}/>
-    </>
-  )
-  const AppStack = (
-    <>
-      {/* <Stack.Screen
+    <Stack.Screen
         options={{
           headerShown: false,
           headerTitle: "",
         }} 
         name="Start" 
         component={Start} 
-      /> */}
+      />
+    <Stack.Screen name="Login" component={Login}/>
+    <Stack.Screen name="SignUp" component={SignUp}/>
+    </>
+  )
+  const AppStack = (
+    <>
 
       <Stack.Screen 
        options={({navigation})=>{
         return{
+          headerShown: false,
           headerRight: () => {
             return (
             <PressableButton
@@ -96,7 +97,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="SignUp"
+        initialRouteName="Start"
         screenOptions={{
           headerStyle: { backgroundColor: "#929" },
           headerTintColor: "white",
