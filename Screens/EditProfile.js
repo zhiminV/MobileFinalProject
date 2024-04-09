@@ -41,7 +41,7 @@ export default function EditProfile({navigation}) {
         };
     
         fetchUserData();
-      }, []);
+      }, [navigation]);
 
     const [Name, setName] = useState("");
     const [Location, setLocation] = useState("");
