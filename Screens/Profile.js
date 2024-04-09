@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView,FlatList,TouchableOpacity,Alert, Button} from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView,FlatList,TouchableOpacity,Alert, Button,Image} from 'react-native'
 import React from 'react'
 import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
@@ -15,6 +15,8 @@ export default function Profile({navigation}) {
   const [followingCount, setFollowingCount] = useState(0);
   const [postHistory, setPostHistory] = useState([]);
   const [userId,setUserId] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [Name, setName] = useState("");
 
   useEffect(() => {
     navigation.setOptions({
@@ -52,6 +54,12 @@ export default function Profile({navigation}) {
           const userProfile = await fetchInfoById("Users", docId);
           setUserId(docId);
           setPostHistory(userProfile.post);
+          setAvatar(userProfile.userAvatar);
+          setName(userProfile.userName);
+          setFollowersCount(userProfile.followers.length);
+          setFollowingCount(userProfile.following.length);
+          setPostsCount(userProfile.post.length);
+          
         
         } else {
           console.log("No document found for the current user");
@@ -62,7 +70,7 @@ export default function Profile({navigation}) {
     };
 
     fetchUserData();
-  }, [postHistory]);
+  }, []);
 
   
 
@@ -118,18 +126,20 @@ export default function Profile({navigation}) {
   return (
     <SafeAreaView style={colors.container}>
       <View style={styles.container}>
-      <PressableButton onPressFunction={addImageHandle} style={styles.iconContainer}>
-        <Ionicons name="person-add-outline" size={40} color="black" /> 
-      </PressableButton>
+        <View style={styles.avatarContainer}>
+              {avatar ? (
+                  <Image source={{ uri: avatar }} style={styles.avatarImage} />
+              ) : (
+                  <Ionicons name="person-circle-outline" size={50} color="gray" />
+              )}
+             <Text style={styles.nameText}>{Name}</Text>
+               <View style={styles.stats}>
+                <Text style={styles.statsItem}>Posts: {postsCount} </Text>
+                <Text style={styles.statsItem}>Fans: {followersCount} </Text>
+                <Text style={styles.statsItem}>Following: {followingCount} </Text>
+            </View >
+        </View>
     
-
-      <View style={styles.userInfo}>
-        <View style={styles.stats}>
-          <Text style={styles.statsItem}>Posts: {postsCount} </Text>
-          <Text style={styles.statsItem}>Fans: {followersCount} </Text>
-          <Text style={styles.statsItem}>Following: {followingCount} </Text>
-          </View >
-      </View >
       </View>
       <View style={colors.buttonsContainer}>
           <View style={colors.buttonView}>
@@ -143,11 +153,13 @@ export default function Profile({navigation}) {
               </PressableButton>
           </View>
       </View>
+
       <FlatList
       data ={postHistory}
       renderItem ={renderPostItem}
       keyExtractor={(item) => item} 
       />
+
     <Button title="Delete Account" onPress={deleteAccount} />
       
     </SafeAreaView>
@@ -171,6 +183,7 @@ const styles = StyleSheet.create({
   stats: {
     flexDirection: 'row',
     marginBottom: 50,
+    marginTop:10,
   },
   statsItem: {
     marginRight: 5,
@@ -191,6 +204,19 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     padding: 10,
+  },
+  avatarContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  avatarImage: {
+      width: 120,
+      height: 120,
+      borderRadius: 60,
+  },
+  nameText: {
+    fontWeight: 'bold',
+    fontSize: 18,
   },
 
 });

@@ -11,7 +11,6 @@ import { getDownloadURL, ref } from "firebase/storage";
 export default function PostDetail({route,navigation}) {
 
     const { postId } = route.params;
-    const [postDetail, setPostDetail] = useState(null);
     const [description, setDescription] = useState("");
     const [imageUris, setImageUris] = useState([]);
 
