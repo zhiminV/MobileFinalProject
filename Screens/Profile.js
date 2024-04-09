@@ -115,8 +115,6 @@ export default function Profile({navigation}) {
         </View>
       </View>
 
-      <View style={styles.lineBetween} />
-
       <TouchableOpacity style={styles.button} onPress={handleEdit}>
         <View style={styles.buttonContent}>
           <View style={colors.iconContaner}> 
@@ -125,8 +123,6 @@ export default function Profile({navigation}) {
           <Text style={styles.buttonText}>Edit Profile</Text>
         </View>
       </TouchableOpacity>
-
-      <View style={styles.lineBetween} />
 
       <TouchableOpacity style={styles.button} onPress={handleHistory}>
         <View style={styles.buttonContent}>
@@ -190,6 +186,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: 5,
     width: "100%",
+    marginBottom:10,
   },
   buttonText: {
     fontSize: 18,
@@ -200,11 +197,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent:"flex-start",
   },
-  lineBetween: {
-    height: 1,
-    width: "100%",
-    backgroundColor: 'whitesmoke',
-    marginBottom: 5,
-    marginTop: 5,
-  },
+
 });

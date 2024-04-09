@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput,SafeAreaView,Image,Alert } from 'react-native'
+import { StyleSheet, Text, View, TextInput,SafeAreaView,Image,Alert, ScrollView } from 'react-native'
 import React from 'react'
 import { auth } from '../firebase-files/firebaseSetup'
 import { Ionicons } from '@expo/vector-icons';
@@ -83,59 +83,61 @@ export default function EditProfile({navigation}) {
 
  
   return (
-    <SafeAreaView style={colors.container}>
-    
-      <View style={styles.avatarContainer}>
-            {avatar ? (
-                <Image source={{ uri: avatar }} style={styles.avatarImage} />
-            ) : (
-                <Ionicons name="person-circle-outline" size={120} color="gray" />
-            )}
-            <ImageManerge recieveImageUri={receiveImageUri} />
-        </View>
+    <ScrollView>
+      <SafeAreaView style={colors.container}>
+      
+        <View style={styles.avatarContainer}>
+              {avatar ? (
+                  <Image source={{ uri: avatar }} style={styles.avatarImage} />
+              ) : (
+                  <Ionicons name="person-circle-outline" size={120} color="gray" />
+              )}
+              <ImageManerge recieveImageUri={receiveImageUri} />
+          </View>
 
-        <View >
-            <Text style={colors.text}>Name:</Text>
-            <TextInput
-            style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
-            value={Name}
-            onChangeText={(text) => setName(text)}
-            />
+          <View >
+              <Text style={colors.text}>Name:</Text>
+              <TextInput
+              style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
+              value={Name}
+              onChangeText={(text) => setName(text)}
+              />
 
-            <Text style={colors.text}>Phone:</Text>
-            <TextInput
-            style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
-            value={Phone}
-            onChangeText={(text) => setPhone(text)}
-            />
+              <Text style={colors.text}>Phone:</Text>
+              <TextInput
+              style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
+              value={Phone}
+              onChangeText={(text) => setPhone(text)}
+              />
 
-            <Text style={colors.text}>Location:</Text>
-            <TextInput
-            style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
-            value={Location}
-            onChangeText={(text) => setLocation(text)}
-            />
-           
-            <Text style={colors.text}>Email:</Text>
-            <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.email}</Text>
-            <Text style={colors.text}>UID:</Text>
-            <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.uid}</Text>
+              <Text style={colors.text}>Location:</Text>
+              <TextInput
+              style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
+              value={Location}
+              onChangeText={(text) => setLocation(text)}
+              />
             
-            <View style={colors.buttonsContainer}>
-                <View style={colors.buttonView}>
-                    <PressableButton customStyle={colors.cancle} onPressFunction={handleCancle}>
-                        <Text style={colors.buttonText}>Cancle</Text>
-                    </PressableButton>
-                </View>
-                <View style={colors.buttonView}>
-                    <PressableButton customStyle={colors.save} onPressFunction={handleSave}>
-                        <Text style={colors.buttonText}>Save</Text>
-                    </PressableButton>
-                </View>
-            </View> 
+              <Text style={colors.text}>Email:</Text>
+              <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.email}</Text>
+              <Text style={colors.text}>UID:</Text>
+              <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.uid}</Text>
+              
+              <View style={colors.buttonsContainer}>
+                  <View style={colors.buttonView}>
+                      <PressableButton customStyle={colors.cancle} onPressFunction={handleCancle}>
+                          <Text style={colors.buttonText}>Cancle</Text>
+                      </PressableButton>
+                  </View>
+                  <View style={colors.buttonView}>
+                      <PressableButton customStyle={colors.save} onPressFunction={handleSave}>
+                          <Text style={colors.buttonText}>Save</Text>
+                      </PressableButton>
+                  </View>
+              </View> 
 
-        </View>
-    </SafeAreaView>
+          </View>
+      </SafeAreaView>
+    </ScrollView>
   
   )
 }
