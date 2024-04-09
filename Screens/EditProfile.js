@@ -122,13 +122,13 @@ export default function EditProfile({navigation}) {
               <Text style={colors.text}>UID:</Text>
               <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.uid}</Text>
               
-              <View style={colors.buttonsContainer}>
-                  <View style={colors.buttonView}>
+              <View style={styles.buttonsContainer}>
+                  <View style={styles.buttonView}>
                       <PressableButton customStyle={colors.cancle} onPressFunction={handleCancle}>
                           <Text style={colors.buttonText}>Cancle</Text>
                       </PressableButton>
                   </View>
-                  <View style={colors.buttonView}>
+                  <View style={styles.buttonView}>
                       <PressableButton customStyle={colors.save} onPressFunction={handleSave}>
                           <Text style={colors.buttonText}>Save</Text>
                       </PressableButton>
@@ -153,4 +153,23 @@ const styles = StyleSheet.create({
         height: 120,
         borderRadius: 60,
     },
+    buttonView: {
+      width: "30%",
+      margin: 20,
+     
+  },
+  buttonsContainer: {
+       flexDirection: "row",
+       marginTop: 20,
+       justifyContent: "center",
+       alignItems: "center",
+      
+  },
+  buttonText:{
+      color: 'black',
+      fontSize: 15,
+      alignSelf:"center",
+  },
+  
+
 })

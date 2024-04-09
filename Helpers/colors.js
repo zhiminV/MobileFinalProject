@@ -71,10 +71,10 @@ const colors = StyleSheet.create({
     },
 
     cancle:{
-        backgroundColor:"crimson",
+        backgroundColor:"indianred",
     },
     save:{
-        backgroundColor:"mediumblue",
+        backgroundColor:"lightskyblue",
     },
     checkboxContainer: {
         flexDirection: 'row',
