@@ -52,6 +52,7 @@ export default function App() {
        options={({navigation})=>{
         return{
           headerShown: false,
+          headerTitle: "",
         }
        
       }}

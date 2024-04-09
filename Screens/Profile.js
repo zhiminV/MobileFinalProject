@@ -19,29 +19,6 @@ export default function Profile({navigation}) {
   const [Name, setName] = useState("");
 
   useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => {
-        return (
-        <PressableButton
-          onPressFunction ={()=>{
-
-            try{
-              signOut(auth);
-            }
-            catch(err){
-              console.log('Error at App.js', err);
-            }
-
-          }}
-        >
-          <AntDesign name="logout" size={24} color="black" />
-        </PressableButton>
-        );
-      }, 
-    }); 
-  },[])
-
-  useEffect(() => {
     const fetchUserData = async () => {
       try {
         // Query the "Users" collection to find the document associated with the current user's UID
@@ -70,12 +47,34 @@ export default function Profile({navigation}) {
     };
 
     fetchUserData();
-  }, []);
+  }, [postHistory]);
 
-  
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+        <PressableButton
+          onPressFunction ={()=>{
+
+            try{
+              signOut(auth);
+            }
+            catch(err){
+              console.log('Error at App.js', err);
+            }
+
+          }}
+        >
+          <AntDesign name="logout" size={24} color="black" />
+        </PressableButton>
+        );
+      }, 
+    }); 
+  },[])
+
 
   const navigateToPostDetail = (postId) => {
-    navigation.navigate('PostDetail', { postId });
+    navigation.navigate('PostDetail', {postId,userId});
   };
 
   

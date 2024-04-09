@@ -6,34 +6,25 @@ import {auth, database  } from '../firebase-files/firebaseSetup';
 import { collection,query, where, getDocs } from 'firebase/firestore'
 import { storage } from "../firebase-files/firebaseSetup";
 import { getDownloadURL, ref } from "firebase/storage";
-
+import { updateFromDB } from '../firebase-files/firebaseHelper';
+import { firebase } from '../firebase-files/firebaseSetup';
 
 export default function PostDetail({route,navigation}) {
 
-    const { postId } = route.params;
+    const  {postId,userId} = route.params;
     const [description, setDescription] = useState("");
     const [imageUris, setImageUris] = useState([]);
     const [time, setTime] = useState("");
+    const [posts, setPosts] = useState([]);
 
-    useEffect(() => {
-      navigation.setOptions({
-        headerRight:()=>{
-          return<Pressable onPress={deleteFunction}>
-          <AntDesign name="delete" size={20} color="white"style={{ padding: 10 }} />
-        </Pressable>
-        },
-      });
-    },[postId])
   
-    function deleteFunction() {
- 
-    }
-
     useEffect(() => {
       const fetchPostDetail = async () => {
           try {
               const postDetailData = await fetchInfoById("Posts", postId);
-              if (postDetailData) {
+              const userData = await fetchInfoById("Users", userId);
+              if (postDetailData && userData) {
+                  setPosts(userData.post)
                   setDescription(postDetailData.description);
                   setTime(postDetailData.timestamp)
                   //  postDetailData.imageUris is an array of paths in Firebase Storage
@@ -50,7 +41,45 @@ export default function PostDetail({route,navigation}) {
       };
   
       fetchPostDetail();
-  }, [postId]);
+    }, [postId]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight:()=>{
+        return<Pressable onPress={deleteFunction}>
+        <AntDesign name="delete" size={20} color="white"style={{ padding: 10 }} />
+      </Pressable>
+      },
+    });
+  },[postId])
+
+  function deleteFunction() {
+    Alert.alert('Delete', 'Are you sure you want to delete this item?', [
+      {
+        text: 'No',
+        style: 'cancel',
+      },
+      {
+        text: 'Yes',
+        onPress: async () => {
+          try {
+
+            const newPosts = posts.filter(item => item.id !== postId);
+
+            updateFromDB("Users", userId, { post: newPosts});
+
+            // Delete the post from the "Posts" collection
+            await deleteFromDB('Posts', postId);
+  
+
+            navigation.goBack();
+          } catch (error) {
+            console.error('Failed to delete post:', error);
+          }
+        },
+      },
+    ]);
+  }
 
   const renderImages = () => {
     return (
