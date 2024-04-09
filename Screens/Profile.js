@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView,FlatList,TouchableOpacity,Alert, Button} from 'react-native'
 import React from 'react'
-import { Ionicons } from '@expo/vector-icons';
 import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
 import colors from '../Helpers/colors';
@@ -8,6 +7,7 @@ import { fetchInfoById,deleteFromDB} from '../firebase-files/firebaseHelper';
 import {auth, database  } from '../firebase-files/firebaseSetup';
 import { collection,query, where, getDocs } from 'firebase/firestore'
 import { signOut } from "firebase/auth";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 
 export default function Profile({navigation}) {
   const [postsCount, setPostsCount] = useState(0);
@@ -15,6 +15,29 @@ export default function Profile({navigation}) {
   const [followingCount, setFollowingCount] = useState(0);
   const [postHistory, setPostHistory] = useState([]);
   const [userId,setUserId] = useState("");
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+        <PressableButton
+          onPressFunction ={()=>{
+
+            try{
+              signOut(auth);
+            }
+            catch(err){
+              console.log('Error at App.js', err);
+            }
+
+          }}
+        >
+          <AntDesign name="logout" size={24} color="black" />
+        </PressableButton>
+        );
+      }, 
+    }); 
+  },[])
 
   useEffect(() => {
     const fetchUserData = async () => {

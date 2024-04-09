@@ -11,8 +11,6 @@ import TabNavigator from './Components/TabNavigator';
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./firebase-files/firebaseSetup";
 import { useEffect, useState} from 'react';
-import PressableButton from './Components/PressableButton';
-import { Ionicons, AntDesign } from "@expo/vector-icons";
 import EditProfile from "./Screens/EditProfile";
 import OtherProfile from './Screens/OtherProfile';
 import PostDetail from './Screens/PostDetail';
@@ -54,24 +52,6 @@ export default function App() {
        options={({navigation})=>{
         return{
           headerShown: false,
-          headerRight: () => {
-            return (
-            <PressableButton
-              onPressFunction ={()=>{
-
-                try{
-                  signOut(auth);
-                }
-                catch(err){
-                  console.log('Error at App.js', err);
-                }
-
-              }}
-            >
-               <AntDesign name="logout" size={24} color="white" />
-            </PressableButton>
-            );
-          },
         }
        
       }}
