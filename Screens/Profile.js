@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView,FlatList,TouchableOpacity,Alert, Button,Image} from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView,FlatList,TouchableOpacity,Alert, Button,Image,ScrollView} from 'react-native'
 import React from 'react'
 import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
@@ -7,7 +7,7 @@ import { fetchInfoById,deleteFromDB} from '../firebase-files/firebaseHelper';
 import {auth, database  } from '../firebase-files/firebaseSetup';
 import { collection,query, where, getDocs } from 'firebase/firestore'
 import { signOut } from "firebase/auth";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { Ionicons, AntDesign ,Feather} from "@expo/vector-icons";
 
 export default function Profile({navigation}) {
   const [postsCount, setPostsCount] = useState(0);
@@ -89,134 +89,122 @@ export default function Profile({navigation}) {
   );
 
 
-
-  function addImageHandle(){
-    console.log("user can edit profile picture") 
-  }
   function handleEdit(){
-    console.log("navigate to edit page")
     navigation.navigate("EditProfile");
 
   }
-  function handleNotification(){
-    console.log("navigate to notification page")
+  function handleHistory(){
+    console.log("navigate to History")
   }
 
-  function deleteAccount() {
-    try {
-  
-      deleteFromDB("Users", userId)
-        .then(() => {
-          console.log("User account deleted successfully");
-          // Sign out the user after deleting the account
-          auth.signOut()
-            .then(() => {
-              console.log("User signed out successfully");
-              // Optionally navigate to a different screen after sign out
-            })
-            .catch((error) => console.error("Error signing out user:", error));
-        })
-        .catch((error) => console.error("Error deleting user account:", error));
-    } catch (error) {
-      console.error("Error deleting user account:", error);
-    }
-  }
-
- 
   return (
-    <SafeAreaView style={colors.container}>
-      <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.profileContainer}>
         <View style={styles.avatarContainer}>
-              {avatar ? (
-                  <Image source={{ uri: avatar }} style={styles.avatarImage} />
-              ) : (
-                  <Ionicons name="person-circle-outline" size={50} color="gray" />
-              )}
-             <Text style={styles.nameText}>{Name}</Text>
-               <View style={styles.stats}>
-                <Text style={styles.statsItem}>Posts: {postsCount} </Text>
-                <Text style={styles.statsItem}>Fans: {followersCount} </Text>
-                <Text style={styles.statsItem}>Following: {followingCount} </Text>
-            </View >
+          {avatar ? (
+            <Image source={{ uri: avatar }} style={styles.avatarImage} />
+          ) : (
+            <Ionicons name="person-circle-outline" size={120} color="gray" />
+          )}
+          <Text style={styles.nameText}>{Name}</Text>
+          <View style={styles.stats}>
+            <Text style={styles.statsItem}>Posts: {postsCount}</Text>
+            <Text style={styles.statsItem}>Fans: {followersCount}</Text>
+            <Text style={styles.statsItem}>Following: {followingCount}</Text>
+          </View>
         </View>
-    
       </View>
-      <View style={colors.buttonsContainer}>
-          <View style={colors.buttonView}>
-              <PressableButton customStyle={colors.save} onPressFunction={handleEdit}>
-                  <Text style={colors.buttonText}>Edit Profile</Text>
-              </PressableButton>
+
+      <View style={styles.lineBetween} />
+
+      <TouchableOpacity style={styles.button} onPress={handleEdit}>
+        <View style={styles.buttonContent}>
+          <View style={colors.iconContaner}> 
+            <Feather name="edit" size={24} color="green" />
           </View>
-          <View style={colors.buttonView}>
-              <PressableButton customStyle={colors.save} onPressFunction={handleNotification}>
-                  <Text style={colors.buttonText}>Notification</Text>
-              </PressableButton>
+          <Text style={styles.buttonText}>Edit Profile</Text>
+        </View>
+      </TouchableOpacity>
+
+      <View style={styles.lineBetween} />
+
+      <TouchableOpacity style={styles.button} onPress={handleHistory}>
+        <View style={styles.buttonContent}>
+          <View style={colors.iconContaner}> 
+            <Ionicons name="image-outline" size={24} color="goldenrod" />
           </View>
-      </View>
+          <Text style={styles.buttonText}>Post History</Text>
+        </View>
+      </TouchableOpacity>
 
       <FlatList
-      data ={postHistory}
-      renderItem ={renderPostItem}
-      keyExtractor={(item) => item} 
+        data={postHistory}
+        renderItem={renderPostItem}
+        keyExtractor={(item) => item}
       />
-
-    <Button title="Delete Account" onPress={deleteAccount} />
-      
     </SafeAreaView>
-   
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
-    // alignItems: 'center',
-    padding: 20,
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
   },
-  iconContainer: {
-    marginRight: 5,
-  },
-  userInfo: {
-    flexDirection: 'column',
-  },
-  stats: {
-    flexDirection: 'row',
-    marginBottom: 50,
-    marginTop:10,
-  },
-  statsItem: {
-    marginRight: 5,
-  },
-  postItem: {
-    padding: 10,
-    backgroundColor: "plum",
-    borderRadius: 5,
-    marginBottom: 10,
-    marginTop:10,
-  },
-  postItemContainer: {
-    flexDirection: 'row',
+  profileContainer: {
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    marginBottom: 10,
-  },
-  deleteButton: {
-    padding: 10,
+    marginBottom: 20,
   },
   avatarContainer: {
     alignItems: 'center',
     marginBottom: 20,
   },
   avatarImage: {
-      width: 120,
-      height: 120,
-      borderRadius: 60,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
   },
   nameText: {
     fontWeight: 'bold',
     fontSize: 18,
+    marginTop: 10,
   },
-
+  stats: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  statsItem: {
+    marginHorizontal: 10,
+  },
+  postItem: {
+    padding: 10,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: 'whitesmoke',
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+    width: "100%",
+  },
+  buttonText: {
+    fontSize: 18,
+    color: 'black',
+    textAlign: 'center',
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    justifyContent:"flex-start",
+  },
+  lineBetween: {
+    height: 1,
+    width: "100%",
+    backgroundColor: 'whitesmoke',
+    marginBottom: 5,
+    marginTop: 5,
+  },
 });
