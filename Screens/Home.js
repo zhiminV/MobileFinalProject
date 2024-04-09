@@ -25,30 +25,27 @@ export default function Home() {
           setFollowing(doc.data().following); 
         
         });
+        
         for (i = 0; i<following.length; i++) {
           const query_posts = query(collectionRefPosts, where('userID', '==', following[i]));
           const querySnapshotPosts = await getDocs(query_posts);
           querySnapshotPosts.forEach((doc) => {
-          if(!postID.includes(doc.id)){
-            setPostID(previousItems => [...previousItems, doc.id]);
+          if(!postID.find(post => post.postID === doc.id)){
+            const post = doc.data();
+            post["postID"] = doc.id;
+            console.log(doc.id);
+            setPostID(previousItems => [...previousItems, post]);
           }
         });
         }
-        /*
-        const query_posts = query(collectionRefPosts, where('userID', 'array-contains-any', following));
-        const querySnapshotPosts = await getDocs(query_posts);
-        querySnapshotPosts.forEach((doc) => {
-          setPostID([...oldItems, doc.id]);
-        });
-        */
-        console.log(postID)
-      
       } catch (err){
         console.log(err);
       }
     }
     getData();
   }, [refresh])
+
+
 
 
   return (
@@ -58,12 +55,13 @@ export default function Home() {
         data={postID}
         renderItem={({item}) => {
           return (
-            <Text>{item}</Text>
+            <TimeLine
+              item={item}
+            />
           )
-        }
-        
-        }
+        }}
         style={styles.flatListStyle}
+        
       />
       <Button
         title = {'Refresh'}
