@@ -80,8 +80,8 @@ export default function App() {
       <Stack.Navigator
         initialRouteName="Start"
         screenOptions={{
-          headerStyle: { backgroundColor: "#929" },
-          headerTintColor: "white",
+          headerStyle: { backgroundColor: "linen" },
+          headerTintColor: "black",
         }}
       >
         {userLogined ? AppStack : AuthStack}

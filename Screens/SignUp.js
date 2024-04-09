@@ -81,9 +81,19 @@ export default function SignUp({navigation}) {
     }
 
     function validatePassword(value) {
-        // Regular expression to check if the password meets the criteria
         const isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value);
-        setPasswordError(isValid ? '' : 'Please enter a valid password.');
+        if (!isValid) {
+            // Show an alert if the password is invalid
+            Alert.alert(
+                "Password Requirements",
+                "-At least 8 characters\n-At least one number\n-At least one uppercase letter\n-At least one lowercase letter\n-At least one special character",
+                [
+                    { text: "OK" }
+                ],
+                { cancelable: false }
+            );
+        }
+        setPasswordError(isValid ? '' : 'Your password does not meet the requirements.');
         return isValid;
     }
 
@@ -111,7 +121,7 @@ export default function SignUp({navigation}) {
                 }}
             />
 
-            {PasswordError ? <Text style={colors.errorText}>{PasswordError}</Text> : null}
+            {/* {PasswordError ? <Text style={colors.errorText}>{PasswordError}</Text> : null} */}
 
             <Text style={colors.text}>Confirm Password</Text>
             <TextInput
@@ -123,18 +133,18 @@ export default function SignUp({navigation}) {
                 setConfirmPassword(changedText);
                 }}
             />
-            <View style={colors.buttonsContainer}>
+            
                 <View style={colors.buttonView}>
-                    <PressableButton customStyle={colors.cancle} onPressFunction={handleSignup}>
+                    <PressableButton customStyle={colors.login} onPressFunction={handleSignup}>
                         <Text style={colors.buttonText}>SignUp</Text>
                     </PressableButton>
                 </View>
                 <View style={colors.buttonView}>
-                    <PressableButton customStyle={colors.save} onPressFunction={handleLogin}>
+                    <PressableButton customStyle={colors.signup} onPressFunction={handleLogin}>
                         <Text style={colors.buttonText}>Have Account? Login</Text>
                     </PressableButton>
                 </View>
-            </View> 
+            
 
 
         </SafeAreaView>

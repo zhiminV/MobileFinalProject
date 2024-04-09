@@ -76,18 +76,18 @@ export default function Login({navigation}) {
                 }}
             />
 
-            <View style={colors.buttonsContainer}>
+           
                 <View style={colors.buttonView}>
-                    <PressableButton customStyle={colors.cancle} onPressFunction={loginHandler}>
+                    <PressableButton customStyle={colors.login} onPressFunction={loginHandler}>
                         <Text style={colors.buttonText}>Login</Text>
                     </PressableButton>
                 </View>
                 <View style={colors.buttonView}>
-                    <PressableButton customStyle={colors.save} onPressFunction={signupHandler}>
-                        <Text style={colors.buttonText}>New User? SignUp</Text>
+                    <PressableButton customStyle={colors.signup} onPressFunction={signupHandler}>
+                        <Text style={colors.buttonText}>New User ? SignUp</Text>
                     </PressableButton>
                 </View>
-            </View> 
+        
         </SafeAreaView>
     )
 }
