@@ -4,6 +4,8 @@ import { fetchInfoById,deleteFromDB} from '../firebase-files/firebaseHelper';
 import { AntDesign } from '@expo/vector-icons';
 import {auth, database  } from '../firebase-files/firebaseSetup';
 import { collection,query, where, getDocs } from 'firebase/firestore'
+import { storage } from "../firebase-files/firebaseSetup";
+import { getDownloadURL, ref } from "firebase/storage";
 
 
 export default function PostDetail({route,navigation}) {
@@ -26,15 +28,18 @@ export default function PostDetail({route,navigation}) {
     function deleteFunction() {
  
     }
-  
 
     useEffect(() => {
       const fetchPostDetail = async () => {
           try {
               const postDetailData = await fetchInfoById("Posts", postId);
               if (postDetailData) {
-                setDescription(postDetailData.description);
-                setImageUris(postDetailData.imageUris)
+                  setDescription(postDetailData.description);
+                  //  postDetailData.imageUris is an array of paths in Firebase Storage
+                  const imageDownloadURL = await Promise.all(postDetailData.imageUris.map((uri) => 
+                      getDownloadURL(ref(storage, uri)) 
+                  ));
+                  setImageUris(imageDownloadURL);
               } else {
                   console.log("Post not found");
               }
@@ -42,21 +47,29 @@ export default function PostDetail({route,navigation}) {
               console.error("Error fetching post detail:", error);
           }
       };
-
+  
       fetchPostDetail();
   }, [postId]);
 
-  return (
-    <View style={styles.container}>
-        <View>
-            <Text>Post ID: {postId}</Text>
-            <Text>Description: {description}</Text>
-            {imageUris.map((uri, index) => (
+  const renderImages = () => {
+    return (
+        <View style={styles.imageContainer}>
+            {imageUris.slice(0, 9).map((uri, index) => (
                 <Image key={index} source={{ uri }} style={styles.image} />
             ))}
         </View>
-    </View>
-  );
+    );
+};
+
+return (
+  <View style={styles.container}>
+      <View>
+          <Text>Post ID: {postId}</Text>
+          <Text>Description: {description}</Text>
+          {renderImages()}
+      </View>
+  </View>
+);
 }
 
 const styles = StyleSheet.create({
@@ -65,9 +78,15 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
   },
+  imageContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   image: {
-      width: 200,
-      height: 200,
-      marginVertical: 10,
+      width: '30%', 
+      aspectRatio: 1, 
+      margin: '1%', 
   },
   });
