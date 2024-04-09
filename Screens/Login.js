@@ -40,7 +40,6 @@ export default function Login({navigation}) {
           }
           //return a promise 
           const userCred = await signInWithEmailAndPassword(auth, email, password);
-          console.log(userCred);
           
         } catch (err) {
           console.log(err);

@@ -9,15 +9,21 @@ const colors = StyleSheet.create({
         margin: 20,
     },
     buttonsContainer: {
-         flexDirection: "row",
-         marginTop: 20,
-         marginLeft: 20,
-    },
-    container: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 20,
+      },
+      button: {
         flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: '#007bff',
+        paddingVertical: 10,
+        borderRadius: 5,
+        marginHorizontal: 5,
+      },
+      buttonText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontWeight: 'bold',
     },
     screenContainer:{
         flex: 1,
@@ -61,7 +67,7 @@ const colors = StyleSheet.create({
     },
 
     iconContaner:{
-        marginLeft: 30,  
+        marginRight: 20,  
     },
 
     cancle:{
@@ -70,17 +76,11 @@ const colors = StyleSheet.create({
     save:{
         backgroundColor:"mediumblue",
     },
-
-    buttonText:{
-        color: 'white',
-        fontSize: 15,
-        alignSelf:"center",
-    },
-    
     checkboxContainer: {
         flexDirection: 'row',
         alignItems: 'center',
     },
+  
     
 })
 
