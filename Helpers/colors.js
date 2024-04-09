@@ -5,25 +5,25 @@ import { StyleSheet } from 'react-native'
 const colors = StyleSheet.create({
 
     buttonView: {
-        width: "35%",
-        margin: 20,
+        width: "30%",
+        margin: 10,
+        alignItems: 'center',
     },
     buttonsContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 20,
-      },
-      button: {
+         flexDirection: "row",
+         marginTop: 100,
+    },
+    buttonText:{
+        color: 'black',
+        fontSize: 15,
+        alignSelf:"center",
+    },
+    
+    container: {
         flex: 1,
-        backgroundColor: '#007bff',
-        paddingVertical: 10,
-        borderRadius: 5,
-        marginHorizontal: 5,
-      },
-      buttonText: {
-        color: '#fff',
-        textAlign: 'center',
-        fontWeight: 'bold',
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     screenContainer:{
         flex: 1,
@@ -79,7 +79,42 @@ const colors = StyleSheet.create({
     checkboxContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+    },  
+    signup: {
+       
+        paddingVertical: 12,
+        paddingHorizontal: 25,
+        borderRadius: 25,
+        shadowColor: "#000",
+        width: 250,
+        height:50,
+        alignItems: 'center',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
+    
+    login: {
+        backgroundColor: "plum", 
+        paddingVertical: 12,
+        paddingHorizontal: 25,
+        borderRadius: 25,
+        width: 250,
+        height:50,
+        marginTop:50,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 2,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    }
   
     
 })

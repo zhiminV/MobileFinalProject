@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
       height:40,
     },
     pressedButton: {
-        backgroundColor: "pink",
         opacity: 0.5,
     },
   });
