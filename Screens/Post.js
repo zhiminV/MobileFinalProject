@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View,Button, ScrollView, Image, TouchableWithoutFeedback, Keyboard } from 'react-native'
+import { StyleSheet, Text, TextInput, View,Button, ScrollView, Image, TouchableWithoutFeedback, Keyboard,TouchableOpacity } from 'react-native'
 import React, { useState,useEffect } from 'react'
 import colors from '../Helpers/colors';
 import ImageManerge from '../Components/ImageManerge';
@@ -7,9 +7,23 @@ import { ref, uploadBytes } from "firebase/storage";
 import { storage, auth, database, firestore  } from '../firebase-files/firebaseSetup';
 import { serverTimestamp } from 'firebase/firestore';
 import { collection,query, where, getDocs } from 'firebase/firestore'
+import { EvilIcons ,Feather,Entypo,Ionicons,AntDesign,Fontisto} from '@expo/vector-icons';
+import PressableButton from '../Components/PressableButton';
+
 
 
 export default function Post({navigation}) {
+  const [description, setDescription] = useState("");
+  const [imageUris, setImageUris] = useState([]);
+  const [docID, setdocID] = useState("");
+  const [postArr, setPostArr] = useState([]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <ImageManerge recieveImageUri={handleImageUri}/>,
+    });
+  }, []);
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -40,12 +54,6 @@ export default function Post({navigation}) {
   }, []);
 
 
-  const [description, setDescription] = useState("");
-  const [imageUris, setImageUris] = useState([]);
-  const [docID, setdocID] = useState("");
-  const [postArr, setPostArr] = useState([]);
-  // console.log(postArr);
-
   async function getImageData(uri) {
     try {
       const response = await fetch(uri);
@@ -61,11 +69,16 @@ export default function Post({navigation}) {
 
   const handleImageUri = (uri) => {
     if (imageUris.length < 9) {
-      setImageUris([...imageUris, uri]);
+      setImageUris(prevImageUris => [...prevImageUris, uri]);
     } else {
       alert('You can only add up to 9 images.');
     }
   };
+  
+  const handleDeleteImage = (index) => {
+    setImageUris(prevImageUris => prevImageUris.filter((_, i) => i !== index));
+  };
+
 
   function handleReset(){
     setDescription('');
@@ -116,49 +129,108 @@ export default function Post({navigation}) {
     <ScrollView keyboardShouldPersistTaps="handled">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View>
-          <Text style={colors.text}>Description</Text>
           <TextInput
             value={description}
-            style={[colors.input, { height: 100, width: 300, marginLeft: 20 }]}
+            style={[styles.input, { height: 100 }]}
             onChangeText={setDescription}
             multiline
+            placeholder="Share your moment..."
           />
 
           <View style={styles.imageGrid}>
             {imageUris.map((uri, index) => (
               <View style={styles.imageContainer} key={index}>
                 <Image source={{ uri }} style={styles.image} />
+                <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteImage(index)}>
+                  <AntDesign name="delete" size={10} color="black"/>
+                </TouchableOpacity>
               </View>
             ))}
           </View>
+     
+          <TouchableOpacity style={styles.button} onPress={handlePost}>
+          <View style={styles.buttonContent}>
+            <View style={colors.iconContaner}> 
+              <Feather name="send" size={24} color="black" />
+            </View>
+            <Text style={styles.buttonText}>Post</Text>
+          </View>
+        </TouchableOpacity>
 
-          <ImageManerge recieveImageUri={handleImageUri} />
-          <Button title="Post" onPress={handlePost} />
-          <Button title="Reset" onPress={handleReset} />
-          <Button title="Location" onPress={handleLocation} />
-          <Button title="Weather" onPress={handleWeather} />
+        <TouchableOpacity style={styles.button} onPress={handleLocation}>
+          <View style={styles.buttonContent}>
+            <View style={colors.iconContaner}> 
+              <Entypo name="location-pin" size={24} color="black" />
+            </View>
+            <Text style={styles.buttonText}>Location</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button} onPress={handleWeather}>
+          <View style={styles.buttonContent}>
+            <View style={colors.iconContaner}> 
+              <Feather name="sun" size={24} color="black" />
+            </View>
+            <Text style={styles.buttonText}>Weather</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.button} onPress={handleReset}>
+          <View style={styles.buttonContent}>
+            <View style={colors.iconContaner}> 
+             <Fontisto name="arrow-return-left" size={24} color="black" />
+            </View>
+            <Text style={styles.buttonText}>Reset</Text>
+          </View>
+        </TouchableOpacity>
+
+      
+
         </View>
       </TouchableWithoutFeedback>
+      
   </ScrollView>
 );
 }
+
 
 const styles = StyleSheet.create({
   imageGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'flex-start',
     padding: 10,
+    marginBottom: 50,
   },
   imageContainer: {
     width: '30%', // Approximately three images per row
     aspectRatio: 1, // Keep the aspect ratio of images to 1:1
     marginBottom: 10,
+    margin:5,
+    position: 'relative',
   },
   image: {
     width: '100%',
     height: '100%',
   },
+  button: {
+    backgroundColor: 'whitesmoke',
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+    width: "100%",
+    marginBottom:10,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: 'black',
+    textAlign: 'center',
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    justifyContent:"flex-start",
+  },
+
 });
 

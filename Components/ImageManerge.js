@@ -92,7 +92,7 @@ export default function ImageManerge({recieveImageUri}) {
 
   return (
     <View style = {styles.container}>
-      <Ionicons name="camera" size={60} color="black"onPress={takeImageHandle} />
+      <Ionicons name="camera" size={30} color="black"onPress={takeImageHandle}/>
     </View>
   )
 }
