@@ -3,7 +3,7 @@ import React, { useEffect,useState } from "react";
 import * as Location from 'expo-location';
 import { mapsApiKey } from "@env";
 
-export default function LocationManager({setLocationNameProp}) {
+export default function LocationManager({setLocationNameProp,setLocationData}) {
     const [status, requestPermission] = Location.useForegroundPermissions();
     const [location, setLocation] = useState(null);
     const [locationName, setLocationName] = useState(null);
@@ -49,6 +49,7 @@ export default function LocationManager({setLocationNameProp}) {
             const locationName = data.results[0].formatted_address;
             setLocationName(locationName);
             setLocationNameProp(locationName);
+            setLocationData(location)
         } catch (err) {
             console.log(err);
         }

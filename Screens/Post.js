@@ -19,7 +19,7 @@ export default function Post({navigation}) {
   const [docID, setdocID] = useState("");
   const [postArr, setPostArr] = useState([]);
   const [CurrentLocation, setCurrentLocation] = useState(null);
-
+  const[locationData, setLocationData] = useState(null);
 
   useEffect(() => {
     navigation.setOptions({
@@ -97,7 +97,11 @@ export default function Post({navigation}) {
         imageUris: uploadUris,
         timestamp: timestamp, 
         userID: auth.currentUser.uid,
-        postLocation: CurrentLocation
+        postLocation: {
+          location: CurrentLocation,
+          latitude: locationData.latitude,
+          longitude: locationData.longitude
+        }
       };
 
       console.log(newPost);
@@ -124,9 +128,14 @@ export default function Post({navigation}) {
     setCurrentLocation(locationName)
   }
 
+  function handleLocationData(locData){
+    setLocationData(locData);
+  }
+
   function handleWeather(){
     console.log("weather")
   }
+
 
   
  
@@ -169,7 +178,7 @@ export default function Post({navigation}) {
               <Entypo name="location-pin" size={24} color="black" />
             </View>
 
-            <LocationManager setLocationNameProp={handleLocationName}/>
+            <LocationManager setLocationNameProp={handleLocationName} setLocationData={handleLocationData}/>
 
           </View>
         </TouchableOpacity>
