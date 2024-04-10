@@ -17,10 +17,11 @@ export default function TimeLine( props, {navigation}) {
   const [itemID, setItemID] = useState(0);
 
   useEffect(() => {
-    
+
     async function getPhoto() {
       try {
-        for (i = 0; i <= photosData.length; i++) {
+        for (i = 0; i < photosData.length; i++) {
+          console.log(photosData[i])
         const reference = ref(storage, photosData[i]);
         const uri = await getDownloadURL(reference);
         //console.log(uri);
@@ -35,7 +36,7 @@ export default function TimeLine( props, {navigation}) {
         
       } 
       } catch (err) {
-        console.log(err);
+        console.log('Error Ocurred in getPhoto()' ,err);
       }
     }
     getPhoto();
@@ -44,7 +45,7 @@ export default function TimeLine( props, {navigation}) {
   return (
     
       <View style={styles.flatListStyle}>
-        <Text>{post.postID}</Text>
+        <Text>{post.userID}</Text>
         <Swiper
           horizontal={true}
         >
