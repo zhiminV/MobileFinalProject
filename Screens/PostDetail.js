@@ -113,10 +113,9 @@ return (
           <Text>Post ID: {postId}</Text>
           <Text>Post Location: {postLoc}</Text>
           <Text>Weather: {weather}</Text> 
-          <Image
-                source={{ uri: weatherIconuri }}
-                style={styles.weatherIcon}
-          />
+          <Image source={{ uri: weatherIconuri || 'https://via.placeholder.com/150' }} 
+          style={styles.weatherIcon} />
+
           <Text>Description: {description}</Text>
           {renderImages()}
       </View>

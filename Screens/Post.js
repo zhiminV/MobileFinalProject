@@ -108,6 +108,8 @@ export default function Post({navigation}) {
   function handleReset(){
     setDescription('');
     setImageUris([]);
+    setCurrentLocation(null);
+    setWeatherData(null);
   }
 
   const handlePost = async () => {
