@@ -243,6 +243,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'black',
     textAlign: 'center',
+    marginLeft:10,
   },
   buttonContent: {
     flexDirection: 'row',
