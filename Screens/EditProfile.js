@@ -113,8 +113,13 @@ export default function EditProfile({navigation}) {
               value={Phone}
               onChangeText={(text) => setPhone(text)}
               />
-              <LocationManager setLocationNameProp={handleLocationName}/>
-              <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}>{Location}</Text>
+              
+              <Text style={colors.text}>Location:</Text>
+              <TextInput
+              style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
+              value={Location}
+              onChangeText={(text) => setLocation(text)}
+              />
             
               <Text style={colors.text}>Email:</Text>
               <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.email}</Text>
