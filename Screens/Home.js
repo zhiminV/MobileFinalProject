@@ -33,7 +33,7 @@ export default function Home() {
           if(!postID.find(post => post.postID === doc.id)){
             const post = doc.data();
             post["postID"] = doc.id;
-            console.log(doc.id);
+            //console.log(doc.id);
             setPostID(previousItems => [...previousItems, post]);
           }
         });
