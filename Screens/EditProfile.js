@@ -9,10 +9,16 @@ import ImageManerge from '../Components/ImageManerge';
 import { fetchInfoById,updateFromDB } from '../firebase-files/firebaseHelper';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { database } from '../firebase-files/firebaseSetup';
+import LocationManager from '../Components/LocationManager';
 
 export default function EditProfile({navigation}) {
+  const [Name, setName] = useState("");
+  const [Location, setLocation] = useState("");
+  const [Phone, setPhone] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [docid, setdocid] = useState("");
 
-    useEffect(() => {
+  useEffect(() => {
         const fetchUserData = async () => {
           try {
             // Query the "Users" collection to find the document associated with the current user's UID
@@ -41,45 +47,43 @@ export default function EditProfile({navigation}) {
         };
     
         fetchUserData();
-      }, [navigation]);
-
-    const [Name, setName] = useState("");
-    const [Location, setLocation] = useState("");
-    const [Phone, setPhone] = useState("");
-    const [avatar, setAvatar] = useState("");
-    const [docid, setdocid] = useState("");
+  }, [navigation]);
    
-    function handleCancle(){
-        navigation.goBack()
-    }
+  function handleCancle(){
+      navigation.goBack()
+  }
 
-    function handleSave(){
-        const newProfile = {
-            userName:Name,
-            location: Location,
-            phoneNum: Phone,
-            userAvatar: avatar
-        };
-        Alert.alert('Important', 'Are you sure you want to save these changes?',[
-            {
-              text: 'No',
-              style: 'cancel',
-            },
-            {text: 'Yes', onPress: () => 
-            updateFromDB("Users",docid, newProfile)
-              .then(() => {
-                navigation.navigate("Profile");
-              })
-              .catch((error) => console.error("Update failed", error))
-            },
-        ]);
-        
-        
-    }
+  function handleSave(){
+      const newProfile = {
+          userName:Name,
+          location: Location,
+          phoneNum: Phone,
+          userAvatar:avatar
+      };
+      Alert.alert('Important', 'Are you sure you want to save these changes?',[
+          {
+            text: 'No',
+            style: 'cancel',
+          },
+          {text: 'Yes', onPress: () => 
+          updateFromDB("Users",docid, newProfile)
+            .then(() => {
+              navigation.navigate("Profile");
+            })
+            .catch((error) => console.error("Update failed", error))
+          },
+      ]);
+      
+      
+  }
 
-    function receiveImageUri(uri){
-        setAvatar(uri);
-    }
+  function receiveImageUri(uri){
+      setAvatar(uri);
+  }
+
+  function handleLocationName(locationName){
+    setLocation(locationName)
+  }
 
  
   return (
@@ -109,13 +113,8 @@ export default function EditProfile({navigation}) {
               value={Phone}
               onChangeText={(text) => setPhone(text)}
               />
-
-              <Text style={colors.text}>Location:</Text>
-              <TextInput
-              style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
-              value={Location}
-              onChangeText={(text) => setLocation(text)}
-              />
+              <LocationManager setLocationNameProp={handleLocationName}/>
+              <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}>{Location}</Text>
             
               <Text style={colors.text}>Email:</Text>
               <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.email}</Text>
