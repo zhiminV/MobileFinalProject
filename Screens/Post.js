@@ -10,7 +10,7 @@ import { collection,query, where, getDocs } from 'firebase/firestore'
 import { EvilIcons ,Feather,Entypo,Ionicons,AntDesign,Fontisto} from '@expo/vector-icons';
 import PressableButton from '../Components/PressableButton';
 import LocationManager from '../Components/LocationManager';
-
+import axios from 'axios';
 
 
 export default function Post({navigation}) {
@@ -20,6 +20,8 @@ export default function Post({navigation}) {
   const [postArr, setPostArr] = useState([]);
   const [CurrentLocation, setCurrentLocation] = useState(null);
   const[locationData, setLocationData] = useState(null);
+  const [weatherData, setWeatherData] = useState(null);
+
 
   useEffect(() => {
     navigation.setOptions({
@@ -27,7 +29,27 @@ export default function Post({navigation}) {
     });
   }, []);
 
+  const options = {
+    method: 'GET',
+    url: 'https://weatherapi-com.p.rapidapi.com/current.json',
+    params: {q: 'auto:ip'},
+    headers: {
+      'X-RapidAPI-Key': '244355f437msh6306e2a4a1a67e1p140199jsnea9c42e0d2ed',
+      'X-RapidAPI-Host': 'weatherapi-com.p.rapidapi.com'
+    }
+  };
+  
 
+  const fetchWeather = async () => {
+    try {
+      const response = await axios.request(options);
+      setWeatherData(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -101,6 +123,10 @@ export default function Post({navigation}) {
           location: CurrentLocation,
           latitude: locationData.latitude,
           longitude: locationData.longitude
+        },
+        weather: {
+          icon: weatherData ? `https:${weatherData.current.condition.icon}` : null,
+          text: weatherData ? weatherData.current.condition.text : null
         }
       };
 
@@ -116,6 +142,7 @@ export default function Post({navigation}) {
       setDescription('');
       setImageUris([]);
       setCurrentLocation(null);
+      setWeatherData(null);
       navigation.navigate("Home");
       
     } catch (error) {
@@ -132,9 +159,15 @@ export default function Post({navigation}) {
     setLocationData(locData);
   }
 
-  function handleWeather(){
-    console.log("weather")
-  }
+  const handleWeather = () => {
+    if (!locationData) {
+      alert('Please select a location first.');
+      return;
+    }
+    
+    fetchWeather();
+  };
+  
 
 
   
@@ -162,6 +195,16 @@ export default function Post({navigation}) {
             ))}
           </View>
           <Text style={styles.locationText}>{CurrentLocation}</Text>
+
+          {weatherData && (
+            <View style={styles.weatherContainer}>
+              <Image
+                source={{ uri: `https:${weatherData.current.condition.icon}` }}
+                style={styles.weatherIcon}
+              />
+              <Text style={styles.weatherText}>{weatherData.current.condition.text}</Text>
+            </View>
+          )}
      
           <TouchableOpacity style={styles.button} onPress={handlePost}>
           <View style={styles.buttonContent}>
@@ -252,6 +295,20 @@ const styles = StyleSheet.create({
   locationText:{
     marginBottom:20,
     color:"green",
+  },
+  weatherContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  weatherIcon: {
+    width: 50,
+    height: 50,
+  },
+  weatherText: {
+    marginLeft: 10,
+    fontSize: 16,
+    color:"green"
   }
 
 });
