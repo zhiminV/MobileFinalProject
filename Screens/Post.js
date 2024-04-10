@@ -97,6 +97,7 @@ export default function Post({navigation}) {
         imageUris: uploadUris,
         timestamp: timestamp, 
         userID: auth.currentUser.uid,
+        postLocation: CurrentLocation
       };
 
       console.log(newPost);
@@ -110,6 +111,7 @@ export default function Post({navigation}) {
       // Reset state
       setDescription('');
       setImageUris([]);
+      setCurrentLocation(null);
       navigation.navigate("Home");
       
     } catch (error) {
@@ -150,7 +152,7 @@ export default function Post({navigation}) {
               </View>
             ))}
           </View>
-          <Text>{CurrentLocation}</Text>
+          <Text style={styles.locationText}>{CurrentLocation}</Text>
      
           <TouchableOpacity style={styles.button} onPress={handlePost}>
           <View style={styles.buttonContent}>
@@ -237,6 +239,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent:"flex-start",
   },
+  locationText:{
+    marginBottom:20,
+    color:"green",
+  }
 
 });
 
