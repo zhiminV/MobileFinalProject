@@ -9,6 +9,7 @@ import { serverTimestamp } from 'firebase/firestore';
 import { collection,query, where, getDocs } from 'firebase/firestore'
 import { EvilIcons ,Feather,Entypo,Ionicons,AntDesign,Fontisto} from '@expo/vector-icons';
 import PressableButton from '../Components/PressableButton';
+import LocationManager from '../Components/LocationManager';
 
 
 
@@ -17,6 +18,8 @@ export default function Post({navigation}) {
   const [imageUris, setImageUris] = useState([]);
   const [docID, setdocID] = useState("");
   const [postArr, setPostArr] = useState([]);
+  const [CurrentLocation, setCurrentLocation] = useState(null);
+  const[locationData, setLocationData] = useState(null);
 
   useEffect(() => {
     navigation.setOptions({
@@ -94,6 +97,11 @@ export default function Post({navigation}) {
         imageUris: uploadUris,
         timestamp: timestamp, 
         userID: auth.currentUser.uid,
+        postLocation: {
+          location: CurrentLocation,
+          latitude: locationData.latitude,
+          longitude: locationData.longitude
+        }
       };
 
       console.log(newPost);
@@ -107,6 +115,7 @@ export default function Post({navigation}) {
       // Reset state
       setDescription('');
       setImageUris([]);
+      setCurrentLocation(null);
       navigation.navigate("Home");
       
     } catch (error) {
@@ -115,13 +124,18 @@ export default function Post({navigation}) {
     }
   };
 
-  function handleLocation(){
-    console.log("should locate user current location");
+  function handleLocationName(locationName){
+    setCurrentLocation(locationName)
+  }
+
+  function handleLocationData(locData){
+    setLocationData(locData);
   }
 
   function handleWeather(){
-    console.log("should use external API in iteration 2")
+    console.log("weather")
   }
+
 
   
  
@@ -147,6 +161,7 @@ export default function Post({navigation}) {
               </View>
             ))}
           </View>
+          <Text style={styles.locationText}>{CurrentLocation}</Text>
      
           <TouchableOpacity style={styles.button} onPress={handlePost}>
           <View style={styles.buttonContent}>
@@ -157,12 +172,14 @@ export default function Post({navigation}) {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={handleLocation}>
+        <TouchableOpacity style={styles.button} >
           <View style={styles.buttonContent}>
             <View style={colors.iconContaner}> 
               <Entypo name="location-pin" size={24} color="black" />
             </View>
-            <Text style={styles.buttonText}>Location</Text>
+
+            <LocationManager setLocationNameProp={handleLocationName} setLocationData={handleLocationData}/>
+
           </View>
         </TouchableOpacity>
 
@@ -226,11 +243,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'black',
     textAlign: 'center',
+    marginLeft:10,
   },
   buttonContent: {
     flexDirection: 'row',
     justifyContent:"flex-start",
   },
+  locationText:{
+    marginBottom:20,
+    color:"green",
+  }
 
 });
 

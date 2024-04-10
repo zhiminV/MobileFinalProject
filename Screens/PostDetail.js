@@ -16,6 +16,7 @@ export default function PostDetail({route,navigation}) {
     const [imageUris, setImageUris] = useState([]);
     const [time, setTime] = useState("");
     const [posts, setPosts] = useState([]);
+    const [postLoc,setPostLoc] = useState("");
 
   
     useEffect(() => {
@@ -27,6 +28,7 @@ export default function PostDetail({route,navigation}) {
                   setPosts(userData.post)
                   setDescription(postDetailData.description);
                   setTime(postDetailData.timestamp)
+                  setPostLoc(postDetailData.postLocation.location)
                   //  postDetailData.imageUris is an array of paths in Firebase Storage
                   const imageDownloadURL = await Promise.all(postDetailData.imageUris.map((uri) => 
                       getDownloadURL(ref(storage, uri)) 
@@ -47,7 +49,7 @@ export default function PostDetail({route,navigation}) {
     navigation.setOptions({
       headerRight:()=>{
         return<Pressable onPress={deleteFunction}>
-        <AntDesign name="delete" size={20} color="white"style={{ padding: 10 }} />
+        <AntDesign name="delete" size={20} color="black"style={{ padding: 10 }} />
       </Pressable>
       },
     });
@@ -106,6 +108,7 @@ return (
       <View>
           {renderTime()}
           <Text>Post ID: {postId}</Text>
+          <Text>Post Location{postLoc}</Text>
           <Text>Description: {description}</Text>
           {renderImages()}
       </View>
