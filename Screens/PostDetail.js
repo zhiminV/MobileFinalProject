@@ -17,7 +17,8 @@ export default function PostDetail({route,navigation}) {
     const [time, setTime] = useState("");
     const [posts, setPosts] = useState([]);
     const [postLoc,setPostLoc] = useState("");
-
+    const [weather, setWeather] = useState("");
+    const [weatherIconuri, setWeatherIconuri] = useState("");
   
     useEffect(() => {
       const fetchPostDetail = async () => {
@@ -29,6 +30,8 @@ export default function PostDetail({route,navigation}) {
                   setDescription(postDetailData.description);
                   setTime(postDetailData.timestamp)
                   setPostLoc(postDetailData.postLocation.location)
+                  setWeather(postDetailData.weather.text)
+                  setWeatherIconuri(postDetailData.weather.icon)
                   //  postDetailData.imageUris is an array of paths in Firebase Storage
                   const imageDownloadURL = await Promise.all(postDetailData.imageUris.map((uri) => 
                       getDownloadURL(ref(storage, uri)) 
@@ -108,7 +111,12 @@ return (
       <View>
           {renderTime()}
           <Text>Post ID: {postId}</Text>
-          <Text>Post Location{postLoc}</Text>
+          <Text>Post Location: {postLoc}</Text>
+          <Text>Weather: {weather}</Text> 
+          <Image
+                source={{ uri: weatherIconuri }}
+                style={styles.weatherIcon}
+          />
           <Text>Description: {description}</Text>
           {renderImages()}
       </View>
@@ -132,5 +140,9 @@ const styles = StyleSheet.create({
       width: '30%', 
       aspectRatio: 1, 
       margin: '1%', 
+  },
+  weatherIcon: {
+    width: 50,
+    height: 50,
   },
   });
