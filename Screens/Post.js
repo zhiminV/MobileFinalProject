@@ -9,6 +9,7 @@ import { serverTimestamp } from 'firebase/firestore';
 import { collection,query, where, getDocs } from 'firebase/firestore'
 import { EvilIcons ,Feather,Entypo,Ionicons,AntDesign,Fontisto} from '@expo/vector-icons';
 import PressableButton from '../Components/PressableButton';
+import LocationManager from '../Components/LocationManager';
 
 
 
@@ -157,12 +158,12 @@ export default function Post({navigation}) {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={handleLocation}>
+        <TouchableOpacity style={styles.button} >
           <View style={styles.buttonContent}>
             <View style={colors.iconContaner}> 
               <Entypo name="location-pin" size={24} color="black" />
             </View>
-            <Text style={styles.buttonText}>Location</Text>
+            <LocationManager/>
           </View>
         </TouchableOpacity>
 

@@ -47,7 +47,7 @@ export default function PostDetail({route,navigation}) {
     navigation.setOptions({
       headerRight:()=>{
         return<Pressable onPress={deleteFunction}>
-        <AntDesign name="delete" size={20} color="white"style={{ padding: 10 }} />
+        <AntDesign name="delete" size={20} color="black"style={{ padding: 10 }} />
       </Pressable>
       },
     });
