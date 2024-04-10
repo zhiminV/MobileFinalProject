@@ -3,9 +3,16 @@ import React, { useEffect,useState } from "react";
 import * as Location from 'expo-location';
 import { mapsApiKey } from "@env";
 
-export default function LocationManager() {
+export default function LocationManager({setLocationNameProp}) {
     const [status, requestPermission] = Location.useForegroundPermissions();
     const [location, setLocation] = useState(null);
+    const [locationName, setLocationName] = useState(null);
+
+    useEffect(() => {
+        if (location) {
+            reverseGeocodeLocation();
+        }
+    }, [location]);
 
     async function verifyPermission() {
         if (status.granted) {
@@ -34,19 +41,30 @@ export default function LocationManager() {
         } catch (err) {
           console.log(err);
         }
-      }
+    }
+    async function reverseGeocodeLocation() {
+        try {
+            const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=${mapsApiKey}`);
+            const data = await response.json();
+            const locationName = data.results[0].formatted_address;
+            setLocationName(locationName);
+            setLocationNameProp(locationName);
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
   return (
     <View>
       <Button title="Location" color="black" onPress={locateUserHandler} />
-      {location && (
+      {/* {location && (
         <Image
           style={styles.image}
           source={{
             uri: `https://maps.googleapis.com/maps/api/staticmap?center=${location.latitude},${location.longitude}&zoom=14&size=400x200&maptype=roadmap&markers=color:red%7Clabel:L%7C${location.latitude},${location.longitude}&key=${mapsApiKey}`,
           }}
         />
-      )}
+      )} */}
     </View>
   );
 }

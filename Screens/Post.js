@@ -18,6 +18,8 @@ export default function Post({navigation}) {
   const [imageUris, setImageUris] = useState([]);
   const [docID, setdocID] = useState("");
   const [postArr, setPostArr] = useState([]);
+  const [CurrentLocation, setCurrentLocation] = useState(null);
+
 
   useEffect(() => {
     navigation.setOptions({
@@ -116,12 +118,12 @@ export default function Post({navigation}) {
     }
   };
 
-  function handleLocation(){
-    console.log("should locate user current location");
+  function handleLocationName(locationName){
+    setCurrentLocation(locationName)
   }
 
   function handleWeather(){
-    console.log("should use external API in iteration 2")
+    console.log("weather")
   }
 
   
@@ -148,6 +150,7 @@ export default function Post({navigation}) {
               </View>
             ))}
           </View>
+          <Text>{CurrentLocation}</Text>
      
           <TouchableOpacity style={styles.button} onPress={handlePost}>
           <View style={styles.buttonContent}>
@@ -163,7 +166,9 @@ export default function Post({navigation}) {
             <View style={colors.iconContaner}> 
               <Entypo name="location-pin" size={24} color="black" />
             </View>
-            <LocationManager/>
+
+            <LocationManager setLocationNameProp={handleLocationName}/>
+
           </View>
         </TouchableOpacity>
 
