@@ -28,6 +28,7 @@ export default function TimeLine( props, {navigation}) {
     async function getPhoto() {
       
       try {
+        console.log(photos);
         let counter = 0;
         let array = [];
         for (let i = 0; i < photos.length; i++) {
@@ -49,6 +50,7 @@ export default function TimeLine( props, {navigation}) {
 
         setElements(array);
         //console.log(elements);
+        //setElements([]);
       } catch (err) {
         console.log('Error Ocurred in getPhoto()', err);
       }
@@ -57,13 +59,13 @@ export default function TimeLine( props, {navigation}) {
     getPhoto();
   
     //usePhotos([]);
-  }, []);
+  }, [photos]);
 
 
   return (
     
       <View style={styles.flatListStyle}>
-        <Text>{docID}</Text>
+        <Text> The Post ID: {docID}</Text>
         <Swiper
           key={elements.length}
           //style={styles.viewSwiper}
@@ -76,6 +78,7 @@ export default function TimeLine( props, {navigation}) {
                   source={
                     element.url
                   }
+                  //resizeMode={'stretch'}
                 />
             ))
           }
@@ -92,7 +95,7 @@ const styles = StyleSheet.create({
   },
   
   flatListStyle: {
-    marginTop: 30,
+    marginTop: 100,
     width: width,
     height: 600,
     borderColor: 'red',

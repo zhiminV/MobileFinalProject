@@ -1,4 +1,4 @@
-import { View, Text, FlatList, StyleSheet, Button, Dimensions } from 'react-native'
+import { View, Text, FlatList, StyleSheet, Button, Dimensions, SectionList } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { getAllDocs, fetchInfoById } from '../firebase-files/firebaseHelper';
 import { auth, database } from '../firebase-files/firebaseSetup';
@@ -56,7 +56,7 @@ export default function Home() {
           });
         }
         setPostID(tempArray);
-        console.log(postID);
+        //console.log(postID);
         //setPostID(previousItems => [...previousItems, result]);
         //console.log(postID.length);
         //integer = integer + 1;
@@ -90,6 +90,7 @@ export default function Home() {
         renderItem={({item}) =>  (
             <TimeLine
               item={item}
+              refresh={refresh}
             />
           )
         }
