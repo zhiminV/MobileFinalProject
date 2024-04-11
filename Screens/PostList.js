@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { FlatList, StyleSheet, Text, View, TouchableOpacity ,ScrollView} from "react-native";
 import React from "react";
 import colors from "../Helpers/colors";
 
@@ -9,8 +9,8 @@ export default function PostList({ route, navigation }) {
     navigation.navigate("PostDetail", { postId, userId });
   };
 
-  const renderPostItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigateToPostDetail(item)}>
+  const renderPostItem = (item) => (
+    <TouchableOpacity key={item} onPress={() => navigateToPostDetail(item)}>
       <View style={styles.postItemContainer}>
         <Text style={styles.postItem}>{item}</Text>
       </View>
@@ -18,17 +18,18 @@ export default function PostList({ route, navigation }) {
   );
 
   return (
-    <View>
-      <FlatList
-        data={postHistory}
-        renderItem={renderPostItem}
-        keyExtractor={(item) => item}
-      />
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      {postHistory.map(renderPostItem)}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 20,
+  },
   postItemContainer: {
     padding: 10,
     backgroundColor: "#f0f0f0",
