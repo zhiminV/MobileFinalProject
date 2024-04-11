@@ -32,14 +32,14 @@ export default function Post({navigation}) {
   const options = {
     method: 'GET',
     url: 'https://weatherapi-com.p.rapidapi.com/current.json',
-    params: {q: 'auto:ip'},
+    params: { q: locationData?`${locationData.latitude},${locationData.longitude}`:"auto:ip"},
     headers: {
       'X-RapidAPI-Key': '244355f437msh6306e2a4a1a67e1p140199jsnea9c42e0d2ed',
       'X-RapidAPI-Host': 'weatherapi-com.p.rapidapi.com'
     }
   };
-  
-
+  console.log(options.params)
+ 
   const fetchWeather = async () => {
     try {
       const response = await axios.request(options);
@@ -109,6 +109,7 @@ export default function Post({navigation}) {
     setDescription('');
     setImageUris([]);
     setCurrentLocation(null);
+    setLocationData(null);
     setWeatherData(null);
   }
 
@@ -133,7 +134,7 @@ export default function Post({navigation}) {
     
       };
 
-      console.log(newPost);
+      // console.log(newPost);
 
       const docRef =  await writeToDB(newPost, "Posts")
       const postId = docRef.id;
@@ -145,6 +146,7 @@ export default function Post({navigation}) {
       setDescription('');
       setImageUris([]);
       setCurrentLocation(null);
+      setLocationData(null);
       setWeatherData(null);
       navigation.navigate("Home");
       
