@@ -1,4 +1,5 @@
-import { View, Text, Image, FlatList, StyleSheet, Dimensions } from 'react-native'
+import { View, Text, FlatList, StyleSheet, Dimensions } from 'react-native'
+import { Image } from 'expo-image';
 import React, { useEffect, useRef, useState } from 'react'
 import Swiper from 'react-native-swiper'
 import { collection, getDocs, query, where, whereIn } from 'firebase/firestore'
@@ -14,10 +15,13 @@ const height = Dimensions.get('window').height;
 
 export default function TimeLine( props, {navigation}) {
 
-  [photos, usePhotos] = useState(props.item.imageUris);
+  
+  //[photos, usePhotos] = useState(props.item.imageUris);
+  photos = props.item.imageUris;
+  //console.log(photos);
   [elements, setElements] = useState([]);
-  //console.log(photosData);
   const [itemID, setItemID] = useState(0);
+  const docID = props.item.docId;
   
   useEffect(() => {
 
@@ -26,24 +30,32 @@ export default function TimeLine( props, {navigation}) {
       try {
         let counter = 0;
         let array = [];
-        for (i = 0; i < photos.length; i++) {
+        for (let i = 0; i < photos.length; i++) {
           const reference = ref(storage, photos[i]);
           const uri = await getDownloadURL(reference);
+         //console.log(uri);
           counter = counter + 1;
+          
           const object = 
           {
             id: counter,
             url: uri,
-          }
+          };
+          //console.log(object);
+
           array.push(object);
+          //console.log(array);
         } 
+
         setElements(array);
-        console.log(elements);
+        //console.log(elements);
       } catch (err) {
         console.log('Error Ocurred in getPhoto()', err);
       }
     }
+
     getPhoto();
+  
     //usePhotos([]);
   }, []);
 
@@ -51,24 +63,22 @@ export default function TimeLine( props, {navigation}) {
   return (
     
       <View style={styles.flatListStyle}>
-        <Text>{props.item.userID}</Text>
+        <Text>{docID}</Text>
         <Swiper
           key={elements.length}
           //style={styles.viewSwiper}
         >
-
           {
             elements.map((element) => (
                 <Image
                   style={styles.viewPhoto}
                   key={element.id}
-                  source={{
-                    uri: element.url
-                  }}
+                  source={
+                    element.url
+                  }
                 />
             ))
           }
-          
         </Swiper>
       </View>
   )
@@ -84,7 +94,9 @@ const styles = StyleSheet.create({
   flatListStyle: {
     marginTop: 30,
     width: width,
-    height: 1000,
+    height: 600,
+    borderColor: 'red',
+    borderWidth: 1,
   },
 
   viewSwiper: {
@@ -96,7 +108,7 @@ const styles = StyleSheet.create({
   viewPhoto: {
     flex: 1,
     width: width,
-    height: height * 0.3,
+    height: 200,
   }
 
 })
