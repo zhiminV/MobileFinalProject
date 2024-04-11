@@ -1,4 +1,4 @@
-import { View, Text, Image, FlatList, StyleSheet } from 'react-native'
+import { View, Text, Image, FlatList, StyleSheet, Dimensions } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import Swiper from 'react-native-swiper'
 import { collection, getDocs, query, where, whereIn } from 'firebase/firestore'
@@ -8,61 +8,71 @@ import { storage } from '../firebase-files/firebaseSetup'
 import { getDownloadURL, ref } from "firebase/storage";
 
 
+
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
+
 export default function TimeLine( props, {navigation}) {
 
-  const post = props.item;
-  const photosData = post.imageUris;
-  [photos, usePhotos] = useState([]);
+  [photos, usePhotos] = useState(props.item.imageUris);
+  [elements, setElements] = useState([]);
   //console.log(photosData);
   const [itemID, setItemID] = useState(0);
-
+  
   useEffect(() => {
 
     async function getPhoto() {
+      
       try {
-        for (i = 0; i < photosData.length; i++) {
-          console.log(photosData[i])
-        const reference = ref(storage, photosData[i]);
-        const uri = await getDownloadURL(reference);
-        //console.log(uri);
-        const counter = itemID + 1;
-        const object = 
-        {
-          id: counter,
-          url: uri,
-        }
-        usePhotos([object]);
-        setItemID(counter);
-        
-      } 
+        let counter = 0;
+        let array = [];
+        for (i = 0; i < photos.length; i++) {
+          const reference = ref(storage, photos[i]);
+          const uri = await getDownloadURL(reference);
+          counter = counter + 1;
+          const object = 
+          {
+            id: counter,
+            url: uri,
+          }
+          array.push(object);
+        } 
+        setElements(array);
+        console.log(elements);
       } catch (err) {
-        console.log('Error Ocurred in getPhoto()' ,err);
+        console.log('Error Ocurred in getPhoto()', err);
       }
     }
     getPhoto();
+    //usePhotos([]);
   }, []);
+
 
   return (
     
       <View style={styles.flatListStyle}>
-        <Text>{post.userID}</Text>
+        <Text>{props.item.userID}</Text>
         <Swiper
-          horizontal={true}
+          key={elements.length}
+          //style={styles.viewSwiper}
         >
+
           {
-            photos.map((photo) => (
+            elements.map((element) => (
                 <Image
-                  style={styles.view}
-                  key={photo.id}
+                  style={styles.viewPhoto}
+                  key={element.id}
                   source={{
-                    uri: photo.url
+                    uri: element.url
                   }}
                 />
             ))
           }
+          
         </Swiper>
       </View>
   )
+
 }
 
 
@@ -73,14 +83,20 @@ const styles = StyleSheet.create({
   
   flatListStyle: {
     marginTop: 30,
-    height:600,
-    width: 300,
+    width: width,
+    height: 1000,
   },
 
-  view: {
+  viewSwiper: {
     flex: 1,
-    width: 200,
-    height: 200,
+    width: width,
+    height: 300,
+  },
+
+  viewPhoto: {
+    flex: 1,
+    width: width,
+    height: height * 0.3,
   }
 
 })
