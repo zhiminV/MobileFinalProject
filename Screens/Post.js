@@ -123,13 +123,14 @@ export default function Post({navigation}) {
         userID: auth.currentUser.uid,
         postLocation: {
           location: CurrentLocation,
-          latitude: locationData.latitude,
-          longitude: locationData.longitude
+          latitude: locationData ? locationData.latitude : null, // Check if locationData is available
+          longitude: locationData ? locationData.longitude : null // Check if locationData is available
         },
         weather: {
           icon: weatherData ? `https:${weatherData.current.condition.icon}` : null,
           text: weatherData ? weatherData.current.condition.text : null
         }
+    
       };
 
       console.log(newPost);
