@@ -5,7 +5,7 @@ import { useEffect,useState } from 'react';
 import colors from '../Helpers/colors';
 import { fetchInfoById,deleteFromDB} from '../firebase-files/firebaseHelper';
 import {auth, database  } from '../firebase-files/firebaseSetup';
-import { collection,query, where, getDocs } from 'firebase/firestore'
+import { collection,query, where, getDocs,onSnapshot } from 'firebase/firestore'
 import { signOut } from "firebase/auth";
 import { Ionicons, AntDesign ,Feather} from "@expo/vector-icons";
 
@@ -17,37 +17,35 @@ export default function Profile({navigation}) {
   const [userId,setUserId] = useState("");
   const [avatar, setAvatar] = useState("");
   const [Name, setName] = useState("");
+  const [isSignedOut, setIsSignedOut] = useState(false);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Query the "Users" collection to find the document associated with the current user's UID
-        const usersCollectionRef = collection(database, "Users");
-        const q = query(usersCollectionRef, where("uid", "==", auth.currentUser.uid));
-        const querySnapshot = await getDocs(q);
+    const fetchUserData = () => {
+      // Assuming auth.currentUser is not null and has a valid uid
+      const q = query(collection(database, "Users"), where("uid", "==", auth.currentUser.uid));
 
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
         if (!querySnapshot.empty) {
-          const docId = querySnapshot.docs[0].id;    
-          const userProfile = await fetchInfoById("Users", docId);
-          setUserId(docId);
-          setPostHistory(userProfile.post);
-          setAvatar(userProfile.userAvatar);
-          setName(userProfile.userName);
-          setFollowersCount(userProfile.followers.length);
-          setFollowingCount(userProfile.following.length);
-          setPostsCount(userProfile.post.length);
-          
-        
+          const docSnapshot = querySnapshot.docs[0];
+          const userProfile = docSnapshot.data();
+          setUserId(docSnapshot.id);
+          setPostHistory(userProfile.post || []);
+          setAvatar(userProfile.userAvatar || "");
+          setName(userProfile.userName || "");
+          setFollowersCount(userProfile.followers ? userProfile.followers.length : 0);
+          setFollowingCount(userProfile.following ? userProfile.following.length : 0);
+          setPostsCount(userProfile.post ? userProfile.post.length : 0);
         } else {
           console.log("No document found for the current user");
         }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
+      });
 
-    fetchUserData();
+      return () => unsubscribe();
+    };
+    const unsubscribe = fetchUserData();
+    return () => unsubscribe();
   }, [postHistory]);
+
 
   useEffect(() => {
     navigation.setOptions({
@@ -92,9 +90,50 @@ export default function Profile({navigation}) {
     navigation.navigate("EditProfile");
 
   }
-  function handleHistory(){
-    console.log("navigate to History")
+  function handleNotification(){
+    console.log("handle notification")
   }
+
+  function handleHistory(){
+    console.log("history")
+  }
+
+  function HandledeleteAccount() {
+    // Display a confirmation alert
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account? This action cannot be undone.",
+      [
+        {
+          text: "Yes",
+          onPress: () => {
+            try {
+              deleteFromDB("Users", userId)
+                .then(() => {
+                  console.log("User account deleted successfully");
+                  // Sign out the user after deleting the account
+                  signOut(auth)
+                    .then(() => {
+                      console.log("User signed out successfully");
+                      // navigation.navigate("Start"); 
+                    })
+                    .catch((error) => console.error("Error signing out user:", error));
+                })
+                .catch((error) => console.error("Error deleting user account:", error));
+            } catch (error) {
+              console.error("Error deleting user account:", error);
+            }
+          },
+        },
+        {
+          text: "No",
+        },
+      ],
+      { cancelable: false } // This prevents the alert from being dismissed by tapping outside of the alert dialog
+    );
+  }
+
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -123,12 +162,30 @@ export default function Profile({navigation}) {
         </View>
       </TouchableOpacity>
 
+      <TouchableOpacity style={styles.button} onPress={handleNotification}>
+        <View style={styles.buttonContent}>
+          <View style={colors.iconContaner}> 
+          <Ionicons name="notifications" size={24} color="cornflowerblue" />
+          </View>
+          <Text style={styles.buttonText}>Notification</Text>
+        </View>
+      </TouchableOpacity>
+
       <TouchableOpacity style={styles.button} onPress={handleHistory}>
         <View style={styles.buttonContent}>
           <View style={colors.iconContaner}> 
             <Ionicons name="image-outline" size={24} color="goldenrod" />
           </View>
           <Text style={styles.buttonText}>Post History</Text>
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={HandledeleteAccount}>
+        <View style={styles.buttonContent}>
+          <View style={colors.iconContaner}> 
+            <AntDesign name="deleteuser" size={24} color="red" />
+          </View>
+          <Text style={styles.buttonText}>Delete Account</Text>
         </View>
       </TouchableOpacity>
 
