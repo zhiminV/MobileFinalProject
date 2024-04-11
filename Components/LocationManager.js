@@ -8,6 +8,7 @@ export default function LocationManager({setLocationNameProp,setLocationData}) {
     const [location, setLocation] = useState(null);
     const [locationName, setLocationName] = useState(null);
 
+    
     useEffect(() => {
         if (location) {
             reverseGeocodeLocation();
@@ -43,17 +44,38 @@ export default function LocationManager({setLocationNameProp,setLocationData}) {
         }
     }
     async function reverseGeocodeLocation() {
-        try {
-            const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=${mapsApiKey}`);
-            const data = await response.json();
-            const locationName = data.results[0].formatted_address;
-            setLocationName(locationName);
-            setLocationNameProp(locationName);
-            setLocationData(location)
-        } catch (err) {
-            console.log(err);
-        }
-    }
+      try {
+          const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${location.latitude},${location.longitude}&key=${mapsApiKey}`);
+          const data = await response.json();
+          // Extract address components
+          const addressComponents = data.results[0].address_components;
+          
+          // Initialize empty strings for street number and name
+          let streetNumber = '';
+          let streetName = '';
+          
+          // Iterate through the address components to find street number and street name
+          addressComponents.forEach(component => {
+              if (component.types.includes("street_number")) {
+                  streetNumber = component.long_name;
+              }
+              if (component.types.includes("route")) {
+                  streetName = component.long_name;
+              }
+          });
+          
+          // Combine the street number and name
+          const locationName = `${streetNumber}, ${streetName}`;
+          
+          setLocationName(locationName);
+          setLocationNameProp(locationName);
+          setLocationData(location);
+      } catch (err) {
+          console.log(err);
+      }
+  }
+  
+  
 
   return (
     <View>

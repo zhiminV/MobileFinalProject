@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,Image,Pressable,Alert} from 'react-native'
+import { StyleSheet, Text, View,Image,Pressable,Alert,SafeAreaView} from 'react-native'
 import React, { useEffect,useState } from 'react'
 import { fetchInfoById,deleteFromDB} from '../firebase-files/firebaseHelper';
 import { AntDesign } from '@expo/vector-icons';
@@ -46,7 +46,7 @@ export default function PostDetail({route,navigation}) {
       };
   
       fetchPostDetail();
-    }, [postId]);
+    }, []);
 
   useEffect(() => {
     navigation.setOptions({
@@ -100,40 +100,47 @@ const renderTime = () => {
   if (time) {
     const date = new Date(time.seconds * 1000); 
     const dateString = date.toLocaleString(); 
-    return <Text>Time: {dateString}</Text>;
+    return <Text>{dateString}</Text>;
   } else {
     return null;
   }
 };
 
 return (
-  <View style={styles.container}>
-      <View>
-          {renderTime()}
-          <Text>Post ID: {postId}</Text>
-          <Text>Post Location: {postLoc}</Text>
-          <Text>Weather: {weather}</Text> 
+  <SafeAreaView style={styles.container}>
+      <View style={styles.descriptionText}>
+        <Text>Description: {description}</Text>
+      </View>
+        {renderImages()}
+        <View style={styles.weatherContainer}>
+          <Text>{weather}</Text> 
           <Image source={{ uri: weatherIconuri || 'https://via.placeholder.com/150' }} 
           style={styles.weatherIcon} />
+        </View>
 
-          <Text>Description: {description}</Text>
-          {renderImages()}
-      </View>
-  </View>
+        <View style={styles.timetext}>
+          {renderTime()}
+        </View>
+        <View style={styles.locationText}>
+          <Text> {postLoc}</Text>
+        </View>
+  </SafeAreaView>
 );
 }
 
 const styles = StyleSheet.create({
   container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingHorizontal: 20,
+   
   },
   imageContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
+    marginLeft:10,
   },
   image: {
       width: '30%', 
@@ -144,4 +151,22 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
   },
+  weatherContainer: {
+    flexDirection: 'row',
+    alignItems: 'center', 
+    marginLeft:10,
+  },
+  timetext:{
+    flexDirection: 'row',
+    alignItems: 'center', 
+    marginBottom:10,
+    marginLeft:10,
+  },
+  descriptionText:{
+    fontSize: 30,
+    margin:25,
+  },
+  locationText:{
+    marginLeft:10,
+  }
   });
