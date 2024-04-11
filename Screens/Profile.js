@@ -71,19 +71,19 @@ export default function Profile({navigation}) {
   },[])
 
 
-  const navigateToPostDetail = (postId) => {
-    navigation.navigate('PostDetail', {postId,userId});
-  };
+  // const navigateToPostDetail = (postId) => {
+  //   navigation.navigate('PostDetail', {postId,userId});
+  // };ß
 
   
 
-  const renderPostItem = ({ item }) => (
-    <View style={styles.postItemContainer}>
-      <PressableButton style={colors.postItem} onPressFunction={() => navigateToPostDetail(item)}>
-        <Text>{item}</Text>
-      </PressableButton>
-    </View>
-  );
+  // const renderPostItem = ({ item }) => (
+  //   <View style={styles.postItemContainer}>
+  //     <PressableButton style={colors.postItem} onPressFunction={() => navigateToPostDetail(item)}>
+  //       <Text>{item}</Text>
+  //     </PressableButton>
+  //   </View>
+  // );
 
 
   function handleEdit(){
@@ -95,7 +95,7 @@ export default function Profile({navigation}) {
   }
 
   function handleHistory(){
-    console.log("history")
+    navigation.navigate("PostList", {postHistory,userId})
   }
 
   function HandledeleteAccount() {
@@ -189,11 +189,11 @@ export default function Profile({navigation}) {
         </View>
       </TouchableOpacity>
 
-      <FlatList
+      {/* <FlatList
         data={postHistory}
         renderItem={renderPostItem}
         keyExtractor={(item) => item}
-      />
+      /> */}
     </SafeAreaView>
   );
 }

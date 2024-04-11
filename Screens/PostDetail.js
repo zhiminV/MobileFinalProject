@@ -29,9 +29,9 @@ export default function PostDetail({route,navigation}) {
                   setPosts(userData.post)
                   setDescription(postDetailData.description);
                   setTime(postDetailData.timestamp)
-                  setPostLoc(postDetailData.postLocation.location)
-                  setWeather(postDetailData.weather.text)
-                  setWeatherIconuri(postDetailData.weather.icon)
+                  setPostLoc(postDetailData.postLocation.location? postDetailData.postLocation.location: "")
+                  setWeather(postDetailData.weather.text? postDetailData.weather.text:"")
+                  setWeatherIconuri(postDetailData.weather.icon? postDetailData.weather.icon:"")
                   //  postDetailData.imageUris is an array of paths in Firebase Storage
                   const imageDownloadURL = await Promise.all(postDetailData.imageUris.map((uri) => 
                       getDownloadURL(ref(storage, uri)) 
@@ -109,7 +109,7 @@ const renderTime = () => {
 return (
   <SafeAreaView style={styles.container}>
       <View style={styles.descriptionText}>
-        <Text>Description: {description}</Text>
+        <Text>{description}</Text>
       </View>
         {renderImages()}
         <View style={styles.weatherContainer}>
@@ -131,9 +131,7 @@ return (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
-   
+  
   },
   imageContainer: {
     flexDirection: 'row',
