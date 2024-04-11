@@ -28,7 +28,7 @@ export default function TimeLine( props, {navigation}) {
     async function getPhoto() {
       
       try {
-        console.log(photos);
+        //console.log(photos);
         let counter = 0;
         let array = [];
         for (let i = 0; i < photos.length; i++) {
