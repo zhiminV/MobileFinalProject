@@ -1,10 +1,10 @@
 import { View, Text, FlatList, StyleSheet, Button, Dimensions, SectionList } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { getAllDocs, fetchInfoById } from '../firebase-files/firebaseHelper';
-import { auth, database } from '../firebase-files/firebaseSetup';
+import { auth, database, storage } from '../firebase-files/firebaseSetup';
 import TimeLine from '../Components/TimeLine';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { ref } from 'firebase/storage';
+import { getDownloadURL, ref } from 'firebase/storage';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -26,18 +26,30 @@ export default function Home() {
         const query_user = query(collectionRef, where('uid', '==', auth.currentUser.uid))
         const querySnapshot = await getDocs(query_user);
         setFollowing(querySnapshot.docs[0].data().following); 
-
+        //console.log(querySnapshot.docs[0].data());
 
         for (let i = 0; i<following.length; i++) {
           const query_posts = query(collectionRef, where('uid', '==', following[i]));
           const querySnapshotPosts = await getDocs(query_posts);
           //console.log(querySnapshotPosts.docs[0].data());
           querySnapshotPosts.forEach(async (document) => {
+
             const posts = document.data().post;
+            const email = document.data().email;
+            const avatar = document.data().userAvatar;
             //console.log(posts);
             for (let j = 0; j < posts.length; j++) {
               if (!tempArray.some(object => object.docId === posts[j])) {
                 const result = await fetchInfoById('Posts', posts[j]);
+                const imageArray = result.imageUris;
+                for (let k = 0; k < imageArray.length; k++) {
+                  const imageRef = ref(storage, imageArray[k]);
+                  const downloadURL = await getDownloadURL(imageRef);
+                  imageArray[k] = downloadURL;
+                }
+                result['email'] = email;
+                result['avatar'] = avatar;
+                result['downloadUris'] = imageArray;
                 //console.log(posts);
                 tempArray.push(result);
                 //console.log(tempArray);
@@ -90,7 +102,6 @@ export default function Home() {
         renderItem={({item}) =>  (
             <TimeLine
               item={item}
-              refresh={refresh}
             />
           )
         }

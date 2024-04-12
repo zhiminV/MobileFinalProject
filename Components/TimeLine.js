@@ -13,34 +13,40 @@ import { getDownloadURL, ref } from "firebase/storage";
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default function TimeLine( props, {navigation}) {
+export default function TimeLine( props) {
 
-  
+  const photos = props.item.downloadUris;
   //[photos, usePhotos] = useState(props.item.imageUris);
-  photos = props.item.imageUris;
-  //console.log(photos);
+  console.log(photos);
   [elements, setElements] = useState([]);
-  const [itemID, setItemID] = useState(0);
-  const docID = props.item.docId;
+  const docID = props.item.email;
+  let time = props.item.timestamp.toDate().toString();
+  time = time.substring(4, 15);
+  //const [avatarURL, setAvatarURL] = useState('');
+  //[initialize, initializer] = useState(false);
+
+
   
   useEffect(() => {
 
     async function getPhoto() {
       
       try {
-        //console.log(photos);
+        //console.log(time);
+        console.log(photos);
+
         let counter = 0;
         let array = [];
         for (let i = 0; i < photos.length; i++) {
-          const reference = ref(storage, photos[i]);
-          const uri = await getDownloadURL(reference);
+          //const reference = ref(storage, photos[i]);
+          //const uri = await getDownloadURL(reference);
          //console.log(uri);
           counter = counter + 1;
           
           const object = 
           {
             id: counter,
-            url: uri,
+            url: photos[i],
           };
           //console.log(object);
 
@@ -59,30 +65,32 @@ export default function TimeLine( props, {navigation}) {
     getPhoto();
   
     //usePhotos([]);
-  }, [photos]);
-
+  }, []);
+  
 
   return (
     
       <View style={styles.flatListStyle}>
-        <Text> The Post ID: {docID}</Text>
+        <Text style={styles.userNameFont}> {docID}</Text>
         <Swiper
-          key={elements.length}
+          key={photos.length}
           //style={styles.viewSwiper}
         >
           {
-            elements.map((element) => (
+            photos.map((photo) => (
                 <Image
                   style={styles.viewPhoto}
-                  key={element.id}
-                  source={
-                    element.url
-                  }
+                  source={photo}
+                  key={photo}
                   //resizeMode={'stretch'}
                 />
             ))
           }
         </Swiper>
+        <View style={styles.userView}>
+          <Text style={styles.userNameFont}> {time.toString()} </Text>
+         
+        </View>
       </View>
   )
 
@@ -93,13 +101,24 @@ const styles = StyleSheet.create({
   searchView: {
     flex: 1,
   },
+  userView: {
+    flexDirection: 'row',
+  },
+  avatar: {
+    width: 30,
+    height: 30,
+  },
   
+  userNameFont: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 30,
+  },
+
   flatListStyle: {
-    marginTop: 100,
+    //marginTop: 30,
     width: width,
     height: 600,
-    borderColor: 'red',
-    borderWidth: 1,
   },
 
   viewSwiper: {
