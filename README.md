@@ -60,27 +60,3 @@
 
 
 
-Iteration 2: 
-
-We have add the following functionalities ：
--- Authentication: From start page, we will navigate to to signUp screen, and user can signup or signIn if they have account, after login, it will navigate to Home
-![IMG_8689](https://github.com/zhiminV/MobileFinalProject/assets/122182731/782652c2-1e10-4657-a094-716a12ea3566)
-![IMG_8690](https://github.com/zhiminV/MobileFinalProject/assets/122182731/84966e88-5c3a-4ab2-941d-8b2bff9877d1)
-![IMG_8691](https://github.com/zhiminV/MobileFinalProject/assets/122182731/db42021e-625c-4583-8d4b-fb13a5c5b8fa)
-![IMG_8692](https://github.com/zhiminV/MobileFinalProject/assets/122182731/35811d36-efdd-4864-ad45-e895efa6fc2e)
-![IMG_8679](https://github.com/zhiminV/MobileFinalProject/assets/122182731/52ddb361-5d95-4a7e-9f54-0651e9bd8844)
-
--- Camera, Location, External API:
-   Camera:  In post screen, user can choose camera ot photos from libary, and in edit page, user can change their avatar
-   Location: In post screen, user can press location to locate their current position, and it will show the address 
-   External API: We use weather as out external API, after selcet location, user ia able to get their local weather base on the location 
-   ![IMG_8681](https://github.com/zhiminV/MobileFinalProject/assets/122182731/25e825ef-b018-4911-aec7-3cdee5b161a4)
-    ![IMG_8682](https://github.com/zhiminV/MobileFinalProject/assets/122182731/5a994e30-2c11-4113-b6ee-007c79de9b88)
-    ![IMG_8685](https://github.com/zhiminV/MobileFinalProject/assets/122182731/b3d93525-9931-4571-bcf0-5954fff2f46a)
-
--- We have not add notification
-
-
-
-
-
