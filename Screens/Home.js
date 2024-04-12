@@ -47,11 +47,15 @@ export default function Home() {
                   const downloadURL = await getDownloadURL(imageRef);
                   imageArray[k] = downloadURL;
                 }
+                result['downloadUris'] = imageArray;
+              
                 result['email'] = email;
                 result['avatar'] = avatar;
-                result['downloadUris'] = imageArray;
+                //result['downloadUris'] = imageArray;
                 //console.log(posts);
                 tempArray.push(result);
+              
+
                 //console.log(tempArray);
                 //setPostID(previousItems => [...previousItems, result]);
               }
