@@ -87,6 +87,9 @@ when you click post history, you can see the list of all your posts, and click e
 ![IMG_8686](https://github.com/zhiminV/MobileFinalProject/assets/122182731/62b0954b-0080-4bbe-90d3-1c3aacbd387c)
 ![IMG_8687](https://github.com/zhiminV/MobileFinalProject/assets/122182731/e0b95169-3bf0-4489-b730-55b2d0e699f0)
 
+A detailed description of what each member has contributed
+ZiChuan Zhang: 
 
+Zhimin Liang: fix error in interation1, add location and external api , improve layout and style of post, profile, postlist, and postDetail screen
 
 
