@@ -21,7 +21,6 @@ export default function Post({navigation}) {
   const [CurrentLocation, setCurrentLocation] = useState(null);
   const[locationData, setLocationData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
-  console.log(postArr)
 
 
   useEffect(() => {

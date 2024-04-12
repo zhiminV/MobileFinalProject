@@ -19,45 +19,48 @@ export default function PostDetail({route,navigation}) {
     const [postLoc,setPostLoc] = useState("");
     const [weather, setWeather] = useState("");
     const [weatherIconuri, setWeatherIconuri] = useState("");
-
+    console.log("At the begining",posts)
 
     useEffect(() => {
       const fetchPostDetail = async () => {
-          try {
-              const postDetailData = await fetchInfoById("Posts", postId);
-              const userData = await fetchInfoById("Users", userId);
-              if (postDetailData && userData) {
-                  setPosts(userData.post)
-                  setDescription(postDetailData.description);
-                  setTime(postDetailData.timestamp)
-                  setPostLoc(postDetailData.postLocation.location? postDetailData.postLocation.location: "")
-                  setWeather(postDetailData.weather.text? postDetailData.weather.text:"")
-                  setWeatherIconuri(postDetailData.weather.icon? postDetailData.weather.icon:"")
-                  //  postDetailData.imageUris is an array of paths in Firebase Storage
-                  const imageDownloadURL = await Promise.all(postDetailData.imageUris.map((uri) => 
-                      getDownloadURL(ref(storage, uri)) 
-                  ));
-                  setImageUris(imageDownloadURL);
-              } else {
-                  console.log("Post not found");
-              }
-          } catch (error) {
-              console.error("Error fetching post detail:", error);
+        try {
+          const postDetailData = await fetchInfoById("Posts", postId);
+          const userData = await fetchInfoById("Users", userId);
+          if (postDetailData && userData) {
+            setDescription(postDetailData.description);
+            setTime(postDetailData.timestamp)
+            setPostLoc(postDetailData.postLocation.location? postDetailData.postLocation.location: "")
+            setWeather(postDetailData.weather.text? postDetailData.weather.text:"")
+            setWeatherIconuri(postDetailData.weather.icon? postDetailData.weather.icon:"")
+            //  postDetailData.imageUris is an array of paths in Firebase Storage
+            const imageDownloadURL = await Promise.all(postDetailData.imageUris.map((uri) => 
+              getDownloadURL(ref(storage, uri)) 
+            ));
+            setImageUris(imageDownloadURL);
+            setPosts(userData.post);
+          
+          } else {
+            console.log("Post not found");
           }
+        } catch (error) {
+          console.error("Error fetching post detail:", error);
+        }
       };
-  
+    
       fetchPostDetail();
-    }, [postId]);
+    }, []);
+    
+  
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight:()=>{
-        return<Pressable onPress={deleteFunction}>
-        <AntDesign name="delete" size={20} color="black"style={{ padding: 10 }} />
-      </Pressable>
-      },
-    });
-  },[postId])
+    useEffect(() => {
+      navigation.setOptions({
+        headerRight:()=>{
+          return<Pressable onPress={deleteFunction}>
+          <AntDesign name="delete" size={20} color="black"style={{ padding: 10 }} />
+        </Pressable>
+        },
+      });
+    },[posts])
 
   function deleteFunction() {
     Alert.alert('Delete', 'Are you sure you want to delete this item?', [
@@ -69,15 +72,16 @@ export default function PostDetail({route,navigation}) {
         text: 'Yes',
         onPress: async () => {
           try {
-        
+            console.log("postId:", postId);
+            console.log("posts before deletion:", posts);
             const newPosts = posts.filter((item) => item !== postId);
-            console.log(newPosts)
-            setPosts(newPosts);
+            console.log("newPosts after deletion:", newPosts);
+         
           
            updateFromDB("Users", userId, { post: newPosts });
 
             //Delete the post from the "Posts" collection
-            // await deleteFromDB('Posts', postId);
+            await deleteFromDB('Posts', postId);
   
 
             navigation.navigate('Profile');

@@ -9,7 +9,7 @@ import { collection,query, where, getDocs,onSnapshot } from 'firebase/firestore'
 import { signOut } from "firebase/auth";
 import { Ionicons, AntDesign ,Feather} from "@expo/vector-icons";
 
-export default function Profile({navigation}) {
+export default function Profile({navigation,route}) {
   const [postsCount, setPostsCount] = useState(0);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
@@ -18,7 +18,8 @@ export default function Profile({navigation}) {
   const [avatar, setAvatar] = useState("");
   const [Name, setName] = useState("");
   const [isSignedOut, setIsSignedOut] = useState(false);
-
+  
+  // console.log(route.params.newPosts)
   useEffect(() => {
     const fetchUserData = () => {
       // Assuming auth.currentUser is not null and has a valid uid
