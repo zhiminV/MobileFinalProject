@@ -29,7 +29,7 @@ export default function Profile({navigation}) {
           const docSnapshot = querySnapshot.docs[0];
           const userProfile = docSnapshot.data();
           setUserId(docSnapshot.id);
-          setPostHistory(userProfile.post || []);
+          setPostHistory(userProfile.post);
           setAvatar(userProfile.userAvatar || "");
           setName(userProfile.userName || "");
           setFollowersCount(userProfile.followers ? userProfile.followers.length : 0);

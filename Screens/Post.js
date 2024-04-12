@@ -21,6 +21,7 @@ export default function Post({navigation}) {
   const [CurrentLocation, setCurrentLocation] = useState(null);
   const[locationData, setLocationData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
+  console.log(postArr)
 
 
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function Post({navigation}) {
       'X-RapidAPI-Host': 'weatherapi-com.p.rapidapi.com'
     }
   };
-  console.log(options.params)
+
  
   const fetchWeather = async () => {
     try {
@@ -119,7 +120,7 @@ export default function Post({navigation}) {
       const timestamp = serverTimestamp();
       const newPost = {
         description: description,
-        imageUris: uploadUris,
+        imageUris: uploadUris?uploadUris:[],
         timestamp: timestamp, 
         userID: auth.currentUser.uid,
         postLocation: {
@@ -134,13 +135,14 @@ export default function Post({navigation}) {
     
       };
 
-      // console.log(newPost);
+      console.log(newPost);
 
       const docRef =  await writeToDB(newPost, "Posts")
       const postId = docRef.id;
 
       // Update the user document with the updated postArr
       updateFromDB("Users", docID, { post: [...postArr, postId] });
+      console.log(postArr)
 
       // Reset state
       setDescription('');

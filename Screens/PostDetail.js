@@ -19,7 +19,8 @@ export default function PostDetail({route,navigation}) {
     const [postLoc,setPostLoc] = useState("");
     const [weather, setWeather] = useState("");
     const [weatherIconuri, setWeatherIconuri] = useState("");
-  
+
+
     useEffect(() => {
       const fetchPostDetail = async () => {
           try {
@@ -46,7 +47,7 @@ export default function PostDetail({route,navigation}) {
       };
   
       fetchPostDetail();
-    }, []);
+    }, [postId]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -68,16 +69,19 @@ export default function PostDetail({route,navigation}) {
         text: 'Yes',
         onPress: async () => {
           try {
+        
+            const newPosts = posts.filter((item) => item !== postId);
+            console.log(newPosts)
+            setPosts(newPosts);
+          
+           updateFromDB("Users", userId, { post: newPosts });
 
-            const newPosts = posts.filter(item => item.id !== postId);
-
-            updateFromDB("Users", userId, { post: newPosts});
-
-            // Delete the post from the "Posts" collection
-            await deleteFromDB('Posts', postId);
+            //Delete the post from the "Posts" collection
+            // await deleteFromDB('Posts', postId);
   
 
-            navigation.goBack();
+            navigation.navigate('Profile');
+
           } catch (error) {
             console.error('Failed to delete post:', error);
           }
@@ -87,24 +91,24 @@ export default function PostDetail({route,navigation}) {
   }
 
   const renderImages = () => {
-    return (
-        <View style={styles.imageContainer}>
-            {imageUris.slice(0, 9).map((uri, index) => (
-                <Image key={index} source={{ uri }} style={styles.image} />
-            ))}
-        </View>
-    );
-};
-const renderTime = () => {
- 
-  if (time) {
-    const date = new Date(time.seconds * 1000); 
-    const dateString = date.toLocaleString(); 
-    return <Text>{dateString}</Text>;
-  } else {
-    return null;
-  }
-};
+      return (
+          <View style={styles.imageContainer}>
+              {imageUris.slice(0, 9).map((uri, index) => (
+                  <Image key={index} source={{ uri }} style={styles.image} />
+              ))}
+          </View>
+      );
+  };
+  const renderTime = () => {
+  
+    if (time) {
+      const date = new Date(time.seconds * 1000); 
+      const dateString = date.toLocaleString(); 
+      return <Text>{dateString}</Text>;
+    } else {
+      return null;
+    }
+  };
 
 return (
   <SafeAreaView style={styles.container}>
@@ -112,11 +116,13 @@ return (
         <Text>{description}</Text>
       </View>
         {renderImages()}
-        <View style={styles.weatherContainer}>
-          <Text>{weather}</Text> 
-          <Image source={{ uri: weatherIconuri || 'https://via.placeholder.com/150' }} 
-          style={styles.weatherIcon} />
-        </View>
+        {weather ? (
+          <View style={styles.weatherContainer}>
+            <Text>{weather}</Text> 
+            <Image source={{ uri: weatherIconuri|| 'https://via.placeholder.com/150' }} 
+            style={styles.weatherIcon} />
+          </View>
+        ) : null}
 
         <View style={styles.timetext}>
           {renderTime()}

@@ -62,7 +62,7 @@ export async function fetchInfoById(col,docId) {
 
 export async function updateFromDB(col,id,newData){
   try{
-      await updateDoc(doc(database,col,id),newData);
+    await updateDoc(doc(database,col,id),newData);
   }
   catch(err){
     console.log(err); 
