@@ -19,44 +19,48 @@ export default function PostDetail({route,navigation}) {
     const [postLoc,setPostLoc] = useState("");
     const [weather, setWeather] = useState("");
     const [weatherIconuri, setWeatherIconuri] = useState("");
-  
+    console.log("At the begining",posts)
+
     useEffect(() => {
       const fetchPostDetail = async () => {
-          try {
-              const postDetailData = await fetchInfoById("Posts", postId);
-              const userData = await fetchInfoById("Users", userId);
-              if (postDetailData && userData) {
-                  setPosts(userData.post)
-                  setDescription(postDetailData.description);
-                  setTime(postDetailData.timestamp)
-                  setPostLoc(postDetailData.postLocation.location? postDetailData.postLocation.location: "")
-                  setWeather(postDetailData.weather.text? postDetailData.weather.text:"")
-                  setWeatherIconuri(postDetailData.weather.icon? postDetailData.weather.icon:"")
-                  //  postDetailData.imageUris is an array of paths in Firebase Storage
-                  const imageDownloadURL = await Promise.all(postDetailData.imageUris.map((uri) => 
-                      getDownloadURL(ref(storage, uri)) 
-                  ));
-                  setImageUris(imageDownloadURL);
-              } else {
-                  console.log("Post not found");
-              }
-          } catch (error) {
-              console.error("Error fetching post detail:", error);
+        try {
+          const postDetailData = await fetchInfoById("Posts", postId);
+          const userData = await fetchInfoById("Users", userId);
+          if (postDetailData && userData) {
+            setDescription(postDetailData.description);
+            setTime(postDetailData.timestamp)
+            setPostLoc(postDetailData.postLocation.location? postDetailData.postLocation.location: "")
+            setWeather(postDetailData.weather.text? postDetailData.weather.text:"")
+            setWeatherIconuri(postDetailData.weather.icon? postDetailData.weather.icon:"")
+            //  postDetailData.imageUris is an array of paths in Firebase Storage
+            const imageDownloadURL = await Promise.all(postDetailData.imageUris.map((uri) => 
+              getDownloadURL(ref(storage, uri)) 
+            ));
+            setImageUris(imageDownloadURL);
+            setPosts(userData.post);
+          
+          } else {
+            console.log("Post not found");
           }
+        } catch (error) {
+          console.error("Error fetching post detail:", error);
+        }
       };
-  
+    
       fetchPostDetail();
     }, []);
+    
+  
 
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight:()=>{
-        return<Pressable onPress={deleteFunction}>
-        <AntDesign name="delete" size={20} color="black"style={{ padding: 10 }} />
-      </Pressable>
-      },
-    });
-  },[postId])
+    useEffect(() => {
+      navigation.setOptions({
+        headerRight:()=>{
+          return<Pressable onPress={deleteFunction}>
+          <AntDesign name="delete" size={20} color="black"style={{ padding: 10 }} />
+        </Pressable>
+        },
+      });
+    },[posts])
 
   function deleteFunction() {
     Alert.alert('Delete', 'Are you sure you want to delete this item?', [
@@ -68,16 +72,20 @@ export default function PostDetail({route,navigation}) {
         text: 'Yes',
         onPress: async () => {
           try {
+            console.log("postId:", postId);
+            console.log("posts before deletion:", posts);
+            const newPosts = posts.filter((item) => item !== postId);
+            console.log("newPosts after deletion:", newPosts);
+         
+          
+           updateFromDB("Users", userId, { post: newPosts });
 
-            const newPosts = posts.filter(item => item.id !== postId);
-
-            updateFromDB("Users", userId, { post: newPosts});
-
-            // Delete the post from the "Posts" collection
+            //Delete the post from the "Posts" collection
             await deleteFromDB('Posts', postId);
   
 
-            navigation.goBack();
+            navigation.navigate('Profile');
+
           } catch (error) {
             console.error('Failed to delete post:', error);
           }
@@ -87,24 +95,24 @@ export default function PostDetail({route,navigation}) {
   }
 
   const renderImages = () => {
-    return (
-        <View style={styles.imageContainer}>
-            {imageUris.slice(0, 9).map((uri, index) => (
-                <Image key={index} source={{ uri }} style={styles.image} />
-            ))}
-        </View>
-    );
-};
-const renderTime = () => {
- 
-  if (time) {
-    const date = new Date(time.seconds * 1000); 
-    const dateString = date.toLocaleString(); 
-    return <Text>{dateString}</Text>;
-  } else {
-    return null;
-  }
-};
+      return (
+          <View style={styles.imageContainer}>
+              {imageUris.slice(0, 9).map((uri, index) => (
+                  <Image key={index} source={{ uri }} style={styles.image} />
+              ))}
+          </View>
+      );
+  };
+  const renderTime = () => {
+  
+    if (time) {
+      const date = new Date(time.seconds * 1000); 
+      const dateString = date.toLocaleString(); 
+      return <Text>{dateString}</Text>;
+    } else {
+      return null;
+    }
+  };
 
 return (
   <SafeAreaView style={styles.container}>
@@ -112,11 +120,13 @@ return (
         <Text>{description}</Text>
       </View>
         {renderImages()}
-        <View style={styles.weatherContainer}>
-          <Text>{weather}</Text> 
-          <Image source={{ uri: weatherIconuri || 'https://via.placeholder.com/150' }} 
-          style={styles.weatherIcon} />
-        </View>
+        {weather ? (
+          <View style={styles.weatherContainer}>
+            <Text>{weather}</Text> 
+            <Image source={{ uri: weatherIconuri|| 'https://via.placeholder.com/150' }} 
+            style={styles.weatherIcon} />
+          </View>
+        ) : null}
 
         <View style={styles.timetext}>
           {renderTime()}

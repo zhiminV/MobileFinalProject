@@ -1,9 +1,15 @@
 import { FlatList, StyleSheet, Text, View, TouchableOpacity ,ScrollView} from "react-native";
-import React from "react";
+import React, { useState,useEffect} from "react";
 import colors from "../Helpers/colors";
 
 export default function PostList({ route, navigation }) {
   const {userId, postHistory } = route.params;
+  const [postList, setPostList] = useState(postHistory);
+  
+  useEffect(() => {
+    setPostList(postHistory);
+  }, [postHistory]);
+  
 
   const navigateToPostDetail = (postId) => {
     navigation.navigate("PostDetail", { postId, userId });
@@ -19,7 +25,7 @@ export default function PostList({ route, navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {postHistory.map(renderPostItem)}
+      {postList.map(renderPostItem)}
     </ScrollView>
   );
 }
