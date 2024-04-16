@@ -92,7 +92,7 @@ export default function Profile({navigation,route}) {
 
   }
   function handleNotification(){
-    console.log("handle notification")
+    navigation.navigate("Notification")
   }
 
   function handleHistory(){

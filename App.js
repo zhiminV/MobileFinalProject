@@ -15,6 +15,7 @@ import EditProfile from "./Screens/EditProfile";
 import OtherProfile from './Screens/OtherProfile';
 import PostDetail from './Screens/PostDetail';
 import PostList from './Screens/PostList';
+import Notification from './Screens/Notification';
 
 const Stack = createNativeStackNavigator();
 
@@ -75,6 +76,10 @@ export default function App() {
       <Stack.Screen
         name='PostList'
         component={PostList}
+      />
+       <Stack.Screen
+        name='Notification'
+        component={Notification}
       />
     </>
   )
