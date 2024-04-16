@@ -52,40 +52,42 @@ export default function Profile({navigation,route}) {
   }, [postHistory]);
 
   useEffect(() => {
-    const fetchFollowersDetails = async () => {
-      try {
-        const followersQuery = query(
-          collection(database, "Users"),
-        );
-        
-        const unsubscribe = onSnapshot(followersQuery, (querySnapshot) => {
-          let followersArr = [];
-          querySnapshot.forEach((doc) => {
-            if(doc.id != userId){
-              const userData = doc.data()
-              if(userData.following && userData.following.includes(auth.currentUser.uid)){
-                followersArr.push(userData.uid);
+    if (userId) {
+      const fetchFollowersDetails = async () => {
+        try {
+          const followersQuery = query(
+            collection(database, "Users"),
+          );
+          
+          const unsubscribe = onSnapshot(followersQuery, (querySnapshot) => {
+            let followersArr = [];
+            querySnapshot.forEach((doc) => {
+              if(doc.id != userId){
+                const userData = doc.data()
+                if(userData.following && userData.following.includes(auth.currentUser.uid)){
+                  followersArr.push(userData.uid);
+                }
               }
-            }
+            });
+    
+            // Update the followers state with the new array
+            setFollowers(followersArr);
+            // Update the followers count
+            setFollowersCount(followersArr.length);
+    
+            // Update the followers array in Firestore
+            updateFromDB("Users", userId, { followers: followersArr });
           });
-  
-          // Update the followers state with the new array
-          setFollowers(followersArr);
-          // Update the followers count
-          setFollowersCount(followersArr.length);
-  
-          // Update the followers array in Firestore
-          updateFromDB("Users", userId, { followers: followersArr });
-        });
-  
-        // setFollowersCount(snapshot.docs.length);
-        return unsubscribe;
-      } catch (error) {
-        console.error("Failed to fetch followers:", error);
-      }
-    };
-    fetchFollowersDetails();
-  }, [followersCount]);
+    
+          // setFollowersCount(snapshot.docs.length);
+          return unsubscribe;
+        } catch (error) {
+          console.error("Failed to fetch followers:", error);
+        }
+      };
+      fetchFollowersDetails();
+    }
+  }, [userId]);
   
  
 
@@ -119,7 +121,7 @@ export default function Profile({navigation,route}) {
 
   }
   function handleNotification(){
-    navigation.navigate("Notification")
+    navigation.navigate("Notification",{followersCount})
   }
 
   function handleHistory(){
