@@ -19,7 +19,7 @@ export default function PostDetail({route,navigation}) {
     const [postLoc,setPostLoc] = useState("");
     const [weather, setWeather] = useState("");
     const [weatherIconuri, setWeatherIconuri] = useState("");
-    console.log("At the begining",posts)
+   
 
     useEffect(() => {
       const fetchPostDetail = async () => {
@@ -72,10 +72,9 @@ export default function PostDetail({route,navigation}) {
         text: 'Yes',
         onPress: async () => {
           try {
-            console.log("postId:", postId);
-            console.log("posts before deletion:", posts);
+          
             const newPosts = posts.filter((item) => item !== postId);
-            console.log("newPosts after deletion:", newPosts);
+            
          
           
            updateFromDB("Users", userId, { post: newPosts });

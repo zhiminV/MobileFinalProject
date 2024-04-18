@@ -6,9 +6,8 @@ import { updateFromDB, writeToDB } from '../firebase-files/firebaseHelper';
 import {auth, database  } from '../firebase-files/firebaseSetup';
 import { collection,query, where, getDocs,onSnapshot ,documentId} from 'firebase/firestore'
 
-let preCount = 0;
+
 export default function Notification({route,navigation}) {
-  const{userId}= route.params;
   const [followersCount, setFollowersCount] = useState(0);
   const [previousFollowersCount, setPreviousFollowersCount] = useState(0);
   const [isNotificationOpen, setIsNotificationOpen ] = useState(false)

@@ -6,15 +6,10 @@ import { auth, database } from '../firebase-files/firebaseSetup';
 
 
 export default function NearMe() {
-  const [postsCount, setPostsCount] = useState(0);
-  const [followers, setFollowers] = useState([]);
-  const [followersCount, setFollowersCount] = useState(0);
-  const [followingCount, setFollowingCount] = useState(0);
   const [postHistory, setPostHistory] = useState([]);
   const [userId,setUserId] = useState("");
-  const [avatar, setAvatar] = useState("");
-  const [Name, setName] = useState("");
   const [postLocations, setPostLocations] = useState([]);
+  
 
   // console.log(postHistory)
   //["4W8WfC4cvvbmdAlOutqY", "yiEZRZuswEntLlyy1QHs", "l0zYHfNNY4gmyOaRu28T", "1ZfBu4uytdebDoxwZHvY"]
@@ -23,18 +18,13 @@ export default function NearMe() {
     const fetchUserData = () => {
       // Assuming auth.currentUser is not null and has a valid uid
       const q = query(collection(database, "Users"), where("uid", "==", auth.currentUser.uid));
-
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
         if (!querySnapshot.empty) {
           const docSnapshot = querySnapshot.docs[0];
           const userProfile = docSnapshot.data();
           setUserId(docSnapshot.id);
           setPostHistory(userProfile.post);
-          setAvatar(userProfile.userAvatar || "");
-          setName(userProfile.userName || "");
-          setFollowers(userProfile.followers);
-          setFollowingCount(userProfile.following ? userProfile.following.length : 0);
-          setPostsCount(userProfile.post ? userProfile.post.length : 0);
+        
         } else {
           console.log("No document found for the current user");
         }
@@ -79,7 +69,7 @@ export default function NearMe() {
   return (
     <View style={styles.container}>
       <Text>NearMe</Text>
-      <MapView style={styles.map} initialRegion={{ latitude: 0, longitude: 0, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}>
+      <MapView style={styles.map} initialRegion={{ latitude: 49.28852168359985, longitude: -123.13880274881578, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}>
         {/* Display markers for each post location */}
         {postLocations.map((location, index) => (
           <Marker key={index} coordinate={{ latitude: location.latitude, longitude: location.longitude }} />
@@ -97,6 +87,6 @@ const styles = StyleSheet.create({
   },
   map: {
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    height: Dimensions.get('window').height * 0.9, 
   },
 });

@@ -120,7 +120,7 @@ export default function Profile({navigation,route}) {
 
   }
   function handleNotification(){
-    navigation.navigate("Notification",{userId})
+    navigation.navigate("Notification")
   }
 
   function handleHistory(){
