@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,Button, Alert, TextInput } from 'react-native'
+import { StyleSheet, Text, View,Button, Alert, TextInput, FlatList } from 'react-native'
 import React from 'react'
 import * as Notifications from "expo-notifications";
 import { useEffect,useState } from 'react';
@@ -11,6 +11,7 @@ export default function Notification({route,navigation}) {
   const{userId}= route.params;
   const [followersCount, setFollowersCount] = useState(0);
   const [previousFollowersCount, setPreviousFollowersCount] = useState(0);
+  const [isNotificationOpen, setIsNotificationOpen ] = useState(false)
 
   useEffect(() => {
     const fetchFollowersDetails = async () => {
@@ -26,7 +27,9 @@ export default function Notification({route,navigation}) {
             });
             
             if (followersCount > previousFollowersCount) {
-              localNotificationHandler();
+              setIsNotificationOpen(true)
+              setNotificationOpen(isNotificationOpen)
+              
             }
             
             setPreviousFollowersCount(() => {
@@ -51,6 +54,12 @@ export default function Notification({route,navigation}) {
     }
   }, [followersCount]);
 
+  function setNotificationOpen(isNotificationOpen){
+   if(isNotificationOpen){
+    localNotificationHandler();
+   }
+    
+  }
 
   async function verifyPermission() {
     try {

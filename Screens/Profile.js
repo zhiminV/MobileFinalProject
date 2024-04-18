@@ -20,7 +20,7 @@ export default function Profile({navigation,route}) {
   const [avatar, setAvatar] = useState("");
   const [Name, setName] = useState("");
   const [isSignedOut, setIsSignedOut] = useState(false);
-  
+
 
   // console.log(route.params.newPosts)
   useEffect(() => {
@@ -105,11 +105,11 @@ export default function Profile({navigation,route}) {
             catch(err){
               console.log('Error at App.js', err);
             }
-
           }}
         >
           <AntDesign name="logout" size={24} color="black" />
         </PressableButton>
+        
         );
       }, 
     }); 
@@ -121,7 +121,7 @@ export default function Profile({navigation,route}) {
 
   }
   function handleNotification(){
-    navigation.navigate("Notification",{followersCount})
+    navigation.navigate("Notification",{userId})
   }
 
   function handleHistory(){
