@@ -89,7 +89,7 @@ when you click post history, you can see the list of all your posts, and click e
 
 A detailed description of what each member has contributed:
 
-ZiChuan Zhang: 
+ZiChuan Zhang: Fixed errors from iteration 1. Completely remade the home screen. Fixed the TimeLine component entirely. 
 
 Zhimin Liang: fix error in interation1, add location and external api , improve layout and style of post, profile, postlist, and postDetail screen
 
