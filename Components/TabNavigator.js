@@ -73,10 +73,10 @@ export default function TabNavigator( {route} ) {
         />
 
         <Tab.Screen 
-          name="NearMe"
+          name="Map"
           component={NearMe}
           options={{
-            tabBarLabel: 'NearMe',
+            tabBarLabel: 'VisitMap',
             tabBarIcon: ({ color, size }) => (
               <Entypo name="map" size={24} color="black" />
           ),
