@@ -19,7 +19,6 @@ export default function Profile({navigation,route}) {
   const [userId,setUserId] = useState("");
   const [avatar, setAvatar] = useState("");
   const [Name, setName] = useState("");
-  const [isSignedOut, setIsSignedOut] = useState(false);
 
 
   // console.log(route.params.newPosts)
