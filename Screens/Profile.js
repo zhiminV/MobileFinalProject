@@ -3,14 +3,16 @@ import React from 'react'
 import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
 import colors from '../Helpers/colors';
-import { fetchInfoById,deleteFromDB} from '../firebase-files/firebaseHelper';
+import { fetchInfoById,deleteFromDB, updateFromDB} from '../firebase-files/firebaseHelper';
 import {auth, database  } from '../firebase-files/firebaseSetup';
 import { collection,query, where, getDocs,onSnapshot } from 'firebase/firestore'
 import { signOut } from "firebase/auth";
 import { Ionicons, AntDesign ,Feather} from "@expo/vector-icons";
+import { update } from 'firebase/database';
 
 export default function Profile({navigation,route}) {
   const [postsCount, setPostsCount] = useState(0);
+  const [followers, setFollowers] = useState([]);
   const [followersCount, setFollowersCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [postHistory, setPostHistory] = useState([]);
@@ -18,7 +20,8 @@ export default function Profile({navigation,route}) {
   const [avatar, setAvatar] = useState("");
   const [Name, setName] = useState("");
   const [isSignedOut, setIsSignedOut] = useState(false);
-  
+
+
   // console.log(route.params.newPosts)
   useEffect(() => {
     const fetchUserData = () => {
@@ -33,7 +36,7 @@ export default function Profile({navigation,route}) {
           setPostHistory(userProfile.post);
           setAvatar(userProfile.userAvatar || "");
           setName(userProfile.userName || "");
-          setFollowersCount(userProfile.followers ? userProfile.followers.length : 0);
+          setFollowers(userProfile.followers);
           setFollowingCount(userProfile.following ? userProfile.following.length : 0);
           setPostsCount(userProfile.post ? userProfile.post.length : 0);
         } else {
@@ -43,9 +46,50 @@ export default function Profile({navigation,route}) {
 
       return () => unsubscribe();
     };
+
     const unsubscribe = fetchUserData();
     return () => unsubscribe();
   }, [postHistory]);
+
+  useEffect(() => {
+    if (userId) {
+      const fetchFollowersDetails = async () => {
+        try {
+          const followersQuery = query(
+            collection(database, "Users"),
+          );
+          
+          const unsubscribe = onSnapshot(followersQuery, (querySnapshot) => {
+            let followersArr = [];
+            querySnapshot.forEach((doc) => {
+              if(doc.id != userId){
+                const userData = doc.data()
+                if(userData.following && userData.following.includes(auth.currentUser.uid)){
+                  followersArr.push(userData.uid);
+                }
+              }
+            });
+    
+            // Update the followers state with the new array
+            setFollowers(followersArr);
+            // Update the followers count
+            setFollowersCount(followersArr.length);
+    
+            // Update the followers array in Firestore
+            updateFromDB("Users", userId, { followers: followersArr });
+          });
+    
+          // setFollowersCount(snapshot.docs.length);
+          return unsubscribe;
+        } catch (error) {
+          console.error("Failed to fetch followers:", error);
+        }
+      };
+      fetchFollowersDetails();
+    }
+  }, [userId]);
+  
+ 
 
 
   useEffect(() => {
@@ -61,30 +105,15 @@ export default function Profile({navigation,route}) {
             catch(err){
               console.log('Error at App.js', err);
             }
-
           }}
         >
           <AntDesign name="logout" size={24} color="black" />
         </PressableButton>
+        
         );
       }, 
     }); 
   },[])
-
-
-  // const navigateToPostDetail = (postId) => {
-  //   navigation.navigate('PostDetail', {postId,userId});
-  // };ß
-
-  
-
-  // const renderPostItem = ({ item }) => (
-  //   <View style={styles.postItemContainer}>
-  //     <PressableButton style={colors.postItem} onPressFunction={() => navigateToPostDetail(item)}>
-  //       <Text>{item}</Text>
-  //     </PressableButton>
-  //   </View>
-  // );
 
 
   function handleEdit(){
@@ -92,7 +121,7 @@ export default function Profile({navigation,route}) {
 
   }
   function handleNotification(){
-    console.log("handle notification")
+    navigation.navigate("Notification",{userId})
   }
 
   function handleHistory(){
@@ -190,11 +219,6 @@ export default function Profile({navigation,route}) {
         </View>
       </TouchableOpacity>
 
-      {/* <FlatList
-        data={postHistory}
-        renderItem={renderPostItem}
-        keyExtractor={(item) => item}
-      /> */}
     </SafeAreaView>
   );
 }

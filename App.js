@@ -15,10 +15,22 @@ import EditProfile from "./Screens/EditProfile";
 import OtherProfile from './Screens/OtherProfile';
 import PostDetail from './Screens/PostDetail';
 import PostList from './Screens/PostList';
+import Notification from './Screens/Notification';
+import * as Notifications from "expo-notifications";
 
+Notifications.setNotificationHandler({
+  handleNotification: async function (notification) {
+    //marking the function async will make it always return a resolved promise
+    // you could use the info about incoming notification and do different behaviour for different notifications
+    return {
+      shouldShowAlert: true,
+    };
+  },
+});
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  
   const [userLogined, setUserLogined] = useState(false);
 
   useEffect(()=> {
@@ -75,6 +87,10 @@ export default function App() {
       <Stack.Screen
         name='PostList'
         component={PostList}
+      />
+       <Stack.Screen
+        name='Notification'
+        component={Notification}
       />
     </>
   )
