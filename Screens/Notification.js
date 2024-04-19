@@ -1,125 +1,84 @@
-import { StyleSheet, Text, View,Button, Alert, TextInput, FlatList } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Button, Alert, Platform } from 'react-native';
 import * as Notifications from "expo-notifications";
-import { useEffect,useState } from 'react';
-import { updateFromDB, writeToDB } from '../firebase-files/firebaseHelper';
-import {auth, database  } from '../firebase-files/firebaseSetup';
-import { collection,query, where, getDocs,onSnapshot ,documentId} from 'firebase/firestore'
+import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
+export default function Notification({ navigation }) {
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-export default function Notification({route,navigation}) {
-  const [followersCount, setFollowersCount] = useState(0);
-  const [previousFollowersCount, setPreviousFollowersCount] = useState(0);
-  const [isNotificationOpen, setIsNotificationOpen ] = useState(false)
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
 
-  useEffect(() => {
-    const fetchFollowersDetails = async () => {
-      try {
-        const followersQuery = query(collection(database, 'Users'), where('uid', '==', auth.currentUser.uid));
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
 
-        const unsubscribe = onSnapshot(followersQuery, (querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            const userData = doc.data();
-            const currentFollowersCount = userData.followers.length;
-            setFollowersCount(() => {
-              return currentFollowersCount;
-            });
-            
-            if (followersCount > previousFollowersCount) {
-              setIsNotificationOpen(true)
-              setNotificationOpen(isNotificationOpen)
-              
-            }
-            
-            setPreviousFollowersCount(() => {
-              return followersCount;
-            });
-            
-          
-
-          });
-        });
-
-        return unsubscribe; // Return the unsubscribe function directly
-      } catch (error) {
-        console.error('Failed to fetch followers:', error);
-      }
-    };
-
-    const unsubscribe = fetchFollowersDetails();
-
-    if (unsubscribe && typeof unsubscribe === 'function') {
-      return () => unsubscribe(); 
-    }
-  }, [followersCount]);
-
-  function setNotificationOpen(isNotificationOpen){
-   if(isNotificationOpen){
-    localNotificationHandler();
-   }
-    
-  }
+  const handleConfirm = (time) => {
+    scheduleNotification(time)
+    hideDatePicker();
+  };
 
   async function verifyPermission() {
-    try {
-      const status = await Notifications.getPermissionsAsync();
-      console.log(status);
-      if (status.granted) {
-        return true;
-      }
-      const permissionResponse = await Notifications.requestPermissionsAsync();
-      return permissionResponse.granted;
-    } catch (err) {
-      console.log(err);
+    const settings = await Notifications.getPermissionsAsync();
+    if (!settings.granted) {
+      return await Notifications.requestPermissionsAsync();
     }
+    return settings;
   }
 
-  async function localNotificationHandler() {
-      try {
-        const havePermission = await verifyPermission();
-        if (!havePermission) {
-          Alert.alert("You need to give permission for notification");
-          return;
-        }
-
-        const id = await Notifications.scheduleNotificationAsync({
-          content: {
-            title: "Notification",
-            body: "You have a new follower",
-          },
-          trigger: null,
-        });
-      } catch (err) {
-        console.log(err);
-      }
+  async function scheduleNotification(time) {
+    const permission = await verifyPermission();
+    if (!permission.granted) {
+      Alert.alert("Permission Denied", "You need to grant notification permissions to use this feature.");
+      return;
     }
+
+    // Set the notification to repeat daily at the user's chosen time
+    const schedulingOptions = {
+      content: {
+        title: "Daily Reminder",
+        body: "Share your happy moment!",
+      },
+      trigger: {
+        hour: time.getHours(),
+        minute: time.getMinutes(),
+        repeats: true,
+      },
+    };
+
+    await Notifications.cancelAllScheduledNotificationsAsync(); // Cancel old notifications
+    await Notifications.scheduleNotificationAsync(schedulingOptions);
+    Alert.alert("Notification Set", `You will be notified daily at ${time.getHours()}:${time.getMinutes()}`);
+  }
 
   return (
-      <View>
-      
-        <Text style={styles.info}>Allow notification when you gain a new follower.</Text>
-
-        <Button
-          title="Set Notification"
-          onPress={() => navigation.goBack()}
+    <View style={styles.container}>
+      <Text style={styles.info}>Set daily reminder to share your monment:</Text>
+        <View>
+        <Button title="Set Notification" onPress={showDatePicker} />
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="time"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
         />
       </View>
-    );
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  info: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
   }
-    
-  const styles = StyleSheet.create({
-    text:{
-      fontSize: 15,
-        marginBottom: 0,
-        alignSelf: 'flex-start',
-        marginLeft:30,
-        marginTop:30,
-    },
-    input:{
-      fontSize: 20,
-      borderWidth: 2,
-      padding: 10,
-      borderRadius: 5,
-      width: "85%",   
-    }
-  });
+});
