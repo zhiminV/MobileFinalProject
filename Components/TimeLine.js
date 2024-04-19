@@ -103,15 +103,14 @@ export default function TimeLine( props) {
           <PressableButton customStyle={{width: 200}} onPressFunction={commentHanlder}>
             <Text>View All Comments</Text>
           </PressableButton>
-          <Modal title='All Comments' animationType='slide' visible={commentPressed}>
+          <Modal title='All Comments' animationType='slide' visible={commentPressed} presentationStyle="overFullScreen" transparent={true}>
+            <View style={styles.containerStyle}>
               <View style={{
-                flex: 1,
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center'}}>
-              <View style={{
-                width: 300,
-                height: 300}}>
+                //marginTop: 300,
+                width: width,
+                height: height * 0.6,
+                backgroundColor: 'white',
+                borderRadius : 20}}>
                   <Button title={"close comment"} onPress={commentHanlder}/>
               </View>
             </View>
@@ -163,6 +162,11 @@ const styles = StyleSheet.create({
     width: 200,
     maxHeight: 300,
   },
-  
+  containerStyle: {
+    //backgroundColor: 'rgba(0,0,0,0.2)',
+    position: 'relative',
+    justifyContent: 'flex-end',
+    flex: 1,
+  },
 
 })
