@@ -20,6 +20,7 @@ export default function Profile({navigation,route}) {
   const [userId,setUserId] = useState("");
   const [avatar, setAvatar] = useState("");
   const [Name, setName] = useState("");
+  const [loading, setLoading] = useState(true);
 
 
   // console.log(route.params.newPosts)
@@ -35,13 +36,19 @@ export default function Profile({navigation,route}) {
           const userProfile = docSnapshot.data();
           setUserId(docSnapshot.id);
           setPostHistory(userProfile.post);
-          const imageRef = ref(storage, userProfile.userAvatar);
+          const imageRef = userProfile.userAvatar ? ref(storage, userProfile.userAvatar) : null;
           try {
-            const imageDownloadURL = await getDownloadURL(imageRef);
-            // console.log(imageDownloadURL);
-            setAvatar(imageDownloadURL || "");
+            if (imageRef) {
+              const imageDownloadURL = await getDownloadURL(imageRef);
+              setAvatar(imageDownloadURL || "");
+            } 
           } catch (error) {
+            // setAvatar("person-circle-outline");
             console.error("Error getting download URL:", error);
+          }finally {
+            // Set loading state to false after fetching the avatar image
+            setLoading(false);
+          // console.log(loading)
           }
           setName(userProfile.userName || "");
           setFollowers(userProfile.followers);
@@ -181,20 +188,25 @@ export default function Profile({navigation,route}) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
-        <View style={styles.avatarContainer}>
-          {avatar ? (
-            <Image source={{ uri:avatar}} style={styles.avatarImage} />
-
+   
+      {loading ? (
+          // Show a loading indicator while fetching the avatar image
+          <Text>Loading...</Text>
+        ) : (
+          avatar ? (
+            <Image source={{ uri: avatar }} style={styles.avatarImage} />
           ) : (
             <Ionicons name="person-circle-outline" size={120} color="gray" />
-          )}
+          )
+        )}
           <Text style={styles.nameText}>{Name}</Text>
+
           <View style={styles.stats}>
             <Text style={styles.statsItem}>Posts: {postsCount}</Text>
             <Text style={styles.statsItem}>Fans: {followersCount}</Text>
             <Text style={styles.statsItem}>Following: {followingCount}</Text>
           </View>
-        </View>
+        
       </View>
 
       <TouchableOpacity style={styles.button} onPress={handleEdit}>

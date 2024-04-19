@@ -93,7 +93,7 @@ export default function EditProfile({navigation}) {
           text: 'Yes', onPress: () =>
             updateFromDB("Users", docid, newProfile)
               .then(() => {
-                navigation.navigate("Profile");
+                navigation.goBack()
               })
               .catch((error) => console.error("Update failed", error))
         },
