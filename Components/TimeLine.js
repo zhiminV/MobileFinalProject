@@ -1,4 +1,4 @@
-import { View, Text, FlatList, StyleSheet, Dimensions } from 'react-native'
+import { View, Text, FlatList, StyleSheet, Dimensions, Modal, Button } from 'react-native'
 import { Image } from 'expo-image';
 import React, { useEffect, useRef, useState } from 'react'
 import Swiper from 'react-native-swiper'
@@ -7,6 +7,7 @@ import { getAllDocs } from '../firebase-files/firebaseHelper'
 import { auth, database } from '../firebase-files/firebaseSetup';
 import { storage } from '../firebase-files/firebaseSetup'
 import { getDownloadURL, ref } from "firebase/storage";
+import PressableButton from './PressableButton';
 
 
 
@@ -24,6 +25,7 @@ export default function TimeLine( props) {
   time = time.substring(4, 15);
   //const [avatarURL, setAvatarURL] = useState('');
   //[initialize, initializer] = useState(false);
+  const [commentPressed, setCommentPressed] = useState(false);
 
 
   
@@ -67,30 +69,53 @@ export default function TimeLine( props) {
     //usePhotos([]);
   }, []);
   
+  function commentHanlder() {
+    if (commentPressed === false) {
+      setCommentPressed(true);
+    } else {
+      setCommentPressed(false);
+    }
+  }
 
   return (
     
       <View style={styles.flatListStyle}>
-        <Text style={styles.userNameFont}> {docID}</Text>
-        <Swiper
-          key={photos.length}
-          //style={styles.viewSwiper}
-        >
-          {
-            photos.map((photo) => (
-                <Image
-                  style={styles.viewPhoto}
-                  source={photo}
-                  key={photo}
-                  //resizeMode={'stretch'}
-                />
-            ))
-          }
-        </Swiper>
-        <View style={styles.userView}>
-          <Text style={styles.userNameFont}> {time.toString()} </Text>
-         
-        </View>
+       
+          <Text style={styles.userNameFont}> {docID}</Text>
+          <Swiper
+            key={photos.length}
+            //style={styles.viewSwiper}
+          >
+            {
+              photos.map((photo) => (
+                  <Image
+                    style={styles.viewPhoto}
+                    source={photo}
+                    key={photo}
+                    //resizeMode={'stretch'}
+                  />
+              ))
+            }
+          </Swiper>
+          <View style={styles.userView}>
+            <Text style={styles.userNameFont}> {time.toString()} </Text>
+          </View>
+          <PressableButton customStyle={{width: 200}} onPressFunction={commentHanlder}>
+            <Text>View All Comments</Text>
+          </PressableButton>
+          <Modal title='All Comments' animationType='slide' visible={commentPressed}>
+              <View style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center'}}>
+              <View style={{
+                width: 300,
+                height: 300}}>
+                  <Button title={"close comment"} onPress={commentHanlder}/>
+              </View>
+            </View>
+         </Modal>
       </View>
   )
 
@@ -131,6 +156,13 @@ const styles = StyleSheet.create({
     flex: 1,
     width: width,
     height: 200,
-  }
+  },
+  modalView: {
+
+    borderRadius: 10,
+    width: 200,
+    maxHeight: 300,
+  },
+  
 
 })
