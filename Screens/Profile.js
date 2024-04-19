@@ -4,11 +4,12 @@ import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
 import colors from '../Helpers/colors';
 import { fetchInfoById,deleteFromDB, updateFromDB} from '../firebase-files/firebaseHelper';
-import {auth, database  } from '../firebase-files/firebaseSetup';
+import {auth, database,storage  } from '../firebase-files/firebaseSetup';
 import { collection,query, where, getDocs,onSnapshot } from 'firebase/firestore'
 import { signOut } from "firebase/auth";
 import { Ionicons, AntDesign ,Feather} from "@expo/vector-icons";
-import { update } from 'firebase/database';
+import { getDownloadURL, ref } from "firebase/storage";
+
 
 export default function Profile({navigation,route}) {
   const [postsCount, setPostsCount] = useState(0);
@@ -23,17 +24,25 @@ export default function Profile({navigation,route}) {
 
   // console.log(route.params.newPosts)
   useEffect(() => {
-    const fetchUserData = () => {
-      // Assuming auth.currentUser is not null and has a valid uid
+    let unsubscribeSnapshot;
+  
+    const fetchData = async () => {
       const q = query(collection(database, "Users"), where("uid", "==", auth.currentUser.uid));
-
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  
+      unsubscribeSnapshot = onSnapshot(q, async (querySnapshot) => {
         if (!querySnapshot.empty) {
           const docSnapshot = querySnapshot.docs[0];
           const userProfile = docSnapshot.data();
           setUserId(docSnapshot.id);
           setPostHistory(userProfile.post);
-          setAvatar(userProfile.userAvatar || "");
+          const imageRef = ref(storage, userProfile.userAvatar);
+          try {
+            const imageDownloadURL = await getDownloadURL(imageRef);
+            // console.log(imageDownloadURL);
+            setAvatar(imageDownloadURL || "");
+          } catch (error) {
+            console.error("Error getting download URL:", error);
+          }
           setName(userProfile.userName || "");
           setFollowers(userProfile.followers);
           setFollowingCount(userProfile.following ? userProfile.following.length : 0);
@@ -42,13 +51,19 @@ export default function Profile({navigation,route}) {
           console.log("No document found for the current user");
         }
       });
-
-      return () => unsubscribe();
     };
-
-    const unsubscribe = fetchUserData();
-    return () => unsubscribe();
+  
+    if (auth.currentUser) {
+      fetchData();
+    }
+  
+    return () => {
+      if (unsubscribeSnapshot) {
+        unsubscribeSnapshot();
+      }
+    };
   }, [postHistory]);
+  
 
   useEffect(() => {
     if (userId) {
@@ -161,15 +176,15 @@ export default function Profile({navigation,route}) {
       { cancelable: false } // This prevents the alert from being dismissed by tapping outside of the alert dialog
     );
   }
-
-  
+// console.log(avatar)
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
         <View style={styles.avatarContainer}>
           {avatar ? (
-            <Image source={{ uri: avatar }} style={styles.avatarImage} />
+            <Image source={{ uri:avatar}} style={styles.avatarImage} />
+
           ) : (
             <Ionicons name="person-circle-outline" size={120} color="gray" />
           )}
