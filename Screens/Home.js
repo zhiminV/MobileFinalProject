@@ -26,18 +26,15 @@ export default function Home() {
         const query_user = query(collectionRef, where('uid', '==', auth.currentUser.uid))
         const querySnapshot = await getDocs(query_user);
         setFollowing(querySnapshot.docs[0].data().following); 
-        //console.log(querySnapshot.docs[0].data());
 
         for (let i = 0; i<following.length; i++) {
           const query_posts = query(collectionRef, where('uid', '==', following[i]));
           const querySnapshotPosts = await getDocs(query_posts);
-          //console.log(querySnapshotPosts.docs[0].data());
           querySnapshotPosts.forEach(async (document) => {
 
             const posts = document.data().post;
             const email = document.data().email;
             const avatar = document.data().userAvatar;
-            //console.log(posts);
             for (let j = 0; j < posts.length; j++) {
               if (!tempArray.some(object => object.docId === posts[j])) {
                 const result = await fetchInfoById('Posts', posts[j]);
@@ -50,31 +47,14 @@ export default function Home() {
                 result['email'] = email;
                 result['avatar'] = avatar;
                 result['downloadUris'] = imageArray;
-                //console.log(posts);
                 tempArray.push(result);
-                //console.log(tempArray);
-                //setPostID(previousItems => [...previousItems, result]);
+                console.log(tempArray);
               }
-              //console.log(j);
+              
             }
-            /*
-            if(!postID.find(post => post.postID === doc.id)){
-              const post = doc.data();
-              post["postID"] = doc.id;
-              //console.log(doc.id);
-              setPostID(previousItems => [...previousItems, post]);
-            }
-            */
           });
         }
         setPostID(tempArray);
-        //console.log(postID);
-        //setPostID(previousItems => [...previousItems, result]);
-        //console.log(postID.length);
-        //integer = integer + 1;
-        //console.log('How many times?', integer);
-        //console.log('How many items does this array have?', postID.length);
-        //console.log(tempArray);
       } catch (err){
         console.log(err);
       }

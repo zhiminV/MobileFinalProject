@@ -131,17 +131,21 @@ export default function Post({navigation}) {
           icon: weatherData ? `https:${weatherData.current.condition.icon}` : null,
           text: weatherData ? weatherData.current.condition.text : null
         }
-    
       };
+
 
       console.log(newPost);
 
-      const docRef =  await writeToDB(newPost, "Posts")
+      const docRef = await writeToDB(newPost, "Posts")
+      //console.log(docRef.id);
       const postId = docRef.id;
 
       // Update the user document with the updated postArr
       updateFromDB("Users", docID, { post: [...postArr, postId] });
-      console.log(postArr)
+      //console.log(postArr)
+
+      const comment = {postID: docRef.id, content:[]};
+      const commentDocRef = await writeToDB(comment, "Comments");
 
       // Reset state
       setDescription('');

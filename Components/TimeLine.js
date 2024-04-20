@@ -1,64 +1,49 @@
-import { View, Text, FlatList, StyleSheet, Dimensions, Modal, Button } from 'react-native'
+import { View, Text, FlatList, StyleSheet, Dimensions, Modal, Button, KeyboardAvoidingView, TextInput } from 'react-native'
 import { Image } from 'expo-image';
 import React, { useEffect, useRef, useState } from 'react'
 import Swiper from 'react-native-swiper'
-import { collection, getDocs, query, where, whereIn } from 'firebase/firestore'
-import { getAllDocs } from '../firebase-files/firebaseHelper'
+import { arrayUnion, collection, doc, getDocs, query, serverTimestamp, updateDoc, where, whereIn } from 'firebase/firestore'
+import { getAllDocs, writeToDB } from '../firebase-files/firebaseHelper'
 import { auth, database } from '../firebase-files/firebaseSetup';
 import { storage } from '../firebase-files/firebaseSetup'
 import { getDownloadURL, ref } from "firebase/storage";
 import PressableButton from './PressableButton';
-
+import { AntDesign } from '@expo/vector-icons';
 
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default function TimeLine( props) {
+export default function TimeLine( props ) {
 
   const photos = props.item.downloadUris;
-  //[photos, usePhotos] = useState(props.item.imageUris);
-  console.log(photos);
   [elements, setElements] = useState([]);
   const docID = props.item.email;
+  const postID = props.item.docId;
   let time = props.item.timestamp.toDate().toString();
   time = time.substring(4, 15);
-  //const [avatarURL, setAvatarURL] = useState('');
-  //[initialize, initializer] = useState(false);
   const [commentPressed, setCommentPressed] = useState(false);
-
-
+  [input, changeInput] = useState("");
+  const [comments, setComments] = useState([]);
+  const [sendPressed, setSendPressed] = useState(false);
   
   useEffect(() => {
 
     async function getPhoto() {
       
       try {
-        //console.log(time);
-        console.log(photos);
-
         let counter = 0;
         let array = [];
         for (let i = 0; i < photos.length; i++) {
-          //const reference = ref(storage, photos[i]);
-          //const uri = await getDownloadURL(reference);
-         //console.log(uri);
           counter = counter + 1;
-          
           const object = 
           {
             id: counter,
             url: photos[i],
-          };
-          //console.log(object);
-
+          };     
           array.push(object);
-          //console.log(array);
         } 
-
         setElements(array);
-        //console.log(elements);
-        //setElements([]);
       } catch (err) {
         console.log('Error Ocurred in getPhoto()', err);
       }
@@ -66,7 +51,6 @@ export default function TimeLine( props) {
 
     getPhoto();
   
-    //usePhotos([]);
   }, []);
   
   function commentHanlder() {
@@ -77,10 +61,34 @@ export default function TimeLine( props) {
     }
   }
 
+  async function sendComment() {
+    const collectionRef = collection(database, 'Users');
+    const query_user = query(collectionRef, where('uid', '==', auth.currentUser.uid));
+    const querySnapshot = await getDocs(query_user);
+
+    const collectionRefComment = collection(database, 'Comments');
+    const query_comment = query(collectionRef, where('postID', '==', postID));
+    const querySnapshotComment = await getDocs(query_comment);
+    
+    const commentRef = querySnapshotComment.docs[0].ref;
+
+
+
+
+
+    const email = querySnapshot.docs[0].data().email;
+    const timestamp = serverTimestamp();
+    const documentID = querySnapshot.docs[0].id;
+
+    const comment = {content: input, time: timestamp, author: email}
+    await updateDoc(commentRef, {content: arrayUnion(comment)});
+    setSendPressed(!sendPressed);
+    changeInput('');
+  }
+
   return (
     
       <View style={styles.flatListStyle}>
-       
           <Text style={styles.userNameFont}> {docID}</Text>
           <Swiper
             key={photos.length}
@@ -104,17 +112,37 @@ export default function TimeLine( props) {
             <Text>View All Comments</Text>
           </PressableButton>
           <Modal title='All Comments' animationType='slide' visible={commentPressed} presentationStyle="overFullScreen" transparent={true}>
-            <View style={styles.containerStyle}>
-              <View style={{
-                //marginTop: 300,
-                width: width,
-                height: height * 0.6,
-                backgroundColor: 'white',
-                borderRadius : 20}}>
-                  <Button title={"close comment"} onPress={commentHanlder}/>
+            <KeyboardAvoidingView 
+              style={styles.textInputContainer} 
+              behavior='padding' 
+              enabled={true}
+              //keyboardVerticalOffset={700}
+            >
+              <View style={styles.containerStyle}>
+                <Button title={"close comment"} onPress={commentHanlder}/>
+                <FlatList
+                    style={styles.flatListStyle}
+                />
+                <View style={styles.userInput}>
+                  <TextInput 
+                    onChangeText={changeInput} 
+                    value={input}
+                    style={styles.textInput}
+                    placeholder="Add a comment here"
+                    placeholderTextColor="#bdbdbf"
+                  />
+                  {input ? 
+                  <PressableButton customStyle={styles.sendButtonStyle} onPressFunction={sendComment}>
+                    <AntDesign name="arrowup" size={24} color="white" />
+                  </PressableButton> 
+                  : 
+                  <PressableButton customStyle={styles.sendButtonStyleNegative}>
+                    <AntDesign name="arrowup" size={24} color="white"/>
+                  </PressableButton>}
+                </View>
               </View>
-            </View>
-         </Modal>
+            </KeyboardAvoidingView>
+          </Modal>
       </View>
   )
 
@@ -157,16 +185,69 @@ const styles = StyleSheet.create({
     height: 200,
   },
   modalView: {
-
-    borderRadius: 10,
+    //borderRadius: 10,
     width: 200,
-    maxHeight: 300,
+    //maxHeight: 300,
   },
   containerStyle: {
     //backgroundColor: 'rgba(0,0,0,0.2)',
-    position: 'relative',
+    //position: 'relative',
     justifyContent: 'flex-end',
     flex: 1,
+    backgroundColor: 'white',
+    width: width,
+    maxHeight: 500,
+    //position:'relative',
+    borderRadius: 20,
+
+    //maxHeight: 300,
   },
+  flatListStyle: {
+    marginTop: 30,
+    height: height * 0.7,
+    width: width,
+  },
+  textInputContainer: {
+    justifyContent: 'flex-end',
+    //paddingBottom: 50,
+    borderRadius : 20,
+    flex: 1,
+    //backgroundColor: 'white',
+  },
+  textInput: {
+    alignSelf: 'center',
+    height: 40,
+    borderColor: 'grey',
+    borderRadius: 20,
+    borderWidth: 1,
+    marginBottom: 10,
+    width: width* 0.7,
+    marginLeft: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  sendButtonStyle: {
+    backgroundColor: '#378ef7',
+    borderRadius:20,
+    width: 80,
+    marginLeft: 10,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sendButtonStyleNegative: {
+    backgroundColor: 'grey',
+    borderRadius:20,
+    width: 80,
+    marginLeft: 10,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  userInput: {
+    flexDirection: 'row',
+    marginBottom: 30,
+  },
+
 
 })
