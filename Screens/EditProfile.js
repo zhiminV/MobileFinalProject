@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TextInput,SafeAreaView,Image,Alert, ScrollView } from 'react-native'
 import React from 'react'
-import { auth } from '../firebase-files/firebaseSetup'
+import { storage,auth } from '../firebase-files/firebaseSetup'
 import { Ionicons } from '@expo/vector-icons';
 import PressableButton from '../Components/PressableButton';
 import { useEffect,useState } from 'react';
@@ -9,7 +9,7 @@ import ImageManerge from '../Components/ImageManerge';
 import { fetchInfoById,updateFromDB } from '../firebase-files/firebaseHelper';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { database } from '../firebase-files/firebaseSetup';
-import LocationManager from '../Components/LocationManager';
+import { ref, uploadBytes } from "firebase/storage";
 
 export default function EditProfile({navigation}) {
   const [Name, setName] = useState("");
@@ -17,6 +17,7 @@ export default function EditProfile({navigation}) {
   const [Phone, setPhone] = useState("");
   const [avatar, setAvatar] = useState("");
   const [docid, setdocid] = useState("");
+  const [localUri,setLocationUri] = useState("");
 
   useEffect(() => {
         const fetchUserData = async () => {
@@ -53,36 +54,63 @@ export default function EditProfile({navigation}) {
       navigation.goBack()
   }
 
-  function handleSave(){
+  async function getImageData(uri) {
+    try {
+      const response = await fetch(uri);
+      const imageBlob = await response.blob();
+      const imageName = uri.substring(uri.lastIndexOf("/") + 1);
+      const imageRef = ref(storage, `images/${imageName}`);
+      const uploadResult = await uploadBytes(imageRef, imageBlob);
+      return uploadResult.metadata.fullPath;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function handleSave() {
+    try {
+      let newAvatar = avatar;
+
+      // If a new avatar image is selected
+      if (avatar.startsWith('data:image')) {
+        newAvatar = await getImageData(avatar);
+      }
+      console.log(newAvatar)
+
       const newProfile = {
-          userName:Name,
-          location: Location,
-          phoneNum: Phone,
-          userAvatar:avatar
+        userName: Name,
+        location: Location,
+        phoneNum: Phone,
+        userAvatar: newAvatar // Use the new avatar URL
       };
-      Alert.alert('Important', 'Are you sure you want to save these changes?',[
-          {
-            text: 'No',
-            style: 'cancel',
-          },
-          {text: 'Yes', onPress: () => 
-          updateFromDB("Users",docid, newProfile)
-            .then(() => {
-              navigation.navigate("Profile");
-            })
-            .catch((error) => console.error("Update failed", error))
-          },
+
+      Alert.alert('Important', 'Are you sure you want to save these changes?', [
+        {
+          text: 'No',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes', onPress: () =>
+            updateFromDB("Users", docid, newProfile)
+              .then(() => {
+                navigation.goBack()
+              })
+              .catch((error) => console.error("Update failed", error))
+        },
       ]);
-      
-      
+    } catch (error) {
+      console.error("Error saving changes:", error);
+      alert('Failed to save changes. Please try again.');
+    }
   }
 
-  function receiveImageUri(uri){
-      setAvatar(uri);
-  }
-
-  function handleLocationName(locationName){
-    setLocation(locationName)
+  function receiveImageUri(uri) {
+    setLocationUri(uri)
+    console.log(localUri)
+    getImageData(uri).then((imagePath) => {
+      setAvatar(imagePath);
+    });
+   
   }
 
  
@@ -91,8 +119,8 @@ export default function EditProfile({navigation}) {
       <SafeAreaView style={colors.container}>
       
         <View style={styles.avatarContainer}>
-              {avatar ? (
-                  <Image source={{ uri: avatar }} style={styles.avatarImage} />
+              {localUri ? (
+                  <Image source={{ uri: localUri }} style={styles.avatarImage} />
               ) : (
                   <Ionicons name="person-circle-outline" size={120} color="gray" />
               )}

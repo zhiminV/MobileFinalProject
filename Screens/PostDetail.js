@@ -37,6 +37,7 @@ export default function PostDetail({route,navigation}) {
               getDownloadURL(ref(storage, uri)) 
             ));
             setImageUris(imageDownloadURL);
+            // console.log(imageDownloadURL)
             setPosts(userData.post);
           
           } else {
