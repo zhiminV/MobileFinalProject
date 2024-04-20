@@ -2,7 +2,7 @@ import { View, Text, FlatList, StyleSheet, Dimensions, Modal, Button, KeyboardAv
 import { Image } from 'expo-image';
 import React, { useEffect, useRef, useState } from 'react'
 import Swiper from 'react-native-swiper'
-import { arrayUnion, collection, doc, getDocs, query, serverTimestamp, updateDoc, where, whereIn } from 'firebase/firestore'
+import { arrayUnion, collection, doc, Firestore, getDocs, query, serverTimestamp, updateDoc, where, whereIn, Timestamp } from 'firebase/firestore'
 import { getAllDocs, writeToDB } from '../firebase-files/firebaseHelper'
 import { auth, database } from '../firebase-files/firebaseSetup';
 import { storage } from '../firebase-files/firebaseSetup'
@@ -62,28 +62,28 @@ export default function TimeLine( props ) {
   }
 
   async function sendComment() {
+
+    try {
     const collectionRef = collection(database, 'Users');
     const query_user = query(collectionRef, where('uid', '==', auth.currentUser.uid));
     const querySnapshot = await getDocs(query_user);
 
     const collectionRefComment = collection(database, 'Comments');
-    const query_comment = query(collectionRef, where('postID', '==', postID));
+    const query_comment = query(collectionRefComment, where('postID', '==', postID));
     const querySnapshotComment = await getDocs(query_comment);
     
     const commentRef = querySnapshotComment.docs[0].ref;
-
-
-
-
-
     const email = querySnapshot.docs[0].data().email;
-    const timestamp = serverTimestamp();
     const documentID = querySnapshot.docs[0].id;
-
+    
+    const timestamp = Timestamp.now();
     const comment = {content: input, time: timestamp, author: email}
     await updateDoc(commentRef, {content: arrayUnion(comment)});
     setSendPressed(!sendPressed);
     changeInput('');
+    } catch (err) {
+      console.log('Error Occured in ', err);
+    }
   }
 
   return (

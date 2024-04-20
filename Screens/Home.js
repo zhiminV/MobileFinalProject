@@ -48,7 +48,7 @@ export default function Home() {
                 result['avatar'] = avatar;
                 result['downloadUris'] = imageArray;
                 tempArray.push(result);
-                console.log(tempArray);
+                //console.log(tempArray);
               }
               
             }
