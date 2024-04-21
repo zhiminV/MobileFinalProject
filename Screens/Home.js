@@ -22,7 +22,7 @@ export default function Home() {
         let tempArray = [];
         const collectionRef = collection(database, 'Users');
         const collectionRefPosts = collection(database, 'Posts');
-        const commentRef = collection(database, 'Comments');
+        //const commentRef = collection(database, 'Comments');
   
         const query_user = query(collectionRef, where('uid', '==', auth.currentUser.uid))
         const querySnapshot = await getDocs(query_user);
@@ -40,9 +40,9 @@ export default function Home() {
               if (!tempArray.some(object => object.docId === posts[j])) {
                 const result = await fetchInfoById('Posts', posts[j]);
                 //console.log(result);
-                const query_comment = query(commentRef, where('postID', '==', result.docId));
-                const querySnapshotComment = await getDocs(query_comment);
-                const comments = querySnapshotComment.docs[0].data();
+                //const query_comment = query(commentRef, where('postID', '==', result.docId));
+                //const querySnapshotComment = await getDocs(query_comment);
+                //const comments = querySnapshotComment.docs[0].data();
 
                 const imageArray = result.imageUris;
                 for (let k = 0; k < imageArray.length; k++) {
@@ -53,9 +53,10 @@ export default function Home() {
                 result['email'] = email;
                 result['avatar'] = avatar;
                 result['downloadUris'] = imageArray;
-                result['comments'] = comments;
+                //result['comments'] = comments;
                 tempArray.push(result);
-                console.log(tempArray);
+                console.log()
+                //console.log(tempArray);
               }
             }
           });

@@ -53,6 +53,14 @@ export default function TimeLine( props ) {
   
   }, []);
   
+  useEffect(() => {
+
+    async function getComments() {
+
+    }
+
+  }, [sendPressed, commentPressed])
+
   function commentHanlder() {
     if (commentPressed === false) {
       setCommentPressed(true);
