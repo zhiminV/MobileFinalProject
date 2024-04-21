@@ -15,6 +15,7 @@ export default function NearMe() {
   //["4W8WfC4cvvbmdAlOutqY", "yiEZRZuswEntLlyy1QHs", "l0zYHfNNY4gmyOaRu28T", "1ZfBu4uytdebDoxwZHvY"]
 
   useEffect(() => {
+    if (auth.currentUser) {
     const fetchUserData = () => {
       // Assuming auth.currentUser is not null and has a valid uid
       const q = query(collection(database, "Users"), where("uid", "==", auth.currentUser.uid));
@@ -34,7 +35,8 @@ export default function NearMe() {
     };
 
     const unsubscribe = fetchUserData();
-    return () => unsubscribe();
+    return () => unsubscribe(); 
+  }
   }, [postHistory]);
 
   useEffect(() => {
@@ -74,7 +76,13 @@ export default function NearMe() {
       <MapView style={styles.map} initialRegion={{ latitude: 49.28852168359985, longitude: -123.13880274881578, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}>
         {/* Display markers for each post location */}
         {postLocations.map((location, index) => (
-          <Marker key={index} coordinate={{ latitude: location.latitude, longitude: location.longitude }} />
+          <Marker
+          key={index}
+          coordinate={{
+            latitude: parseFloat(location.latitude), // Convert latitude to number
+            longitude: parseFloat(location.longitude), // Convert longitude to number
+          }}
+        />
         ))}
       </MapView>
     </View>
