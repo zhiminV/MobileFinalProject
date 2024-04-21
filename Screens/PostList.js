@@ -8,8 +8,8 @@ export default function PostList({ route, navigation }) {
   
   useEffect(() => {
     setPostList(postHistory);
-  }, [postHistory]);
-  
+  }, []);
+  // console.log(postList)
 
   const navigateToPostDetail = (postId) => {
     navigation.navigate("PostDetail", { postId, userId });
