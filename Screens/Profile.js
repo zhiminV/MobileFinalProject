@@ -24,6 +24,7 @@ export default function Profile({navigation,route}) {
 
 
   // console.log(route.params.newPosts)
+  // console.log(postHistory)
   useEffect(() => {
     let unsubscribeSnapshot;
     if (auth.currentUser){
@@ -36,6 +37,7 @@ export default function Profile({navigation,route}) {
           const userProfile = docSnapshot.data();
           setUserId(docSnapshot.id);
           setPostHistory(userProfile.post);
+          // console.log(postHistory)
           const imageRef = userProfile.userAvatar ? ref(storage, userProfile.userAvatar) : null;
           try {
             if (imageRef) {
@@ -59,7 +61,7 @@ export default function Profile({navigation,route}) {
         }
       });
     };
-  
+
    
       fetchData();
     }
@@ -69,7 +71,7 @@ export default function Profile({navigation,route}) {
         unsubscribeSnapshot();
       }
     };
-  }, [postHistory,auth.currentUser]);
+  }, []);
   
 
   useEffect(() => {
@@ -108,7 +110,7 @@ export default function Profile({navigation,route}) {
       };
       fetchFollowersDetails();
     }
-  }, [userId]);
+}, [userId]);
   
  
 
@@ -134,7 +136,7 @@ export default function Profile({navigation,route}) {
         );
       }, 
     }); 
-  },[auth.currentUser])
+  },[])
 
 
   function handleEdit(){
