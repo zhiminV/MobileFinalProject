@@ -53,8 +53,18 @@ export default function App() {
         name="Start" 
         component={Start} 
       />
-    <Stack.Screen name="Login" component={Login}/>
-    <Stack.Screen name="SignUp" component={SignUp}/>
+    <Stack.Screen  
+        options={{
+          headerShown: false,
+        }} 
+        name="Login" 
+        component={Login} />
+    <Stack.Screen  
+        options={{
+          headerShown: false,
+        }} 
+        name="SignUp" 
+        component={SignUp}/>
     </>
   )
   const AppStack = (
