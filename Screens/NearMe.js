@@ -5,7 +5,7 @@ import { onSnapshot,collection, query, where, getDocs, doc, getDoc } from 'fireb
 import { auth, database } from '../firebase-files/firebaseSetup';
 
 
-export default function NearMe() {
+export default function NearMe({navigation}) {
   const [postHistory, setPostHistory] = useState([]);
   const [userId,setUserId] = useState("");
   const [postLocations, setPostLocations] = useState([]);
@@ -13,7 +13,7 @@ export default function NearMe() {
 
   // console.log(postHistory)
   //["4W8WfC4cvvbmdAlOutqY", "yiEZRZuswEntLlyy1QHs", "l0zYHfNNY4gmyOaRu28T", "1ZfBu4uytdebDoxwZHvY"]
-
+// console.log(postHistory)
   useEffect(() => {
     if (auth.currentUser) {
     const fetchUserData = () => {
@@ -37,7 +37,7 @@ export default function NearMe() {
     const unsubscribe = fetchUserData();
     return () => unsubscribe(); 
   }
-  }, [postHistory]);
+  }, []);
 
   useEffect(() => {
     // Function to fetch post locations and update state
@@ -53,9 +53,10 @@ export default function NearMe() {
             const postData = postDocSnap.data();
             // Extract latitude and longitude from post data
             let coordinate
-          
-            if(!postData.postLocation.latitude || postData.postLocation.longitude){
+          // console.log(postData.postLocation)
+            if(!postData.postLocation.latitude && !postData.postLocation.longitude){
               coordinate ={latitude:0,longitude:0} 
+              // console.log(coordinate)
             }else{
                coordinate = {latitude: postData.postLocation.latitude, longitude: postData.postLocation.longitude}
               // console.log(typeof latitude)
@@ -63,6 +64,8 @@ export default function NearMe() {
               
             }
             setPostLocations(prevLocations => [...prevLocations, coordinate]);
+            // console.log(coordinate)
+            // console.log(postLocations)
           }
         }
       } catch (error) {
@@ -77,7 +80,7 @@ export default function NearMe() {
 
 
 
-
+// console.log(postLocations)
   return (
     <View style={styles.container}>
       <Text>NearMe</Text>
