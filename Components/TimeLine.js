@@ -56,7 +56,10 @@ export default function TimeLine( props ) {
   useEffect(() => {
 
     async function getComments() {
-
+      const collectionRefComment = collection(database, 'Comments');
+      const query_comment = query(collectionRefComment, where('postID', '==', postID));
+      const querySnapshotComment = await getDocs(query_comment);
+      
     }
 
   }, [sendPressed, commentPressed])
