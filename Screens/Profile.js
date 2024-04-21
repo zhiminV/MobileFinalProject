@@ -26,7 +26,7 @@ export default function Profile({navigation,route}) {
   // console.log(route.params.newPosts)
   useEffect(() => {
     let unsubscribeSnapshot;
-  
+    if (auth.currentUser){
     const fetchData = async () => {
       const q = query(collection(database, "Users"), where("uid", "==", auth.currentUser.uid));
   
@@ -60,7 +60,7 @@ export default function Profile({navigation,route}) {
       });
     };
   
-    if (auth.currentUser) {
+   
       fetchData();
     }
   
@@ -69,7 +69,7 @@ export default function Profile({navigation,route}) {
         unsubscribeSnapshot();
       }
     };
-  }, [postHistory]);
+  }, [postHistory,auth.currentUser]);
   
 
   useEffect(() => {
@@ -134,7 +134,7 @@ export default function Profile({navigation,route}) {
         );
       }, 
     }); 
-  },[])
+  },[auth.currentUser])
 
 
   function handleEdit(){

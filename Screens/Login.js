@@ -46,7 +46,7 @@ export default function Login({navigation}) {
         }
 
         if (isEmailValid && isPasswordValid) {
-            navigation.navigate('Home');
+            navigation.navigate('HomeScreen');
         }
     }
 

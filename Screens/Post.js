@@ -18,8 +18,8 @@ export default function Post({navigation}) {
   const [imageUris, setImageUris] = useState([]);
   const [docID, setdocID] = useState("");
   const [postArr, setPostArr] = useState([]);
-  const [CurrentLocation, setCurrentLocation] = useState(null);
-  const[locationData, setLocationData] = useState(null);
+  const [CurrentLocation, setCurrentLocation] = useState("");
+  const[locationData, setLocationData] = useState("");
   const [weatherData, setWeatherData] = useState(null);
 
 
@@ -32,7 +32,7 @@ export default function Post({navigation}) {
   const options = {
     method: 'GET',
     url: 'https://weatherapi-com.p.rapidapi.com/current.json',
-    params: { q: locationData?`${locationData.latitude},${locationData.longitude}`:"auto:ip"},
+    params: { q: locationData ? `${locationData.latitude || 0},${locationData.longitude || 0}` : "auto:ip" },
     headers: {
       'X-RapidAPI-Key': '244355f437msh6306e2a4a1a67e1p140199jsnea9c42e0d2ed',
       'X-RapidAPI-Host': 'weatherapi-com.p.rapidapi.com'
@@ -108,8 +108,8 @@ export default function Post({navigation}) {
   function handleReset(){
     setDescription('');
     setImageUris([]);
-    setCurrentLocation(null);
-    setLocationData(null);
+    setCurrentLocation("");
+    setLocationData("");
     setWeatherData(null);
   }
 
@@ -124,8 +124,8 @@ export default function Post({navigation}) {
         userID: auth.currentUser.uid,
         postLocation: {
           location: CurrentLocation,
-          latitude: locationData ? locationData.latitude : null, // Check if locationData is available
-          longitude: locationData ? locationData.longitude : null // Check if locationData is available
+          latitude: locationData ? locationData.latitude : "", // Check if locationData is available
+          longitude: locationData ? locationData.longitude : "" // Check if locationData is available
         },
         weather: {
           icon: weatherData ? `https:${weatherData.current.condition.icon}` : null,
@@ -297,6 +297,7 @@ const styles = StyleSheet.create({
     color: 'black',
     textAlign: 'center',
     marginLeft:10,
+    opacity:3,
   },
   buttonContent: {
     flexDirection: 'row',
@@ -305,6 +306,7 @@ const styles = StyleSheet.create({
   locationText:{
     marginBottom:20,
     color:"green",
+
   },
   weatherContainer: {
     flexDirection: 'row',
@@ -318,7 +320,7 @@ const styles = StyleSheet.create({
   weatherText: {
     marginLeft: 10,
     fontSize: 16,
-    color:"green"
+    color:"green",
   }
 
 });
