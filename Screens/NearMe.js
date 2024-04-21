@@ -52,9 +52,17 @@ export default function NearMe() {
           if (postDocSnap.exists()) {
             const postData = postDocSnap.data();
             // Extract latitude and longitude from post data
-            const { latitude, longitude } = postData.postLocation;
-            // Add location to postLocations array
-            setPostLocations(prevLocations => [...prevLocations, { latitude, longitude }]);
+            let coordinate
+          
+            if(!postData.postLocation.latitude || postData.postLocation.longitude){
+              coordinate ={latitude:0,longitude:0} 
+            }else{
+               coordinate = {latitude: postData.postLocation.latitude, longitude: postData.postLocation.longitude}
+              // console.log(typeof latitude)
+              // Add location to postLocations arrayr
+              
+            }
+            setPostLocations(prevLocations => [...prevLocations, coordinate]);
           }
         }
       } catch (error) {
@@ -76,13 +84,8 @@ export default function NearMe() {
       <MapView style={styles.map} initialRegion={{ latitude: 49.28852168359985, longitude: -123.13880274881578, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}>
         {/* Display markers for each post location */}
         {postLocations.map((location, index) => (
-          <Marker
-          key={index}
-          coordinate={{
-            latitude: parseFloat(location.latitude), // Convert latitude to number
-            longitude: parseFloat(location.longitude), // Convert longitude to number
-          }}
-        />
+           <Marker key={index} coordinate={{ latitude: location.latitude, longitude: location.longitude }} />
+        
         ))}
       </MapView>
     </View>
