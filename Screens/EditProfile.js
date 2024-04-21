@@ -46,7 +46,7 @@ export default function EditProfile({navigation}) {
             console.error("Error fetching user data:", error);
           }
         };
-    
+ 
         fetchUserData();
   }, [navigation]);
    
