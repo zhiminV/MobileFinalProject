@@ -59,8 +59,11 @@ export default function TimeLine( props ) {
       const collectionRefComment = collection(database, 'Comments');
       const query_comment = query(collectionRefComment, where('postID', '==', postID));
       const querySnapshotComment = await getDocs(query_comment);
-      
+      console.log(querySnapshotComment.docs[0].data());
+      setComments(querySnapshotComment.docs[0].data().content)
     }
+
+    getComments();
 
   }, [sendPressed, commentPressed])
 
@@ -132,6 +135,11 @@ export default function TimeLine( props ) {
                 <Button title={"close comment"} onPress={commentHanlder}/>
                 <FlatList
                     style={styles.flatListStyle}
+                    data={comments}
+                    renderItem={({item}) =>  (
+                      <Text>{item.author + `'s comment` + item.content}</Text>
+                    )
+                  }
                 />
                 <View style={styles.userInput}>
                   <TextInput 
