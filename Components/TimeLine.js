@@ -116,7 +116,6 @@ export default function TimeLine( props ) {
               style={styles.textInputContainer} 
               behavior='padding' 
               enabled={true}
-              //keyboardVerticalOffset={700}
             >
               <View style={styles.containerStyle}>
                 <Button title={"close comment"} onPress={commentHanlder}/>
@@ -222,7 +221,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     width: width* 0.7,
-    marginLeft: 10,
+    marginLeft: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
@@ -247,6 +246,8 @@ const styles = StyleSheet.create({
   userInput: {
     flexDirection: 'row',
     marginBottom: 30,
+    width: width,
+
   },
 
 

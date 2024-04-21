@@ -134,7 +134,7 @@ export default function Post({navigation}) {
       };
 
 
-      console.log(newPost);
+      //console.log(newPost);
 
       const docRef = await writeToDB(newPost, "Posts")
       //console.log(docRef.id);

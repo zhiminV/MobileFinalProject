@@ -31,13 +31,14 @@ export default function Home() {
           const query_posts = query(collectionRef, where('uid', '==', following[i]));
           const querySnapshotPosts = await getDocs(query_posts);
           querySnapshotPosts.forEach(async (document) => {
-
+            //console.log(document.data());
             const posts = document.data().post;
             const email = document.data().email;
             const avatar = document.data().userAvatar;
             for (let j = 0; j < posts.length; j++) {
               if (!tempArray.some(object => object.docId === posts[j])) {
                 const result = await fetchInfoById('Posts', posts[j]);
+                //console.log(result);
                 const imageArray = result.imageUris;
                 for (let k = 0; k < imageArray.length; k++) {
                   const imageRef = ref(storage, imageArray[k]);
@@ -50,7 +51,6 @@ export default function Home() {
                 tempArray.push(result);
                 //console.log(tempArray);
               }
-              
             }
           });
         }
