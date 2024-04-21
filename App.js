@@ -93,10 +93,16 @@ export default function App() {
       <Stack.Screen
         name='PostDetail'
         component={PostDetail}
+        
+      
       />
       <Stack.Screen
         name='PostList'
         component={PostList}
+        options={{
+          headerTitle: "",
+        }} 
+        
       />
        <Stack.Screen
         name='Notification'

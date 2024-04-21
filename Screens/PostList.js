@@ -16,7 +16,7 @@ export default function PostList({ route, navigation }) {
     setPostList(postHistory);
   }, []);
 
-console.log(postDetails)
+// console.log(postDetails)
 
   useEffect(() => {
     const fetchPostDetails = async () => {
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   dateText: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
   },
   detailsContainer: {
