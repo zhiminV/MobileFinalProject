@@ -39,7 +39,8 @@ export default function NearMe() {
 
   useEffect(() => {
     // Function to fetch post locations and update state
-    const fetchPostLocations = async () => {
+    if (auth.currentUser) {
+      const fetchPostLocations = async () => {
       try {
         // Iterate over each post ID in postHistory
         for (const postId of postHistory) {
@@ -61,6 +62,7 @@ export default function NearMe() {
 
     // Call fetchPostLocations when postHistory changes
     fetchPostLocations();
+  }
   }, [postHistory]);
 
 
