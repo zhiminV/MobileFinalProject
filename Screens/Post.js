@@ -123,7 +123,7 @@ export default function Post({navigation}) {
         timestamp: timestamp, 
         userID: auth.currentUser.uid,
         postLocation: {
-          location: CurrentLocation,
+          location: CurrentLocation ?CurrentLocation: "",
           latitude: locationData ? locationData.latitude : "", // Check if locationData is available
           longitude: locationData ? locationData.longitude : "" // Check if locationData is available
         },
@@ -150,8 +150,8 @@ export default function Post({navigation}) {
       // Reset state
       setDescription('');
       setImageUris([]);
-      setCurrentLocation(null);
-      setLocationData(null);
+      setCurrentLocation("");
+      setLocationData("");
       setWeatherData(null);
       navigation.navigate("Home");
       
