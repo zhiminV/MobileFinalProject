@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View ,Dimensions,Button,Image} from 'react-native'
+import { StyleSheet, Text, View ,TouchableOpacity, Alert, Platform, Dimensions, Image} from 'react-native'
 import React, { useEffect,useState } from "react";
 import * as Location from 'expo-location';
 import { mapsApiKey } from "@env";
+
 
 export default function LocationManager({setLocationNameProp,setLocationData}) {
     const [status, requestPermission] = Location.useForegroundPermissions();
@@ -14,7 +15,6 @@ export default function LocationManager({setLocationNameProp,setLocationData}) {
             reverseGeocodeLocation();
         }
     }, [location]);
-
     async function verifyPermission() {
         if (status.granted) {
           return true;
@@ -31,6 +31,7 @@ export default function LocationManager({setLocationNameProp,setLocationData}) {
           const havePermission = await verifyPermission();
           if (!havePermission) {
             Alert.alert("You need to give permission");
+            Alert.alert("Permission required", "You need to grant location permission to use this feature.");
             return;
           }
           const receivedLocation = await Location.getCurrentPositionAsync();
@@ -78,17 +79,14 @@ export default function LocationManager({setLocationNameProp,setLocationData}) {
   
 
   return (
-    <View>
-      <Button title="Location" color="black" onPress={locateUserHandler} />
-      {/* {location && (
-        <Image
-          style={styles.image}
-          source={{
-            uri: `https://maps.googleapis.com/maps/api/staticmap?center=${location.latitude},${location.longitude}&zoom=14&size=400x200&maptype=roadmap&markers=color:red%7Clabel:L%7C${location.latitude},${location.longitude}&key=${mapsApiKey}`,
-          }}
-        />
-      )} */}
-    </View>
+    <View >
+        <TouchableOpacity
+            style={styles.button}
+            onPress={locateUserHandler}
+        >
+            <Text style={styles.buttonText}>Location</Text>
+        </TouchableOpacity>
+        </View>
   );
 }
 
@@ -99,4 +97,15 @@ const styles = StyleSheet.create({
     color: 'black',
     textAlign: 'center',
   },
+  button: {
+    backgroundColor: 'transparent',
+    padding: 3,
+    borderColor: 'black',
+    borderRadius: 5
+},buttonText: {
+  color: Platform.OS === 'ios' ? 'black' : 'black',
+  fontSize: 18,
+  textAlign: 'center',
+  marginLeft:5,
+},
 });
