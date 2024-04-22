@@ -77,7 +77,6 @@ export default function Login({navigation}) {
             {/*{<Text style={colors.text}>Password</Text>}*/}
             <TextInput
                 style={colors.input}
-                color='white'
                 secureTextEntry={true}
                 placeholder="Password"
                 value={password}
