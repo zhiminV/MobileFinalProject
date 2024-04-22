@@ -9,7 +9,8 @@ import ImageManerge from '../Components/ImageManerge';
 import { fetchInfoById,updateFromDB } from '../firebase-files/firebaseHelper';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { database } from '../firebase-files/firebaseSetup';
-import { ref, uploadBytes } from "firebase/storage";
+import { uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref } from "firebase/storage";
 
 export default function EditProfile({navigation}) {
   const [Name, setName] = useState("");
@@ -17,7 +18,7 @@ export default function EditProfile({navigation}) {
   const [Phone, setPhone] = useState("");
   const [avatar, setAvatar] = useState("");
   const [docid, setdocid] = useState("");
-  const [localUri,setLocationUri] = useState("");
+  const [localUri,setLocalUri] = useState("");
 
   useEffect(() => {
         const fetchUserData = async () => {
@@ -37,7 +38,12 @@ export default function EditProfile({navigation}) {
                 setName(userProfile.userName || "");
                 setLocation(userProfile.location || "");
                 setPhone(userProfile.phoneNum || "");
-                setAvatar(userProfile.userAvatar || "");
+                if (userProfile.userAvatar) {
+                  const imageRef = ref(storage, userProfile.userAvatar);
+                  const imageUri = await getDownloadURL(imageRef);
+                  setAvatar(imageUri || "");
+                }
+              
               }
             } else {
               console.log("No document found for the current user");
@@ -48,7 +54,7 @@ export default function EditProfile({navigation}) {
         };
  
         fetchUserData();
-  }, [navigation]);
+  }, []);
    
   function handleCancle(){
       navigation.goBack()
@@ -75,7 +81,7 @@ export default function EditProfile({navigation}) {
       if (avatar.startsWith('data:image')) {
         newAvatar = await getImageData(avatar);
       }
-      console.log(newAvatar)
+      // console.log(newAvatar)
 
       const newProfile = {
         userName: Name,
@@ -105,8 +111,8 @@ export default function EditProfile({navigation}) {
   }
 
   function receiveImageUri(uri) {
-    setLocationUri(uri)
-    console.log(localUri)
+    setLocalUri(uri)
+    // console.log(localUri)
     getImageData(uri).then((imagePath) => {
       setAvatar(imagePath);
     });
@@ -118,41 +124,43 @@ export default function EditProfile({navigation}) {
     <ScrollView>
       <SafeAreaView style={colors.container}>
       
-        <View style={styles.avatarContainer}>
-              {localUri ? (
-                  <Image source={{ uri: localUri }} style={styles.avatarImage} />
-              ) : (
-                  <Ionicons name="person-circle-outline" size={120} color="gray" />
-              )}
-              <ImageManerge recieveImageUri={receiveImageUri} />
-          </View>
+       <View style={styles.avatarContainer}>
+          {(avatar && !localUri) ? (
+            <Image source={{ uri: avatar }} style={styles.avatarImage} />
+          ) : localUri ? (
+            <Image source={{ uri: localUri }} style={styles.avatarImage} />
+          ) : (
+            <Ionicons name="person-circle-outline" size={120} color="gray" />
+          )}
+          <ImageManerge recieveImageUri={receiveImageUri} />
+        </View>
 
           <View >
-              <Text style={colors.text}>Name:</Text>
+              <Text style={styles.text}>Name:</Text>
               <TextInput
-              style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
+              style={[styles.input, { height: 55, width: 330,marginLeft:20}]}
               value={Name}
               onChangeText={(text) => setName(text)}
               />
 
-              <Text style={colors.text}>Phone:</Text>
+              <Text style={styles.text}>Phone:</Text>
               <TextInput
-              style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
+              style={[styles.input, { height: 55, width: 330,marginLeft:20}]}
               value={Phone}
               onChangeText={(text) => setPhone(text)}
               />
               
-              <Text style={colors.text}>Location:</Text>
+              <Text style={styles.text}>Location:</Text>
               <TextInput
-              style={[colors.input, { height: 55, width: 330,marginLeft:20}]}
+              style={[styles.input, { height: 55, width: 330,marginLeft:20}]}
               value={Location}
               onChangeText={(text) => setLocation(text)}
               />
             
-              <Text style={colors.text}>Email:</Text>
-              <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.email}</Text>
-              <Text style={colors.text}>UID:</Text>
-              <Text style={[colors.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.uid}</Text>
+              <Text style={styles.text}>Email:</Text>
+              <Text style={[styles.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.email}</Text>
+              <Text style={styles.text}>UID:</Text>
+              <Text style={[styles.input, { height: 55, width: 330,marginLeft:20}]}> {auth.currentUser.uid}</Text>
               
               <View style={styles.buttonsContainer}>
                   <View style={styles.buttonView}>
@@ -202,6 +210,23 @@ const styles = StyleSheet.create({
       fontSize: 15,
       alignSelf:"center",
   },
+  input: {
+    color: "black",
+    fontSize: 18,
+    borderColor: "black",
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 5,
+    width: "85%",   
+},
+text: { 
+  color: 'black',
+  fontSize: 20,
+  marginBottom: 0,
+  alignSelf: 'flex-start',
+  marginLeft:20,
+  marginTop:10
+},
   
 
 })
