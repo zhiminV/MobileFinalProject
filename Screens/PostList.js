@@ -94,11 +94,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   dateContainer: {
-    width: 80, // Fixed width for the date to ensure consistent layout
-    marginRight: 20,
+    width: 90, // Fixed width for the date to ensure consistent layout
+    marginRight: 30,
   },
   dateText: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   detailsContainer: {
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', // Centers the content vertically
   },
   postItem: {
-    fontSize: 16,
+    fontSize: 15,
   },
   image: {
     width: 100,
