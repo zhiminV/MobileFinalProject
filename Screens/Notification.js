@@ -98,7 +98,7 @@ export default function Notification({ navigation }) {
           <Text style={styles.buttonText}>Set Notification</Text>
         </TouchableOpacity>
         {isEnabled && (
-          <Ionicons name="checkmark-done-circle" size={24} color="plum" style={{ marginTop: 50 }} />
+          <Ionicons name="checkmark-done-circle" size={24} color="green" style={{ marginTop: 20 }} />
          
         )}
         <DateTimePickerModal
