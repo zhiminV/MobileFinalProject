@@ -75,14 +75,15 @@ export default function Profile({navigation,route}) {
   
 
   useEffect(() => {
-    if (userId) {
+    let unsubscribeSnapshot;
+    if (auth.currentUser){
       const fetchFollowersDetails = async () => {
         try {
           const followersQuery = query(
             collection(database, "Users"),
           );
           
-          const unsubscribe = onSnapshot(followersQuery, (querySnapshot) => {
+          unsubscribeSnapshot = onSnapshot(followersQuery, (querySnapshot) => {
             let followersArr = [];
             querySnapshot.forEach((doc) => {
               if(doc.id != userId){
@@ -103,13 +104,18 @@ export default function Profile({navigation,route}) {
           });
     
           // setFollowersCount(snapshot.docs.length);
-          return unsubscribe;
+         
         } catch (error) {
           console.error("Failed to fetch followers:", error);
         }
       };
       fetchFollowersDetails();
     }
+    return () => {
+      if (unsubscribeSnapshot) {
+        unsubscribeSnapshot();
+      }
+    };
 }, [userId]);
   
  
