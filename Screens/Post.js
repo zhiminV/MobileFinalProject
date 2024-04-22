@@ -7,7 +7,7 @@ import { ref, uploadBytes } from "firebase/storage";
 import { storage, auth, database, firestore  } from '../firebase-files/firebaseSetup';
 import { serverTimestamp } from 'firebase/firestore';
 import { collection,query, where, getDocs } from 'firebase/firestore'
-import { EvilIcons ,Feather,Entypo,Ionicons,AntDesign,Fontisto} from '@expo/vector-icons';
+import { EvilIcons ,Feather,Entypo,Ionicons,AntDesign,Fontisto,MaterialIcons} from '@expo/vector-icons';
 import PressableButton from '../Components/PressableButton';
 import LocationManager from '../Components/LocationManager';
 import axios from 'axios';
@@ -199,7 +199,7 @@ export default function Post({navigation}) {
               <View style={styles.imageContainer} key={index}>
                 <Image source={{ uri }} style={styles.image} />
                 <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteImage(index)}>
-                  <AntDesign name="delete" size={10} color="black"/>
+                  <AntDesign name="delete" size={10} color="red"/>
                 </TouchableOpacity>
               </View>
             ))}
@@ -208,11 +208,12 @@ export default function Post({navigation}) {
 
           {weatherData && (
             <View style={styles.weatherContainer}>
+              <Text style={styles.weatherText}>{weatherData.current.condition.text}</Text>
               <Image
                 source={{ uri: `https:${weatherData.current.condition.icon}` }}
                 style={styles.weatherIcon}
               />
-              <Text style={styles.weatherText}>{weatherData.current.condition.text}</Text>
+              {/* <Text style={styles.weatherText}>{weatherData.current.condition.text}</Text> */}
             </View>
           )}
      
@@ -283,6 +284,13 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+  },deleteButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    padding: 5,
+    borderRadius: 20,
   },
   button: {
     backgroundColor: 'whitesmoke',
@@ -305,6 +313,7 @@ const styles = StyleSheet.create({
   },
   locationText:{
     marginBottom:20,
+    marginLeft: 10,
     color:"green",
 
   },

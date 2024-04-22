@@ -130,7 +130,7 @@ export default function Profile({navigation,route}) {
             }
           }}
         >
-          <AntDesign name="logout" size={24} color="black" />
+          <AntDesign name="logout" size={20} color="black"style={styles.icon}  />
         </PressableButton>
         
         );
@@ -198,7 +198,7 @@ export default function Profile({navigation,route}) {
           avatar ? (
             <Image source={{ uri: avatar }} style={styles.avatarImage} />
           ) : (
-            <Ionicons name="person-circle-outline" size={120} color="gray" />
+            <Ionicons name="person-circle-outline" size={100} color="gray" />
           )
         )}
           <Text style={styles.nameText}>{Name}</Text>
@@ -305,6 +305,9 @@ const styles = StyleSheet.create({
   buttonContent: {
     flexDirection: 'row',
     justifyContent:"flex-start",
+  },
+  icon: {
+    marginLeft:50,
   },
 
 });
