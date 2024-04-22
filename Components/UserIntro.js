@@ -7,8 +7,9 @@ import { updateFromDB } from '../firebase-files/firebaseHelper';
 
 export default function UserIntro(props) {
 
-  [followed, setFollowed] = useState();
+  [followed, setFollowed] = useState(false);
   [documentID, setDocID] = useState('');
+  [pressed, setPressed] = useState(false);
   
   useEffect(() => {
     
@@ -20,6 +21,8 @@ export default function UserIntro(props) {
         const query_user = query(collectionRef, where('uid', '==', auth.currentUser.uid))
         const querySnapshot = await getDocs(query_follow);
         const querySnapshot2 = await getDocs(query_user);
+        
+        /*
         querySnapshot.forEach((doc) => {
           
           //console.log(doc.data());
@@ -28,9 +31,16 @@ export default function UserIntro(props) {
             //setFollowed(true);
           }
         });
+        */
 
         querySnapshot2.forEach((doc) => {
-          
+          const following = doc.data().following;
+          if (following.includes(props.username.uid)) {
+            setFollowed(true);
+          } else {
+            setFollowed(false);
+          }
+
           //console.log(doc.id);
           if (doc.data()) {
             setDocID(doc.id);
@@ -43,7 +53,7 @@ export default function UserIntro(props) {
 
     search();
 
-  }, [followed, props.email])
+  }, [props.email, pressed]);
   
   
  /*
@@ -80,10 +90,11 @@ export default function UserIntro(props) {
   
 */
   async function followHandler() {
-    let uid = ''
-    setFollowed(true);
+    let uid = '';
+    //setFollowed(true);
+    setPressed(!pressed);
     const collectionRef = collection(database, 'Users');
-    const query_user = query(collectionRef, where('email', '==', props.email))
+    const query_user = query(collectionRef, where('email', '==', props.email));
     const querySnapshot2 = await getDocs(query_user);
     querySnapshot2.forEach(
       (doc) => {
@@ -97,9 +108,10 @@ export default function UserIntro(props) {
 
   async function unfollowHandler() {
     let uid = ''
-    setFollowed(true);
+    //setFollowed(true);
+    setPressed(!pressed);
     const collectionRef = collection(database, 'Users');
-    const query_user = query(collectionRef, where('email', '==', props.email))
+    const query_user = query(collectionRef, where('email', '==', props.email));
     const querySnapshot2 = await getDocs(query_user);
     querySnapshot2.forEach(
       (doc) => {
@@ -114,7 +126,7 @@ export default function UserIntro(props) {
 
   return (
     <View style={styles.introView}>
-      <Text>{props.username}</Text>
+      <Text style={styles.emailStyle}>{props.username.email}</Text>
       {followed ? (
         <PressableButton customStyle={styles.confirmButtonStyle} onPressFunction={unfollowHandler} >
           <Text style={styles.textIntroStyle}>Unfollow</Text>
@@ -135,17 +147,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignSelf: 'center',
     width: 200,
-  },
-
-  confirmButtonStyle: {
-    width: 130,
-    height: 30,
-    backgroundColor: '#373675', 
-    alignContent: 'center',
     alignItems: 'center',
+  },
+  emailStyle: {
+    fontWeight: 'bold',
+  },
+  confirmButtonStyle: {
+    backgroundColor: '#378ef7',
+    borderRadius:20,
+    width: 80,
+    marginLeft: 30,
+    height: 40,
     justifyContent: 'center',
-    borderRadius: 5,
-    marginLeft: 20,
+    alignItems: 'center',
   },
   textIntroStyle: {
     color: 'white',

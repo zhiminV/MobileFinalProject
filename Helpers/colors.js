@@ -14,8 +14,9 @@ const colors = StyleSheet.create({
          marginTop: 100,
     },
     buttonText:{
-        color: 'black',
+        color: 'white',
         fontSize: 15,
+        fontWeight: 'bold',
         alignSelf:"center",
     },
     
@@ -33,13 +34,16 @@ const colors = StyleSheet.create({
         marginTop:"50",
     },
     input: {
-        color: "darkmagenta",
+        backgroundColor: 'white',
+        color: "black",
         fontSize: 20,
-        borderColor: "darkmagenta",
+        height: 60,
+        borderColor: "#f2f7fe",
         borderWidth: 2,
         padding: 10,
-        borderRadius: 5,
-        width: "85%",   
+        borderRadius: 10,
+        width: "95%",   
+        marginTop: 10,
     },
     text: { 
         color: 'purple',
@@ -52,7 +56,8 @@ const colors = StyleSheet.create({
     errorText: {
         color: 'dimgray',
         fontSize: 18,
-        alignSelf: 'flex-start',  
+        alignSelf: 'flex-start',
+        marginLeft: 10,  
     },
     iconColor:{
         color: "goldenrod",
@@ -79,6 +84,10 @@ const colors = StyleSheet.create({
     checkboxContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+    },
+    logo: {
+        width: 100,
+        height: 100,
     },  
     signup: {
        
@@ -99,13 +108,14 @@ const colors = StyleSheet.create({
     },
     
     login: {
-        backgroundColor: "plum", 
+        justifyContent: 'center',
+        backgroundColor: "#0040ff", 
         paddingVertical: 12,
         paddingHorizontal: 25,
         borderRadius: 25,
-        width: 250,
+        width: 360,
         height:50,
-        marginTop:50,
+        marginTop:20,
         shadowColor: "#000",
         shadowOffset: {
             width: 2,

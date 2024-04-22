@@ -16,6 +16,8 @@ const height = Dimensions.get('window').height;
 
 export default function TimeLine( props ) {
 
+
+  //console.log(props.item);
   const photos = props.item.downloadUris;
   [elements, setElements] = useState([]);
   const docID = props.item.email;
@@ -26,12 +28,16 @@ export default function TimeLine( props ) {
   [input, changeInput] = useState("");
   const [comments, setComments] = useState([]);
   const [sendPressed, setSendPressed] = useState(false);
+  const avatarurl = props.item.avatar;
+
+
   
   useEffect(() => {
 
     async function getPhoto() {
       
       try {
+
         let counter = 0;
         let array = [];
         for (let i = 0; i < photos.length; i++) {
@@ -44,6 +50,8 @@ export default function TimeLine( props ) {
           array.push(object);
         } 
         setElements(array);
+        
+        //console.log(avatarDownloadURL)
       } catch (err) {
         console.log('Error Ocurred in getPhoto()', err);
       }
@@ -56,16 +64,46 @@ export default function TimeLine( props ) {
   useEffect(() => {
 
     async function getComments() {
+
+      try {
       const collectionRefComment = collection(database, 'Comments');
       const query_comment = query(collectionRefComment, where('postID', '==', postID));
       const querySnapshotComment = await getDocs(query_comment);
-      console.log(querySnapshotComment.docs[0].data());
-      setComments(querySnapshotComment.docs[0].data().content)
-    }
+      const tempArray = querySnapshotComment.docs[0].data().content;
+      //console.log(querySnapshotComment.docs[0].data().content);
+      //setComments(querySnapshotComment.docs[0].data().content);
 
+      if (tempArray) {
+        for (let i = 0; i < tempArray.length; i++) {
+          const collectionRefUser = collection(database, 'Users');
+          const query_pic = query(collectionRefUser, where('email', '==', tempArray[i].author));
+          const querySnapshotProfilepic = await getDocs(query_pic);
+          
+          const result = querySnapshotProfilepic.docs[0].data().userAvatar;
+          //console.log(result);
+          let url;
+          if (result) {
+            const imageRef = ref(storage, result);
+            url = await getDownloadURL(imageRef);
+          }
+          tempArray[i]['avatarURL'] = url;
+          //console.log(tempArray[i]);
+        }
+        
+        
+        
+      }
+      setComments(tempArray);
+      //console.log(tempArray);
+      
+    } catch (err) {
+      console.log(err);
+    }
+    } 
     getComments();
 
   }, [sendPressed, commentPressed])
+
 
   function commentHanlder() {
     if (commentPressed === false) {
@@ -103,7 +141,14 @@ export default function TimeLine( props ) {
   return (
     
       <View style={styles.flatListStyle}>
-          <Text style={styles.userNameFont}> {docID}</Text>
+          <View style={styles.userIntroView}>
+            <Image
+              source={props.item.avatar}
+              style={styles.postAvatar}
+
+            />
+            <Text style={styles.userNameFont}> {docID}</Text>
+          </View>
           <Swiper
             key={photos.length}
             //style={styles.viewSwiper}
@@ -120,11 +165,12 @@ export default function TimeLine( props ) {
             }
           </Swiper>
           <View style={styles.userView}>
-            <Text style={styles.userNameFont}> {time.toString()} </Text>
+            <Text style={styles.timeFont}> {time.toString()} </Text>
           </View>
-          <PressableButton customStyle={{width: 200}} onPressFunction={commentHanlder}>
-            <Text>View All Comments</Text>
-          </PressableButton>
+          <Text style={{marginLeft: 5}}>{props.item.description}</Text>
+            <PressableButton customStyle={{width: 200, marginTop: 10,}} onPressFunction={commentHanlder}>
+              <Text style={{color: '#737373'}}>View All Comments</Text>
+            </PressableButton>
           <Modal title='All Comments' animationType='slide' visible={commentPressed} presentationStyle="overFullScreen" transparent={true}>
             <KeyboardAvoidingView 
               style={styles.textInputContainer} 
@@ -137,9 +183,17 @@ export default function TimeLine( props ) {
                     style={styles.flatListStyle}
                     data={comments}
                     renderItem={({item}) =>  (
-                      <Text>{item.author + `'s comment` + item.content}</Text>
-                    )
-                  }
+                      <View style={styles.commentView}>
+                        <Image
+                          source={item.avatarURL}
+                          style={styles.avatar}
+                        />
+                        <View style={{flexDirection: 'column'}}>
+                          <Text style={styles.commentEmailText}>{item.author}</Text>
+                          <Text style={styles.commentText}>{item.content}</Text>
+                        </View>
+                      </View>
+                    )}
                 />
                 <View style={styles.userInput}>
                   <TextInput 
@@ -171,18 +225,52 @@ const styles = StyleSheet.create({
   searchView: {
     flex: 1,
   },
+  postAvatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 60,
+    marginLeft: 10,
+  },
+  userIntroView: {
+    flexDirection: 'row',
+    //justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   userView: {
     flexDirection: 'row',
   },
+  commentView: {
+    flexDirection: 'row',
+    marginLeft: 20,
+    marginBottom: 40,
+  },
+  commentEmailText: {
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  commentText: {
+    marginTop: 5,
+    marginLeft: 10,
+  },
   avatar: {
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
+    borderRadius: 60,
   },
   
   userNameFont: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 30,
+    //marginBottom: 30,
+    marginLeft: 10,
+  },
+
+  timeFont: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    
   },
 
   flatListStyle: {
@@ -268,6 +356,7 @@ const styles = StyleSheet.create({
     width: width,
 
   },
+
 
 
 })

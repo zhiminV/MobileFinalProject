@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet, FlatList } from 'react-native'
+import { View, Text, TextInput, StyleSheet, FlatList, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { FontAwesome } from '@expo/vector-icons';
 import { auth, database } from '../firebase-files/firebaseSetup';
@@ -8,8 +8,12 @@ import UserIntro from './UserIntro';
 import { debounce } from "lodash";
 
 
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
+
 export default function SearchBar( props ) {
 
+  
   [followed, setFollowed] = useState(false);
 
   async function searchHandler(text) {
@@ -31,7 +35,10 @@ export default function SearchBar( props ) {
           if (doc.id){
           // doc.data() is never undefined for query doc snapshots
             //_onTextChangeHandler([...users, doc.data().email]);
-            props.setUsers([doc.data().email]);
+            const data = {uid: doc.data().uid, email: doc.data().email};
+            const tempArray = [];
+            tempArray.push(data);
+            props.setUsers(tempArray);
           }
         });
         
@@ -69,16 +76,16 @@ export default function SearchBar( props ) {
 
   return (
     <View>
-      <View style={styles.searchLogoView}>
-        <FontAwesome name="search" size={24} color="black" />
-      </View>
-      <View>
-        <TextInput
-          style={styles.textInput}
-          placeholder={"Enter Email to Search for Users"}
-          value={props.searchText}
-          onChangeText={props.setSearchText}
-        />
+      <View style={styles.searchBarView}>
+        <View style={styles.searchLogoView}>
+          <FontAwesome name="search" size={24} color="#378ef7"/>
+        </View>
+          <TextInput
+            style={styles.textInput}
+            placeholder={"Enter Email to Search for Users"}
+            value={props.searchText}
+            onChangeText={props.setSearchText}
+          />
       </View>
     </View>
   )
@@ -86,16 +93,26 @@ export default function SearchBar( props ) {
 
 const styles = StyleSheet.create({
   textInput: {
-    width: 300,
-    height: 30,
+    //alignSelf: 'center',
+    height: 40,
     borderColor: 'grey',
-    borderWidth: 1,
-    borderRadius: 5,
-    alignSelf: 'center',
+    borderRadius: 20,
+    borderWidth: 2,
+    width: width* 0.7,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    
   },
+  searchBarView: {
+    marginTop: 20,
+    flexDirection: 'row', 
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
   searchLogoView: {
     position: 'absolute',
-    top: 2,
-    left: 320,
+    right: 75,
   }
 });
