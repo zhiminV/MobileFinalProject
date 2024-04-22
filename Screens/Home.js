@@ -27,10 +27,45 @@ export default function Home() {
       const query_user = query(collectionRef, where('uid', '==', auth.currentUser.uid))
       const querySnapshot = await getDocs(query_user);
       setFollowing(querySnapshot.docs[0].data().following); 
+      //console.log(following);
 
       for (let i = 0; i<following.length; i++) {
+        //console.log(following[i]);
         const query_posts = query(collectionRef, where('uid', '==', following[i]));
         const querySnapshotPosts = await getDocs(query_posts);
+        const user = querySnapshotPosts.docs[0].data();
+        console.log(user);
+
+        const posts = user.post;
+        const email = user.email;
+        const avatar = user.userAvatar;
+        const imageRef = ref(storage, avatar);
+        url = await getDownloadURL(imageRef);
+
+        for (let j = 0; j < posts.length; j++) {
+          if (!tempArray.some(object => object.docId === posts[j])) {
+            const result = await fetchInfoById('Posts', posts[j]);
+            //console.log(result);
+            //const query_comment = query(commentRef, where('postID', '==', result.docId));
+            //const querySnapshotComment = await getDocs(query_comment);
+            //const comments = querySnapshotComment.docs[0].data();
+
+            const imageArray = result.imageUris;
+            for (let k = 0; k < imageArray.length; k++) {
+              const imageRef = ref(storage, imageArray[k]);
+              const downloadURL = await getDownloadURL(imageRef);
+              imageArray[k] = downloadURL;
+            }
+            result['email'] = email;
+            result['avatar'] = url;
+            result['downloadUris'] = imageArray;
+            //result['comments'] = comments;
+            tempArray.push(result);
+            //console.log()
+            //console.log(tempArray);
+          }
+        }
+        /*
         querySnapshotPosts.forEach(async (document) => {
           //console.log(document.data());
           const posts = document.data().post;
@@ -59,14 +94,15 @@ export default function Home() {
               result['downloadUris'] = imageArray;
               //result['comments'] = comments;
               tempArray.push(result);
-              console.log()
+              //console.log()
               //console.log(tempArray);
             }
           }
-        });
+        });*/
       }
+      
       setPostID(tempArray);
-      //console.log(tempArray);
+      //console.log(postID);
       setRefresh(false);
     } catch (err){
       console.log(err);
@@ -120,8 +156,9 @@ const styles = StyleSheet.create({
   
   flatListStyle: {
     //marginTop: 30,
-    height: height * 0.7,
+    height: height*0.82,
     width: width,
+    backgroundColor: 'white',
   },
 
 
