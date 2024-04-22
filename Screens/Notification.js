@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, Alert, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert, Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { getReactNativePersistence } from 'firebase/auth'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
+import colors from '../Helpers/colors';
 
 export default function Notification({ navigation }) {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -90,17 +91,32 @@ export default function Notification({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.info}>Set daily reminder to share your moment:</Text>
-      <View>
-        <Button title="Set Notification" onPress={showDatePicker} />
+      <Text style={styles.title}>Share your happy moments every day</Text>
+      {/* <Text style={styles.info}>Share your happy moments every day!</Text> */}
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity onPress={showDatePicker} style={[colors.login, styles.button,{ marginLeft: 25 }]}>
+          <Text style={styles.buttonText}>Set Notification</Text>
+        </TouchableOpacity>
+        {isEnabled && (
+          <Ionicons name="checkmark-done-circle" size={24} color="plum" style={{ marginTop: 50 }} />
+         
+        )}
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode="time"
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
         />
-        <Button title="Cancel Notification" onPress={handleCancel} disabled={!isEnabled} />
       </View>
+      {isEnabled && (
+        <TouchableOpacity
+          onPress={handleCancel}
+          disabled={!isEnabled}
+          style={[styles.button ,{backgroundColor:"lightcoral"}]}
+        >
+          <Text style={styles.buttonText}>Cancel Notification</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -110,11 +126,48 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   info: {
     fontSize: 16,
     marginBottom: 20,
     textAlign: 'center',
   },
+  buttonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  button: {
+    // paddingVertical: 12,
+    // paddingHorizontal: 20,
+    borderRadius: 25,
+    width: 250,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  cancle:{
+    color:"red",
+    fontSize: 16,
+    // fontWeight: 'bold',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+  },
+  shadowOpacity: 0.25,
+  shadowRadius: 3.84,
+  elevation: 5,
+  }
 });
