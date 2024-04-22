@@ -84,6 +84,7 @@ export default function Login({navigation}) {
                 setPassword(changedText);
                 }}
             />
+              {PasswordError ? <Text style={colors.errorText}>{PasswordError}</Text> : null}
 
            
                 <View style={colors.buttonView}>

@@ -28,10 +28,10 @@ export default function SignUp({navigation}) {
         const isEmailValid = validateEmail(email);
         const isPasswordValid = validatePassword(password);
 
-        if(!email || !password || !confirmPassword){
-            Alert.alert("Files should not empty.");
-            return;
-        }
+        // if(!password || !confirmPassword){
+        //     Alert.alert("Files should not empty.");
+        //     return;
+        // }
 
         if (password !== confirmPassword) {
             Alert.alert("passwords don't match");
@@ -130,7 +130,7 @@ export default function SignUp({navigation}) {
                     }}
                 />
 
-                {/* {PasswordError ? <Text style={colors.errorText}>{PasswordError}</Text> : null} */}
+                {PasswordError ? <Text style={colors.errorText}>{PasswordError}</Text> : null}
 
                 {/*<Text style={colors.text}>Confirm Password</Text>*/}
                 <TextInput

@@ -55,7 +55,7 @@ const colors = StyleSheet.create({
     },
     errorText: {
         color: 'dimgray',
-        fontSize: 18,
+        fontSize: 13,
         alignSelf: 'flex-start',
         marginLeft: 10,  
     },
