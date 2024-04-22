@@ -92,7 +92,7 @@ export default function ImageManerge({recieveImageUri}) {
 
   return (
     <View style = {styles.container}>
-      <Ionicons name="camera" size={30} color="black"onPress={takeImageHandle}/>
+      <Ionicons name="camera" size={25} color="black"onPress={takeImageHandle}style={styles.icon} />
     </View>
   )
 }
@@ -102,4 +102,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   image: { width: 100, height: 100 },
+  icon: {
+    marginRight:15,
+  },
 });
