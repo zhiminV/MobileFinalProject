@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View,Image,Pressable,Alert,SafeAreaView} from 'react-native'
+import { StyleSheet, Text, View,Image,Pressable,Alert,SafeAreaView,FlatList} from 'react-native'
 import React, { useEffect,useState } from 'react'
 import { fetchInfoById,deleteFromDB} from '../firebase-files/firebaseHelper';
 import { AntDesign } from '@expo/vector-icons';
@@ -19,8 +19,10 @@ export default function PostDetail({route,navigation}) {
     const [postLoc,setPostLoc] = useState("");
     const [weather, setWeather] = useState("");
     const [weatherIconuri, setWeatherIconuri] = useState("");
-   
+    const [comments, setComments] = useState([]);
+  
 
+// console.log(comments)
     useEffect(() => {
       const fetchPostDetail = async () => {
         try {
@@ -39,6 +41,20 @@ export default function PostDetail({route,navigation}) {
             setImageUris(imageDownloadURL);
             // console.log(imageDownloadURL)
             setPosts(userData.post);
+            const commentsCollectionRef = collection(database, "Comments");
+     
+            const q = query(commentsCollectionRef, where("postID", "==", postId));
+ 
+            const querySnapshot = await getDocs(q);
+            const fetchedComments = [];
+            querySnapshot.forEach((doc) => {
+              fetchedComments.push(...doc.data().content); // Spread the array of comments
+            });
+            setComments(fetchedComments);
+       
+            // const fetchedComments = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            // setComments(fetchedComments);
+            // console.log(comments)
           
           } else {
             console.log("Post not found");
@@ -132,13 +148,14 @@ export default function PostDetail({route,navigation}) {
     }
   };
 
+
 return (
   <SafeAreaView style={styles.container}>
       <Text style={styles.descriptionText}>{description}</Text>
         {renderImages()}
         {weather ? (
           <View style={styles.weatherContainer}>
-            <Text style={styles.timeText}>{weather}</Text> 
+            <Text style={styles.locationText}>{weather}</Text> 
             <Image source={{ uri: weatherIconuri|| 'https://via.placeholder.com/150' }} 
             style={styles.weatherIcon} />
           </View>
@@ -146,7 +163,23 @@ return (
 
   
         {renderTime()}
-        <Text style={styles.timeText}>{postLoc}</Text>
+        <Text style={styles.locationText}>{postLoc}</Text>
+
+        {comments.length > 0 && (
+      <View>
+        <Text style={styles.sectionTitle}>Comments</Text>
+        <FlatList
+          data={comments}
+          renderItem={({ item, index }) => (
+            <View style={styles.commentContainer} key={index}>
+              <Text style={styles.commentAuthor}>{item.author}</Text>
+              <Text style={styles.commentText}>{item.content}</Text>
+             
+            </View>
+          )}
+        />
+      </View> 
+    )}
 
   </SafeAreaView>
 );
@@ -181,30 +214,52 @@ const styles = StyleSheet.create({
     marginRight:10,
   },
   weatherIcon: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
   },
   weatherContainer: {
     flexDirection: 'row',
-    alignItems: 'center', 
+    // alignItems: 'center', 
     // marginLeft:10,
   },
   timeText: {
-    fontSize: 16,
+    fontSize: 12,
     color: '#666',
-    padding: 10,
+    marginLeft:12,
+    // marginTop:10,
   },
   descriptionText: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 18,
+    // fontWeight: 'bold',
     color: '#333',
     padding: 15,
     marginTop:10,
   },
   locationText:{
-    marginLeft:10,
+    fontSize: 12,
+    color: '#666',
+    marginLeft:12,
+    marginTop:10,
   },
   Fourimage:{
     width: '30%', 
-  }
+  },
+  sectionTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginLeft: 10,
+    // padding: 10,
+  },
+  commentContainer: {
+    backgroundColor: '#f0f0f0',
+    padding: 5,
+    marginLeft: 10,
+    marginVertical: 5,
+    borderRadius: 5,
+  },
+  commentText: {
+    fontSize: 14,
+  
+  },
   });
