@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View ,TextInput, Alert,SafeAreaView} from 'react-native'
+import { StyleSheet, Text, View ,TextInput, Alert,SafeAreaView, ImageBackground} from 'react-native'
 import React from 'react'
 import { useState } from "react";
 import colors from '../Helpers/colors';
 import PressableButton from '../Components/PressableButton';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase-files/firebaseSetup";
+import { Image } from 'expo-image';
 
 export default function Login({navigation}) {
     const [email, setemail] = useState('');
@@ -53,8 +54,16 @@ export default function Login({navigation}) {
 
 
     return (
-        <SafeAreaView style={colors.container}>
-            <Text style={colors.text}>Email Address</Text>
+        <SafeAreaView style={styles.container}>
+            <ImageBackground
+              source={require('../assets/loginBackground.jpg')}
+              style={styles.imageContainer}
+            >
+                <Image
+                    source={require('../assets/WESHARE.png')}
+                    style={colors.logo}
+                />
+            {/*<Text style={colors.text}>Email Address</Text>*/}
             <TextInput 
             value={email} 
             style={colors.input} 
@@ -65,9 +74,10 @@ export default function Login({navigation}) {
             />
              {emailError ? <Text style={colors.errorText}>{emailError}</Text> : null}
 
-            <Text style={colors.text}>Password</Text>
+            {/*{<Text style={colors.text}>Password</Text>}*/}
             <TextInput
                 style={colors.input}
+                color='white'
                 secureTextEntry={true}
                 placeholder="Password"
                 value={password}
@@ -79,17 +89,47 @@ export default function Login({navigation}) {
            
                 <View style={colors.buttonView}>
                     <PressableButton customStyle={colors.login} onPressFunction={loginHandler}>
-                        <Text style={colors.buttonText}>Login</Text>
+                        <Text style={colors.buttonText}>Log in</Text>
                     </PressableButton>
                 </View>
                 <View style={colors.buttonView}>
                     <PressableButton customStyle={colors.signup} onPressFunction={signupHandler}>
-                        <Text style={colors.buttonText}>New User ? SignUp</Text>
+                        <Text style={colors.buttonText}>New User? Sign Up</Text>
                     </PressableButton>
                 </View>
-        
+            </ImageBackground>
         </SafeAreaView>
     )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+
+    container: {
+        flex: 1,
+        //backgroundColor: 'white',
+        //alignItems: 'center',
+        //justifyContent: 'center',
+    },
+
+    imageContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: 900,
+        resizeMode: 'cover',
+        backgroundImage: require('../assets/loginBackground.jpg'),
+    },
+    input: {
+        color: "darkmagenta",
+        fontSize: 20,
+        borderColor: "darkmagenta",
+        borderWidth: 2,
+        padding: 10,
+        borderRadius: 5,
+        width: "85%",   
+    },
+})

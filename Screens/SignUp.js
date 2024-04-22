@@ -1,4 +1,4 @@
-import { Text, View, SafeAreaView,Alert,TextInput,styles} from 'react-native'
+import { Text, View, SafeAreaView,Alert,TextInput, StyleSheet, ImageBackground} from 'react-native'
 import React from 'react'
 import colors from '../Helpers/colors';
 import { useState } from 'react';
@@ -6,6 +6,7 @@ import PressableButton from '../Components/PressableButton';
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { auth, database } from "../firebase-files/firebaseSetup";
 import { writeToDB } from '../firebase-files/firebaseHelper';
+import { Image } from 'expo-image';
 
 export default function SignUp({navigation}) {
     const [email, setemail] = useState('');
@@ -99,55 +100,94 @@ export default function SignUp({navigation}) {
 
     return (
         <SafeAreaView style={colors.container}>
-            <Text style={colors.text}>Email Address</Text>
-            <TextInput 
-            value={email} 
-            style={colors.input} 
-            placeholder="Email"
-            onChangeText={(text) => {
-                setemail(text);
-            }} 
-            />
-            {emailError ? <Text style={colors.errorText}>{emailError}</Text> : null}
+            <ImageBackground
+              source={require('../assets/loginBackground.jpg')}
+              style={styles.imageContainer}
+            >
+                <Image
+                    source={require('../assets/WESHARE.png')}
+                    style={colors.logo}
+                />
+                {/*<Text style={colors.text}>Email Address</Text>*/}
+                <TextInput 
+                value={email} 
+                style={colors.input} 
+                placeholder="Email"
+                onChangeText={(text) => {
+                    setemail(text);
+                }} 
+                />
+                {emailError ? <Text style={colors.errorText}>{emailError}</Text> : null}
 
-            <Text style={colors.text}>Password</Text>
-            <TextInput
-                style={colors.input}
-                secureTextEntry={true}
-                placeholder="Password"
-                value={password}
-                onChangeText={(changedText) => {
-                setPassword(changedText);
-                }}
-            />
+                {/*<Text style={colors.text}>Password</Text>*/}
+                <TextInput
+                    style={colors.input}
+                    secureTextEntry={true}
+                    placeholder="Password"
+                    value={password}
+                    onChangeText={(changedText) => {
+                    setPassword(changedText);
+                    }}
+                />
 
-            {/* {PasswordError ? <Text style={colors.errorText}>{PasswordError}</Text> : null} */}
+                {/* {PasswordError ? <Text style={colors.errorText}>{PasswordError}</Text> : null} */}
 
-            <Text style={colors.text}>Confirm Password</Text>
-            <TextInput
-                style={colors.input}
-                secureTextEntry={true}
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChangeText={(changedText) => {
-                setConfirmPassword(changedText);
-                }}
-            />
-            
+                {/*<Text style={colors.text}>Confirm Password</Text>*/}
+                <TextInput
+                    style={colors.input}
+                    secureTextEntry={true}
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChangeText={(changedText) => {
+                    setConfirmPassword(changedText);
+                    }}
+                />
+                
                 <View style={colors.buttonView}>
                     <PressableButton customStyle={colors.login} onPressFunction={handleSignup}>
-                        <Text style={colors.buttonText}>SignUp</Text>
+                        <Text style={colors.buttonText}>Sign Up</Text>
                     </PressableButton>
                 </View>
                 <View style={colors.buttonView}>
                     <PressableButton customStyle={colors.signup} onPressFunction={handleLogin}>
-                        <Text style={colors.buttonText}>Have Account? Login</Text>
+                        <Text style={colors.buttonText}>Have an Account? Log in</Text>
                     </PressableButton>
                 </View>
             
 
-
+            </ImageBackground>
         </SafeAreaView>
     )
 }
 
+const styles = StyleSheet.create({
+
+    container: {
+        flex: 1,
+        //backgroundColor: 'white',
+        //alignItems: 'center',
+        //justifyContent: 'center',
+    },
+
+    imageContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: 900,
+        resizeMode: 'cover',
+        backgroundImage: require('../assets/loginBackground.jpg'),
+    },
+    input: {
+        color: "darkmagenta",
+        fontSize: 20,
+        borderColor: "darkmagenta",
+        borderWidth: 2,
+        padding: 10,
+        borderRadius: 5,
+        width: "85%",   
+    },
+})

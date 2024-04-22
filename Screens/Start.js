@@ -2,6 +2,7 @@ import { StyleSheet, Text, View ,SafeAreaView,ImageBackground} from 'react-nativ
 import React from 'react'
 import PressableButton from '../Components/PressableButton'
 import colors from "../Helpers/colors"
+import { Image } from 'expo-image';
 
 export default function Start({navigation}) {
 
@@ -10,11 +11,19 @@ export default function Start({navigation}) {
     }
 
   return (
-    <ImageBackground source={require("../assets/background.jpeg")} style={styles.container}>
+    <ImageBackground source={require("../assets/loginBackground.jpg")} style={styles.container}>
     <View style={styles.textContainer}>
-        <Text style={styles.titleText}>Record</Text>
-        <Text style={styles.titleText}>Share</Text>
-        <Text style={styles.titleText}>Enjoy</Text>
+         <Image
+            source={require('../assets/WESHARE.png')}
+            style={{
+                width: 200,
+                height: 200,
+                marginBottom: 30,
+            }}
+        />
+        {/*<Text style={styles.titleText}>Record</Text>*/}
+        {/*<Text style={styles.titleText}>Share</Text>*/}
+        {/*<Text style={styles.titleText}>Enjoy</Text>*/}
     </View>
 
     <View style={styles.buttonView}>
@@ -49,15 +58,17 @@ const styles = StyleSheet.create({
   },
   startButton: {
       backgroundColor: "mediumturquoise", 
+      justifyContent: 'center',
       paddingVertical: 12,
       paddingHorizontal: 25,
       borderRadius: 25,
-      shadowColor: "#000",
-      width:200,
+      width: 360,
       height:50,
+      marginTop:20,
+      shadowColor: "#000",
       shadowOffset: {
-          width: 10,
-          height: 7,
+          width: 2,
+          height: 2,
       },
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
