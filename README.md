@@ -150,7 +150,7 @@ Iteration 3:
 
 3. A detailed description of what each member has contributed:
 
-ZiChuan Zhang: 
+ZiChuan Zhang: Redesigned the Home Screen, Login Screen, and Sign-up Screen. Created the Comment Collection and implemented the functionality of positing to this collection. Also, implemented the comment Modal so that comments can be correctly displayed.
 
 Zhimin Liang: fix error, add Visitmap ,  notification and postlist , improve layout and style of post, editpage and postDetail screen
 
