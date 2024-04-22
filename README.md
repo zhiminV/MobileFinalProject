@@ -94,3 +94,58 @@ ZiChuan Zhang: Fixed errors from iteration 1. Completely remade the home screen.
 Zhimin Liang: fix error in interation1, add location and external api , improve layout and style of post, profile, postlist, and postDetail screen
 
 
+
+Iteration 3: 
+We have add the following functionalities ：
+-- Notification: user can set notification to remind them to post every day
+
+![IMG_8863](https://github.com/zhiminV/MobileFinalProject/assets/122182731/cb12cd5f-9a5b-48bf-9c83-db765fc4890a)
+
+![IMG_8864](https://github.com/zhiminV/MobileFinalProject/assets/122182731/eef84acb-c0fc-4eb4-ba95-ca5313b59746)
+
+![IMG_8865](https://github.com/zhiminV/MobileFinalProject/assets/122182731/a5239554-742b-4ae0-bda8-c5e2963c4c7c)
+
+![IMG_8866](https://github.com/zhiminV/MobileFinalProject/assets/122182731/8c38ec07-38f7-4077-92aa-a3399fa5fb85)
+
+![IMG_8867](https://github.com/zhiminV/MobileFinalProject/assets/122182731/ac5c66a9-d6c5-4781-876e-ff1d3b8b8bc6)
+
+-- Commment: User can write comments to thier friend
+![IMG_8860](https://github.com/zhiminV/MobileFinalProject/assets/122182731/363666ed-7328-4e32-919b-b4611a8cc60e)
+
+![IMG_8861](https://github.com/zhiminV/MobileFinalProject/assets/122182731/f746ba63-48ce-41f0-96b8-b51b7d73cedc)
+
+-- VisitMap: user can see all their post location 
+![IMG_8848](https://github.com/zhiminV/MobileFinalProject/assets/122182731/4ddb7249-2481-4fa7-b4a5-dd8b243e7f5f)
+
+
+And we have make some imrpovement for our aap:
+-- Start Screen : add own design logo and improve styling
+
+![IMG_8857](https://github.com/zhiminV/MobileFinalProject/assets/122182731/8e5eab08-6900-48ff-a183-5cae1369aa6c)
+
+![IMG_8858](https://github.com/zhiminV/MobileFinalProject/assets/122182731/d9e6a1a2-fbbe-4139-9187-77202f3a0b6b)
+
+![IMG_8859](https://github.com/zhiminV/MobileFinalProject/assets/122182731/f08edb76-eb78-4e07-ba7e-076d4a104051)
+
+-- Post Screen : improve delete icon and styling
+
+![IMG_8847](https://github.com/zhiminV/MobileFinalProject/assets/122182731/89c839a2-0e46-4738-8e37-14676e7b543e)
+
+-- Post History Screen : show post base on time line
+
+![IMG_8854](https://github.com/zhiminV/MobileFinalProject/assets/122182731/cd0f1bbb-daae-416f-84b0-37a752ce0fc2)
+
+-- Post Detail Screen: improve delete styling and improve layout for different amount of images 
+
+![IMG_8855](https://github.com/zhiminV/MobileFinalProject/assets/122182731/01a86dbb-c240-44b8-ba92-0d3353da3f1f)
+
+![IMG_8856](https://github.com/zhiminV/MobileFinalProject/assets/122182731/1a621b5e-779a-4a21-93b6-3a0cb59262c8)
+
+
+A detailed description of what each member has contributed:
+
+ZiChuan Zhang: 
+
+Zhimin Liang: fix error, add Visitmap ,  notification and postlist , improve layout and style of post, editpage and postDetail screen
+
+
