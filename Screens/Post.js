@@ -5,7 +5,7 @@ import ImageManerge from '../Components/ImageManerge';
 import { writeToDB,updateFromDB,fetchInfoById} from '../firebase-files/firebaseHelper';
 import { ref, uploadBytes } from "firebase/storage";
 import { storage, auth, database, firestore  } from '../firebase-files/firebaseSetup';
-import { serverTimestamp } from 'firebase/firestore';
+import { arrayUnion, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { collection,query, where, getDocs } from 'firebase/firestore'
 import { EvilIcons ,Feather,Entypo,Ionicons,AntDesign,Fontisto,MaterialIcons} from '@expo/vector-icons';
 import PressableButton from '../Components/PressableButton';
@@ -139,9 +139,10 @@ export default function Post({navigation}) {
       const docRef = await writeToDB(newPost, "Posts")
       //console.log(docRef.id);
       const postId = docRef.id;
-
+      const userRefrence = doc(database, 'Users', docID)
       // Update the user document with the updated postArr
-      updateFromDB("Users", docID, { post: [...postArr, postId] });
+      //updateFromDB("Users", docID, { post: [...postArr, postId] });
+      await updateDoc(userRefrence, {post : arrayUnion(postId)});
       //console.log(postArr)
 
       const comment = {postID: docRef.id, content:[]};
