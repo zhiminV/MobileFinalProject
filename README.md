@@ -95,8 +95,12 @@ Zhimin Liang: fix error in interation1, add location and external api , improve 
 
 
 
+
+
 Iteration 3: 
-We have add the following functionalities ：
+
+1.  We have add the following functionalities ：
+ 
 -- Notification: user can set notification to remind them to post every day
 
 ![IMG_8863](https://github.com/zhiminV/MobileFinalProject/assets/122182731/cb12cd5f-9a5b-48bf-9c83-db765fc4890a)
@@ -118,7 +122,7 @@ We have add the following functionalities ：
 ![IMG_8848](https://github.com/zhiminV/MobileFinalProject/assets/122182731/4ddb7249-2481-4fa7-b4a5-dd8b243e7f5f)
 
 
-And we have make some imrpovement for our aap:
+2.   we have make some imrpovement for our aap:
 -- Start Screen : add own design logo and improve styling
 
 ![IMG_8857](https://github.com/zhiminV/MobileFinalProject/assets/122182731/8e5eab08-6900-48ff-a183-5cae1369aa6c)
@@ -142,7 +146,8 @@ And we have make some imrpovement for our aap:
 ![IMG_8856](https://github.com/zhiminV/MobileFinalProject/assets/122182731/1a621b5e-779a-4a21-93b6-3a0cb59262c8)
 
 
-A detailed description of what each member has contributed:
+
+3. A detailed description of what each member has contributed:
 
 ZiChuan Zhang: 
 
