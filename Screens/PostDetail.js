@@ -95,20 +95,38 @@ export default function PostDetail({route,navigation}) {
   }
 
   const renderImages = () => {
+    if (imageUris.length === 4) {
       return (
-          <View style={styles.imageContainer}>
-              {imageUris.slice(0, 9).map((uri, index) => (
-                  <Image key={index} source={{ uri }} style={styles.image} />
-              ))}
+        <View style={styles.FourimageContainer}>
+          <View style={styles.row}>
+            {imageUris.slice(0, 2).map((uri, index) => (
+              <Image key={index} source={{ uri }} style={styles.image} />
+            ))}
           </View>
+          <View style={styles.row}>
+            {imageUris.slice(2, 4).map((uri, index) => (
+              <Image key={index + 2} source={{ uri }} style={styles.image} />
+            ))}
+          </View>
+        </View>
       );
+    } else {
+      return (
+        <View style={styles.imageContainer}>
+          {imageUris.slice(0, 9).map((uri, index) => (
+            <Image key={index} source={{ uri }} style={styles.image} />
+          ))}
+        </View>
+      );
+    }
   };
+
   const renderTime = () => {
   
     if (time) {
       const date = new Date(time.seconds * 1000); 
       const dateString = date.toLocaleString(); 
-      return <Text>{dateString}</Text>;
+      return <Text style={styles.timeText}>{dateString}</Text>;
     } else {
       return null;
     }
@@ -116,24 +134,20 @@ export default function PostDetail({route,navigation}) {
 
 return (
   <SafeAreaView style={styles.container}>
-      <View style={styles.descriptionText}>
-        <Text>{description}</Text>
-      </View>
+      <Text style={styles.descriptionText}>{description}</Text>
         {renderImages()}
         {weather ? (
           <View style={styles.weatherContainer}>
-            <Text>{weather}</Text> 
+            <Text style={styles.timeText}>{weather}</Text> 
             <Image source={{ uri: weatherIconuri|| 'https://via.placeholder.com/150' }} 
             style={styles.weatherIcon} />
           </View>
         ) : null}
 
-        <View style={styles.timetext}>
-          {renderTime()}
-        </View>
-        <View style={styles.locationText}>
-          <Text> {postLoc}</Text>
-        </View>
+  
+        {renderTime()}
+        <Text style={styles.timeText}>{postLoc}</Text>
+
   </SafeAreaView>
 );
 }
@@ -143,17 +157,28 @@ const styles = StyleSheet.create({
     flex: 1,
   
   },
+  FourimageContainer:{
+    flexDirection:"column",
+    alignItems: 'center',
+    marginLeft: 15,
+  },
   imageContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    // justifyContent: 'center',
     alignItems: 'center',
-    marginLeft:10,
+    marginLeft: 15,
+  },
+  row: {
+    flexDirection: 'row',
+    // justifyContent: 'space-between',
+    width: '100%',
+    // padding:10,
+   
   },
   image: {
-      width: '30%', 
-      aspectRatio: 1, 
-      margin: '1%', 
+    width: '30%',
+    aspectRatio: 1,
+    marginVertical: 5,
+    marginRight:10,
   },
   weatherIcon: {
     width: 50,
@@ -162,19 +187,24 @@ const styles = StyleSheet.create({
   weatherContainer: {
     flexDirection: 'row',
     alignItems: 'center', 
-    marginLeft:10,
+    // marginLeft:10,
   },
-  timetext:{
-    flexDirection: 'row',
-    alignItems: 'center', 
-    marginBottom:10,
-    marginLeft:10,
+  timeText: {
+    fontSize: 16,
+    color: '#666',
+    padding: 10,
   },
-  descriptionText:{
-    fontSize: 30,
-    margin:25,
+  descriptionText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    padding: 15,
+    marginTop:10,
   },
   locationText:{
     marginLeft:10,
+  },
+  Fourimage:{
+    width: '30%', 
   }
   });
