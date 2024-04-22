@@ -177,9 +177,9 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         width: '100%',
-        height: 900,
+        height: '115%',
         resizeMode: 'cover',
-        backgroundImage: require('../assets/loginBackground.jpg'),
+        //backgroundImage: require('../assets/loginBackground.jpg'),
     },
     input: {
         color: "darkmagenta",
