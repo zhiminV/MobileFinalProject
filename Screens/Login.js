@@ -5,6 +5,7 @@ import colors from '../Helpers/colors';
 import PressableButton from '../Components/PressableButton';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase-files/firebaseSetup";
+import { Image } from 'expo-image';
 
 export default function Login({navigation}) {
     const [email, setemail] = useState('');
@@ -58,6 +59,10 @@ export default function Login({navigation}) {
               source={require('../assets/loginBackground.jpg')}
               style={styles.imageContainer}
             >
+                <Image
+                    source={require('../assets/WESHARE.png')}
+                    style={colors.logo}
+                />
             {/*<Text style={colors.text}>Email Address</Text>*/}
             <TextInput 
             value={email} 
