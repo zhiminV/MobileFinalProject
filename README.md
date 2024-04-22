@@ -113,7 +113,7 @@ Iteration 3:
 
 ![IMG_8867](https://github.com/zhiminV/MobileFinalProject/assets/122182731/ac5c66a9-d6c5-4781-876e-ff1d3b8b8bc6)
 
--- Commment: User can write comments to thier friend
+-- Commment: User can write comments to thier friends
 ![IMG_8860](https://github.com/zhiminV/MobileFinalProject/assets/122182731/363666ed-7328-4e32-919b-b4611a8cc60e)
 
 ![IMG_8861](https://github.com/zhiminV/MobileFinalProject/assets/122182731/f746ba63-48ce-41f0-96b8-b51b7d73cedc)
@@ -122,7 +122,8 @@ Iteration 3:
 ![IMG_8848](https://github.com/zhiminV/MobileFinalProject/assets/122182731/4ddb7249-2481-4fa7-b4a5-dd8b243e7f5f)
 
 
-2.   we have make some imrpovement for our aap:
+2.   we have make some improvement for our app:
+   
 -- Start Screen : add own design logo and improve styling
 
 ![IMG_8857](https://github.com/zhiminV/MobileFinalProject/assets/122182731/8e5eab08-6900-48ff-a183-5cae1369aa6c)
