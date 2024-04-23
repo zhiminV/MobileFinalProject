@@ -3,7 +3,7 @@ import React, { useEffect,useState } from 'react'
 import { fetchInfoById,deleteFromDB} from '../firebase-files/firebaseHelper';
 import { AntDesign } from '@expo/vector-icons';
 import {auth, database  } from '../firebase-files/firebaseSetup';
-import { collection,query, where, getDocs } from 'firebase/firestore'
+import { collection,query, where, getDocs, updateDoc, doc, arrayRemove } from 'firebase/firestore'
 import { storage } from "../firebase-files/firebaseSetup";
 import { getDownloadURL, ref } from "firebase/storage";
 import { updateFromDB } from '../firebase-files/firebaseHelper';
@@ -92,9 +92,10 @@ export default function PostDetail({route,navigation}) {
           
             const newPosts = posts.filter((item) => item !== postId);
             
-         
-          
-           updateFromDB("Users", userId, { post: newPosts });
+            await updateDoc(doc(database, 'Users', userId), {
+              post: arrayRemove(postId)});
+              
+            //await updateFromDB("Users", userId, { post: newPosts });
 
             //Delete the post from the "Posts" collection
             await deleteFromDB('Posts', postId);

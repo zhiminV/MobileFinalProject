@@ -35,7 +35,7 @@ export default function UserIntro(props) {
 
         querySnapshot2.forEach((doc) => {
           const following = doc.data().following;
-          console.log(following);
+          //console.log(following);
           if (following.includes(props.username.uid)) {
             setFollowed(true);
           } else {
@@ -98,15 +98,15 @@ export default function UserIntro(props) {
     const query_user = query(collectionRef, where('email', '==', props.email));
     const querySnapshot2 = await getDocs(query_user);
     const docID = querySnapshot2.docs[0].id;
-    console.log(docID);
+    //console.log(docID);
     const query_reuslt = querySnapshot2.docs[0].data();
 
     await updateDoc(doc(database, 'Users', docID), {
       followers: arrayUnion(auth.currentUser.uid)
     });
     uid = query_reuslt.uid;
-    console.log(uid);
-    console.log(documentID);
+    //console.log(uid);
+    //console.log(documentID);
     await updateDoc(doc(database, 'Users', documentID), {
     following: arrayUnion(uid)
     });
