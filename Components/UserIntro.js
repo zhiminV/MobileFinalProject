@@ -19,7 +19,7 @@ export default function UserIntro(props) {
         const collectionRef = collection(database, 'Users');
         const query_follow = query(collectionRef, where('uid', '==', auth.currentUser.uid), where('following', 'array-contains', props.email));
         const query_user = query(collectionRef, where('uid', '==', auth.currentUser.uid))
-        const querySnapshot = await getDocs(query_follow);
+        //const querySnapshot = await getDocs(query_follow);
         const querySnapshot2 = await getDocs(query_user);
         
         /*
@@ -35,6 +35,7 @@ export default function UserIntro(props) {
 
         querySnapshot2.forEach((doc) => {
           const following = doc.data().following;
+          //console.log(following);
           if (following.includes(props.username.uid)) {
             setFollowed(true);
           } else {
@@ -92,35 +93,63 @@ export default function UserIntro(props) {
   async function followHandler() {
     let uid = '';
     //setFollowed(true);
-    setPressed(!pressed);
+    
     const collectionRef = collection(database, 'Users');
     const query_user = query(collectionRef, where('email', '==', props.email));
     const querySnapshot2 = await getDocs(query_user);
+    const docID = querySnapshot2.docs[0].id;
+    //console.log(docID);
+    const query_reuslt = querySnapshot2.docs[0].data();
+
+    await updateDoc(doc(database, 'Users', docID), {
+      followers: arrayUnion(auth.currentUser.uid)
+    });
+    uid = query_reuslt.uid;
+    //console.log(uid);
+    //console.log(documentID);
+    await updateDoc(doc(database, 'Users', documentID), {
+    following: arrayUnion(uid)
+    });
+    setPressed(!pressed);
+    //setFollowed(true);
+    
+    /*
     querySnapshot2.forEach(
-      (doc) => {
-        uid = doc.data().uid;
+      async (document) => {
+        await updateDoc(doc(database, 'Users', document.id), {
+          followers: arrayUnion(auth.currentUser.uid)
+        });
+        uid = document.data().uid;
+        console.log(uid);
       }
     )
     await updateDoc(doc(database, 'Users', documentID), {
       following: arrayUnion(uid)});
-    
+    */  
   }
+  
 
   async function unfollowHandler() {
     let uid = ''
     //setFollowed(true);
-    setPressed(!pressed);
     const collectionRef = collection(database, 'Users');
     const query_user = query(collectionRef, where('email', '==', props.email));
     const querySnapshot2 = await getDocs(query_user);
     querySnapshot2.forEach(
-      (doc) => {
-        uid = doc.data().uid;
+      async (document) => {
+        uid = document.data().uid;
+        await updateDoc(doc(database, 'Users', document.id), {
+          followers: arrayRemove(auth.currentUser.uid)});
       }
     )
+
+
     setFollowed(false);
     await updateDoc(doc(database, 'Users', documentID), {
       following: arrayRemove(uid)});
+    
+      setPressed(!pressed);  
+    
   }
 
 

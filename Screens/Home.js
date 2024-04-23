@@ -34,7 +34,7 @@ export default function Home() {
         const query_posts = query(collectionRef, where('uid', '==', following[i]));
         const querySnapshotPosts = await getDocs(query_posts);
         const user = querySnapshotPosts.docs[0].data();
-        console.log(user);
+        //console.log(user);
 
         const posts = user.post;
         const email = user.email;
@@ -102,7 +102,8 @@ export default function Home() {
       }
       
       setPostID(tempArray);
-      //console.log(postID);
+      tempArray.sort((post1, post2) => post2.timestamp.seconds - post1.timestamp.seconds);
+      //console.log(tempArray[0].timestamp);
       setRefresh(false);
     } catch (err){
       console.log(err);
