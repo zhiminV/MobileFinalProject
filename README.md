@@ -1,3 +1,5 @@
+Demo link: https://www.youtube.com/watch?v=9PA3WveNp-g 
+
 1. Members: Zichuan Zhang, Zhimin Liang
 
 2. Describe your data model and the 3 collections you will use.
@@ -155,5 +157,5 @@ ZiChuan Zhang:
 Zhimin Liang: fix error, add Visitmap ,  notification and postlist , improve layout and style of post, editpage and postDetail screen
 
 
-Demo link: https://www.youtube.com/watch?v=9PA3WveNp-g 
+
 
